@@ -21,7 +21,7 @@ application {
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
-    implementation(group = "tools.aqua", name = "bgw-gui", version = "0.7")
+    implementation(group = "tools.aqua", name = "bgw-gui", version = "0.7.3")
 }
 
 tasks.distZip {
