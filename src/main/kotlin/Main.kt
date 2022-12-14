@@ -4,5 +4,5 @@ fun main() {
     SopraApplication().show()
     println("Application ended. Goodbye")
 
-    println("Das Sopra ist echt blöd")
+    println("Das Sopra ist voll cool")
 }
