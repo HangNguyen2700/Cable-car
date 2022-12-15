@@ -23,6 +23,7 @@ repositories {
             create<HttpHeaderAuthentication>("header")
         }
     }
+}
 
 application {
     mainClass.set("MainKt")
