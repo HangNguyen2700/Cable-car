@@ -16,8 +16,8 @@ repositories {
     maven {
         url = uri("https://sopra-gitlab.cs.tu-dortmund.de/api/v4/projects/859/packages/maven")
         credentials(HttpHeaderCredentials::class) {
-            name = "Access-Token"
-            value = ""
+            name = "Access-Token-Gr-10"
+            value = "glpat-y5AnsfmWzNrvyk554Frn"
         }
         authentication {
             create<HttpHeaderAuthentication>("header")
