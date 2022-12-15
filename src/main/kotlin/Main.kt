@@ -1,8 +1,7 @@
-import view.SopraApplication
+import view.CCApplication
 
 fun main() {
-    SopraApplication().show()
-    println("Application ended. Goodbye")
-
     println("Das Sopra ist voll cool")
+    CCApplication().show()
+    println("Application ended. Goodbye")
 }
