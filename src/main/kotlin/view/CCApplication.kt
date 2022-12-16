@@ -15,6 +15,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     init {
         this.showGameScene(titleScene)
+        this.showMenuScene(mainMenuScene)
     }
 
 }

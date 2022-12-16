@@ -28,10 +28,7 @@ class TitleScene : BoardGameScene(1920, 1080) {
                 text = "press any key..."
             )
         )
-
     )
-
-    private var test = 0
 
     init {
         background = ColorVisual(108, 168, 59)
