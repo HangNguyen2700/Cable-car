@@ -1,5 +1,6 @@
 package service
 
+import entity.Game
 import entity.Player
 import service.message.*
 
@@ -52,43 +53,52 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         return false
     }
 
-    fun sendGameInitMessage(message: GameInitMessage?): Boolean {
-        if (connectionState != ConnectionState.READY_FOR_GAME) {
-            if (connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
-                println("Not enough or too many Players have joined the Game. Current Amount: ${joinedPlayers.size}")
-            }
-            return false
+    fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean) {
+        val playerInfoList = mutableListOf<PlayerInfo>()
+        playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
+        for (player in joinedPlayers) {
+            playerInfoList.add(PlayerInfo(player, PlayerType.HUMAN))
         }
-        if (message != null) {
-            client?.sendGameActionMessage(message)
-        } else {
-            // Create GameInitMessage
-            val playerInfoList = mutableListOf<PlayerInfo>()
-            for (player in joinedPlayers) {
-                playerInfoList.add(PlayerInfo(player, PlayerType.HUMAN))
-            }
 
-            // TODO get TileSupply list from Entity
-            val gameInitMessage = GameInitMessage(
-                rotationAllowed = true,
-                players = playerInfoList,
-                tileSupply = listOf()
-            )
-            client?.sendGameActionMessage(gameInitMessage)
+        // player list for local game
+        // TODO remove when local startNewGame() no longer takes List<Player> instead of List<String>
+        val localPlayerList = mutableListOf<Player>()
+        localPlayerList.add(Player(hostPlayerName, mutableListOf()))
+        for (player in joinedPlayers) {
+            localPlayerList.add(Player(player, mutableListOf()))
         }
-        updateConnectionState(ConnectionState.GAME_INITIALIZED)
-        return true
-    }
 
-    fun sendTurnMessage(message: TurnMessage) {
-        // TODO
+        // start game locally
+        rootService.gameService.startNewGame(localPlayerList)
+
+        // TODO get TileSupply list from Entity
+        val gameInitMessage = GameInitMessage(
+            rotationAllowed = true,
+            players = playerInfoList,
+            tileSupply = listOf()
+        )
+
+        sendGameInitMessage(gameInitMessage)
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
         // TODO
     }
 
-    fun startNewHostedGame(localPlayers: List<Player>, rotationAllowed: Boolean) {
+    fun sendGameInitMessage(message: GameInitMessage) {
+        // send GameInitMessage
+
+        if (connectionState != ConnectionState.READY_FOR_GAME) {
+            if (connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
+                println("Not enough or too many Players have joined the Game. Current Amount: ${joinedPlayers.size}")
+            }
+            return
+        }
+        client?.sendGameActionMessage(message)
+        updateConnectionState(ConnectionState.GAME_INITIALIZED)
+    }
+
+    fun sendTurnMessage(message: TurnMessage) {
         // TODO
     }
 

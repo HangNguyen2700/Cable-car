@@ -77,6 +77,7 @@ class NetworkClient(playerName: String,
         if(networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {
             if (networkService.connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
                 println("unexpected player joined notification")
+                return
             }
 
             println("${notification.sender} joined the game.")
