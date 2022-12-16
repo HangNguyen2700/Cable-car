@@ -20,7 +20,7 @@ class TitleScene : BoardGameScene(1920, 1080) {
         text = "Carbel Car",
     )
 
-    private val userPrompt = Button(width = 600, height = 100, posX = 660, posY = 900,
+    private val pressAnyKeyLabel = Label(width = 600, height = 100, posX = 660, posY = 800,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -30,9 +30,11 @@ class TitleScene : BoardGameScene(1920, 1080) {
         )
     )
 
+    val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }
+
     init {
         background = ColorVisual(108, 168, 59)
-        addComponents(gameLabel, userPrompt)
+        addComponents(gameLabel, pressAnyKeyLabel, toMenuButton)
     }
 
 }
