@@ -51,7 +51,7 @@ class MainMenuScene : MenuScene(1920,1080) {
         )
     )
 
-    private val nameField = TextField(width = 400, height = 80, posX = )
+    private val nameField = TextField(width = 400, height = 80, posX = 200, posY = 400,)
 
     private val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
         visual = CompoundVisual(
