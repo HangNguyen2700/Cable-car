@@ -1,6 +1,7 @@
 package view
 
 import tools.aqua.bgw.animation.DelayAnimation
+import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -15,6 +16,15 @@ import java.awt.Color
 
 class TitleScene : BoardGameScene(1920, 1080) {
 
+    private val trigger = Button(width = 1920, height = 1080, posX = 0, posY = 0,
+        visual = ColorVisual(0,0,0),
+    ).apply {
+        onMouseEntered = {
+            println("Scene initialized")
+            fadeIn()
+        }
+    }
+
     private val gameLabel = Label(width = 1920, height = 1080, posX = 0, posY = -100,
         font = Font(size = 400, color = Color.PINK, family = "Calibri"),
         text = "Carbel Car",
@@ -28,13 +38,38 @@ class TitleScene : BoardGameScene(1920, 1080) {
                 text = "press any key..."
             )
         )
-    )
+    ).apply { opacity = 0.0 }
+
 
     val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }
 
+    private fun fadeIn() {
+        playAnimation(
+            FadeAnimation(trigger,1.0,0.0,1000).apply { onFinished = {
+                removeComponents(trigger)
+                addComponents(gameLabel, pressAnyKeyLabel, toMenuButton)
+                pressAnyKeyLabelFadeAnimation()
+            }}
+        )
+    }
+
+    private fun pressAnyKeyLabelFadeAnimation() {
+        playAnimation(
+            SequentialAnimation(
+                FadeAnimation(pressAnyKeyLabel, 0.0, 1.0,1000),
+                FadeAnimation(pressAnyKeyLabel, 1.0, 0.0,1000)
+            ).apply { onFinished = {pressAnyKeyLabelFadeAnimation()} }
+        )
+    }
+
+    private fun setMasterOpacity(input : Double) {
+
+    }
+
     init {
         background = ColorVisual(108, 168, 59)
-        addComponents(gameLabel, pressAnyKeyLabel, toMenuButton)
+        addComponents(trigger)
+
     }
 
 }

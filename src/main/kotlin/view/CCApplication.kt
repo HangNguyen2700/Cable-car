@@ -1,6 +1,8 @@
 package view
 
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.ImageVisual
 
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
@@ -29,6 +31,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     init {
         this.showGameScene(titleScene)
+        //icon = ImageVisual("")
     }
 
 }
