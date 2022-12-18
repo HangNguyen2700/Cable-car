@@ -116,8 +116,10 @@ class NetworkClient(playerName: String,
 
     @GameActionReceiver
     fun onInitReceived(message: GameInitMessage, sender: String) {
-        BoardGameApplication.runOnGUIThread {
-            networkService.startNewJoinedGame(message)
+        if (networkService.connectionState == ConnectionState.WAITING_FOR_INIT) {
+            BoardGameApplication.runOnGUIThread {
+                networkService.startNewJoinedGame(message)
+            }
         }
     }
 

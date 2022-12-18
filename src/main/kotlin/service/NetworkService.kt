@@ -1,6 +1,5 @@
 package service
 
-import entity.Game
 import entity.Player
 import service.message.*
 
@@ -10,12 +9,14 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     private val GAME_ID = "CableCar"
 
     private var client: NetworkClient? = null
+    var playerName = ""
 
 
     fun hostGame(secret: String, playerName: String, sessionID: String) {
         if(connect(secret, playerName)) {
             client?.createGame(GAME_ID, sessionID, "Hallo von Gruppe 10")
             updateConnectionState(ConnectionState.WAITING_FOR_HOST_CONFIRMATION)
+            this.playerName = playerName
         }
     }
 
@@ -23,6 +24,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     fun joinGame(secret: String, name:String, sessionID: String) {
         if(connect(secret, name)) {
             client?.joinGame(sessionID, "Hallo von Gruppe 10.")
+            this.playerName = name
         }
     }
 
@@ -54,6 +56,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean) {
+        // TODO set rotation allowed
         val playerInfoList = mutableListOf<PlayerInfo>()
         playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
         for (player in joinedPlayers) {
@@ -82,7 +85,19 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
-        // TODO
+        // TODO rotationAllowed boolean fehlt in enitity
+        val playerList = mutableListOf<Player>()
+        for (player in message.players) {
+            playerList.add(Player(player.name, mutableListOf()))
+        }
+
+        rootService.gameService.startNewGame(playerList)
+
+        val tileStack = IntArray(60)
+        for (i in 0..message.tileSupply.size) {
+            tileStack[i] = message.tileSupply[i].id
+        }
+        // TODO local tileStack in entity speichern
     }
 
     fun sendGameInitMessage(message: GameInitMessage) {
@@ -99,7 +114,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun sendTurnMessage(message: TurnMessage) {
-        // TODO
+        // TODO sendTurnMessage
     }
 
     fun updateConnectionState(newState: ConnectionState) {
