@@ -1,5 +1,7 @@
 package entity
 
+import tools.aqua.bgw.visual.ColorVisual
+
 enum class Color {
     YELLOW,
     BLUE,
@@ -16,5 +18,14 @@ enum class Color {
         GREEN -> "Green"
         PURPLE -> "Purple"
         BLACK -> "Black"
+    }
+
+    fun toRGB() = when(this) {
+        YELLOW -> ColorVisual.YELLOW
+        BLUE -> ColorVisual.BLUE
+        ORANGE -> ColorVisual.ORANGE
+        GREEN -> ColorVisual.GREEN
+        PURPLE -> ColorVisual(183,0,255)
+        BLACK -> ColorVisual.BLACK
     }
 }
