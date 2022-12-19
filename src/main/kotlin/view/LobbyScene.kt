@@ -2,7 +2,6 @@ package view
 
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.CheckBox
-import tools.aqua.bgw.components.uicomponents.ColorPicker
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
@@ -25,21 +24,29 @@ import java.awt.Color
  * [musicToggleButton],[soundToggleButton]: toggles music/sound on off
  */
 
-class LobbyScene : MenuScene(1920,1080) {
+class LobbyScene : MenuScene(1920, 1080) {
 
-    var playersJoined = 1
+    var playersJoined = 0
 
-    val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 660, posY = 40,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Back to Main Menu"
-            )
-        )
+    var colorsPicked = mutableListOf(false, false, false, false, false, false)
+
+    val colorPicker = listOf(
+        Button(width = 40, height = 40, visual = entity.Color.YELLOW.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.YELLOW.toRGB())} },
+        Button(width = 40, height = 40, visual = entity.Color.BLUE.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.BLUE.toRGB())} },
+        Button(width = 40, height = 40, visual = entity.Color.ORANGE.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.ORANGE.toRGB())} },
+        Button(width = 40, height = 40, visual = entity.Color.GREEN.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.GREEN.toRGB())} },
+        Button(width = 40, height = 40, visual = entity.Color.PURPLE.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.PURPLE.toRGB())} },
+        Button(width = 40, height = 40, visual = entity.Color.BLACK.toRGB()).apply { onMouseClicked = {
+            colorPicked(entity.Color.BLACK.toRGB())} },
     )
 
-     val playerLabel = Label(width = 300, height = 100, posX = 100, posY = 100,
+    val playerLabel = Label(
+        width = 300, height = 100, posX = 100, posY = 100,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(
@@ -49,81 +56,60 @@ class LobbyScene : MenuScene(1920,1080) {
         )
     )
 
-    val playerBoxLabel1 = Label(width = 800, height = 80, posX = 100, posY = 250,
+    val playerBoxLabel = listOf(
+        Label(width = 800, height = 80, posX = 100, posY = 250, visual = CompoundVisual(
+                ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                ))),
+        Label(width = 800, height = 80, posX = 100, posY = 350, visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.2 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                ))),
+        Label(width = 800, height = 80, posX = 100, posY = 450, visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.2 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                ))),
+        Label(width = 800, height = 80, posX = 100, posY = 550, visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.2 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                ))),
+        Label(width = 800, height = 80, posX = 100, posY = 650, visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.2 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                ))),
+        Label(width = 800, height = 80, posX = 100, posY = 750, visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.2 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20
+                )))
+    )
+
+    val addPlayerButton = Button(width = 80, height = 80, text = "+")
+
+    val backToMainMenuSceneButton = Button(
+        width = 600, height = 100, posX = 660, posY = 40,
         visual = CompoundVisual(
-            ColorVisual(63,255,63).apply { transparency = 0.3 },
+            ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
+                font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Back to Main Menu"
             )
         )
     )
 
-    //val player1ColorPicker =
-
-    val playerBoxLabel2 = Label(width = 800, height = 80, posX = 100, posY = 350,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.2 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-    )
-
-    val playerBoxLabel3 = Label(width = 800, height = 80, posX = 100, posY = 450,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.2 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-    )
-
-    val playerBoxLabel4 = Label(width = 800, height = 80, posX = 100, posY = 550,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.2 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-    )
-
-    val playerBoxLabel5 = Label(width = 800, height = 80, posX = 100, posY = 650,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.2 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-    )
-
-    val playerBoxLabel6 = Label(width = 800, height = 80, posX = 100, posY = 750,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.2 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-    )
-
-    val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1200, posY = 200,
+    val shuffleTurnOrderButton = Button(
+        width = 600, height = 100, posX = 1200, posY = 200,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -135,7 +121,8 @@ class LobbyScene : MenuScene(1920,1080) {
 
     val shufflePlayerSequenceCheckbox = CheckBox(1830, 233)
 
-    val allowTileRotationButton = Button(width = 600, height = 100, posX = 1200, posY = 330,
+    val allowTileRotationButton = Button(
+        width = 600, height = 100, posX = 1200, posY = 330,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -147,7 +134,8 @@ class LobbyScene : MenuScene(1920,1080) {
 
     val allowTileRotationCheckbox = CheckBox(1830, 363)
 
-    val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
+    val quitButton = Button(
+        width = 300, height = 100, posX = 100, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -157,7 +145,8 @@ class LobbyScene : MenuScene(1920,1080) {
         )
     )
 
-    val musicToggleButton = Button(width = 300, height = 100, posX = 450, posY = 900,
+    val musicToggleButton = Button(
+        width = 300, height = 100, posX = 450, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -167,7 +156,8 @@ class LobbyScene : MenuScene(1920,1080) {
         )
     )
 
-    val soundToggleButton = Button(width = 300, height = 100, posX = 800, posY = 900,
+    val soundToggleButton = Button(
+        width = 300, height = 100, posX = 800, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
@@ -177,17 +167,34 @@ class LobbyScene : MenuScene(1920,1080) {
         )
     )
 
-
     init {
         addComponents(
             backToMainMenuSceneButton,
             playerLabel,
-            playerBoxLabel1,playerBoxLabel2,playerBoxLabel3,playerBoxLabel4,playerBoxLabel5,playerBoxLabel6,
+            playerBoxLabel[0],playerBoxLabel[1],playerBoxLabel[2],playerBoxLabel[3],playerBoxLabel[4],playerBoxLabel[5],
             shuffleTurnOrderButton, shufflePlayerSequenceCheckbox,
             allowTileRotationButton, allowTileRotationCheckbox,
             quitButton, musicToggleButton, soundToggleButton
         )
         opacity = 0.0
+        showColorPicker(playersJoined)
     }
 
+    fun showColorPicker( pos: Int ) {
+        for (i in 0..5) { if (!colorsPicked[i]) { addComponents(colorPicker[i]) } }
+        colorPicker[0].apply { posX = 700.0; posY = 250.0 + pos * 100.0 }
+        colorPicker[1].apply { posX = 700.0; posY = 290.0 + pos * 100.0 }
+        colorPicker[2].apply { posX = 740.0; posY = 250.0 + pos * 100.0 }
+        colorPicker[3].apply { posX = 740.0; posY = 290.0 + pos * 100.0 }
+        colorPicker[4].apply { posX = 780.0; posY = 250.0 + pos * 100.0 }
+        colorPicker[5].apply { posX = 780.0; posY = 290.0 + pos * 100.0 }
+    }
+
+    fun colorPicked( color: ColorVisual ) {
+        //players[playersJoined].color = color
+        for (i in 0..5) { if (!colorsPicked[i]) { removeComponents(colorPicker[i]) } }
+        colorsPicked[playersJoined] = true
+        addComponents(addPlayerButton)
+        addPlayerButton.apply { posX = 150.0; posY = 350.0}
+    }
 }

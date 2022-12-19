@@ -77,7 +77,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun nameEmptyCheck() {
         if (mainMenuScene.nameField.text != "") {
             hideMenuScene(3000)
-            lobbyScene.playerBoxLabel1.visual = CompoundVisual(
+            lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
                 ColorVisual(63, 255, 63).apply { transparency = 0.3 },
                 TextVisual(
                     font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
