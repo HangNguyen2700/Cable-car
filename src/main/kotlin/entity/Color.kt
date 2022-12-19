@@ -1,20 +1,20 @@
 package entity
 
 enum class Color {
-    RED,
+    YELLOW,
     BLUE,
+    ORANGE,
     GREEN,
-    PINK,
-    WHITE,
-    BLACK,
+    PURPLE,
+    BLACK
     ;
 
     override fun toString() = when(this) {
-        RED -> "Red"
+        YELLOW -> "Yellow"
         BLUE -> "Blue"
+        ORANGE -> "Orange"
         GREEN -> "Green"
-        PINK -> "Pink"
-        WHITE -> "White"
+        PURPLE -> "Purple"
         BLACK -> "Black"
     }
 }

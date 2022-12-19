@@ -2,6 +2,7 @@ package view
 
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.CheckBox
+import tools.aqua.bgw.components.uicomponents.ColorPicker
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
@@ -12,6 +13,8 @@ import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
 class LobbyScene : MenuScene(1920,1080) {
+
+    var playersJoined = 1
 
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 660, posY = 40,
         visual = CompoundVisual(
@@ -45,6 +48,8 @@ class LobbyScene : MenuScene(1920,1080) {
         )
     )
 
+    //val player1ColorPicker =
+
     val playerBoxLabel2 = Label(width = 800, height = 80, posX = 100, posY = 350,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.2 },
@@ -56,8 +61,6 @@ class LobbyScene : MenuScene(1920,1080) {
             )
         )
     )
-
-
 
     val playerBoxLabel3 = Label(width = 800, height = 80, posX = 100, posY = 450,
         visual = CompoundVisual(
@@ -106,7 +109,6 @@ class LobbyScene : MenuScene(1920,1080) {
             )
         )
     )
-
 
     val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1200, posY = 200,
         visual = CompoundVisual(
@@ -161,28 +163,6 @@ class LobbyScene : MenuScene(1920,1080) {
             )
         )
     )
-    private fun checkEmpty(){
-        if(playerBoxLabel1.text!= ""){
-            println("here1")
-            writeText()
-        }
-    }
-    private fun writeText()
-    {
-        //lobbyScene.playerBoxLabel2.text = " "
-        println("here2")
-        playerBoxLabel2.visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = "Click to add player name",
-                alignment = Alignment.CENTER_LEFT,
-                offsetX = 20
-            )
-        )
-
-
-    }
 
 
     init {
@@ -196,4 +176,5 @@ class LobbyScene : MenuScene(1920,1080) {
         )
         opacity = 0.0
     }
+
 }
