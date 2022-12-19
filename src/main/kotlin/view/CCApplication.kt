@@ -14,7 +14,10 @@ import java.awt.Color
 
 /**
  * Main BoardGameApplication. contains all scenes and manages scene traversing and audio playback & toggle
- */
+ * [nameEmptyCheck] writes the Host name in the Lobby Scene when not empty
+ * [toggleSound]  sound on/off
+ * [toggleMusic]
+ * */
 
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
@@ -87,26 +90,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         } else
             mainMenuScene.nameCheck()
     }
-
-
-    private fun addNextPlayers() {
-       //  val playerListname = listOf<String>(
-           // lobbyScene.playerBoxLabel1.text, lobbyScene.playerBoxLabel2.text, lobbyScene.playerBoxLabel3.text,
-           // lobbyScene.playerBoxLabel4.text, lobbyScene.playerBoxLabel5.text, lobbyScene.playerBoxLabel6.text
-       // )
-        if(lobbyScene.playerBoxLabel1.text!=null) {
-            println("player1")
-        }
-        else if (lobbyScene.playerBoxLabel2.text == null) {
-            println("hier")
-            lobbyScene.playerBoxLabel2.text = "Click to add players"
-        } else
-            println("Not Empty")
-
-    }
-
-
-
 
 
     private fun toggleMusic() {

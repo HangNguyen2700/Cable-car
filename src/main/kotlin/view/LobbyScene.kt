@@ -12,6 +12,19 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * shows LobbyScene when clicked on Hot Seat Mode (Main Menu Scene)
+ * [backToMainMenuSceneButton]: button to return to the main Menu
+ * [playerLabel]: Header for the Player List
+ * [playerBoxLabel1],[playerBoxLabel2],[playerBoxLabel3],[playerBoxLabel4],
+ * [playerBoxLabel5],[playerBoxLabel6]: has Players Name
+ * [shuffleTurnOrderButton]: Shuffle Player Header
+ * [shufflePlayerSequenceCheckbox]:Shuffle Players Turn Check Box
+ * [allowTileRotationButton]: Tile Rotation Check Box
+ * [quitButton]: exits the Game
+ * [musicToggleButton],[soundToggleButton]: toggles music/sound on off
+ */
+
 class LobbyScene : MenuScene(1920,1080) {
 
     var playersJoined = 1
