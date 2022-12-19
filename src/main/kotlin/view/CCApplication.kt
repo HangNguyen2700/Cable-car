@@ -1,6 +1,7 @@
 package view
 
 import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -68,6 +69,15 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun nameEmptyCheck() {
         if (mainMenuScene.nameField.text != ""){
             hideMenuScene(3000)
+            lobbyScene.playerBoxLabel1.visual = CompoundVisual(
+                ColorVisual(63,255,63).apply { transparency = 0.3 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = mainMenuScene.nameField.text,
+                    alignment = Alignment.CENTER_LEFT,
+                    offsetX = 20
+                )
+            )
             showMenuScene(lobbyScene,3000)
         }
         else
@@ -82,7 +92,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     CompoundVisual(
                         ColorVisual.WHITE.apply { transparency = 0.3 },
                         TextVisual(
-                            font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
+                            font = Font(size = 60, color = Color.GREEN, family = "Calibri"),
                             text = "Music"
                         )
                     )
@@ -108,7 +118,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     CompoundVisual(
                         ColorVisual.WHITE.apply { transparency = 0.3 },
                         TextVisual(
-                            font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
+                            font = Font(size = 60, color = Color.GREEN, family = "Calibri"),
                             text = "Sound"
                         )
                     )
