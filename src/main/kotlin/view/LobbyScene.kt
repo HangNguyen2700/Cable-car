@@ -194,7 +194,8 @@ class LobbyScene : MenuScene(1920, 1080) {
         //players[playersJoined].color = color
         for (i in 0..5) { if (!colorsPicked[i]) { removeComponents(colorPicker[i]) } }
         colorsPicked[playersJoined] = true
+        playersJoined++
         addComponents(addPlayerButton)
-        addPlayerButton.apply { posX = 150.0; posY = 350.0}
+        addPlayerButton.apply { posX = 150.0; posY = 250.0 + 100.0 * playersJoined}
     }
 }
