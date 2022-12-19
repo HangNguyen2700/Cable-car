@@ -28,7 +28,7 @@ class TitleScene : BoardGameScene(1920, 1080) {
     private val gameLabel = Label(width = 1920, height = 1080, posX = 0, posY = -100,
         font = Font(size = 400, color = Color.PINK, family = "Calibri"),
         text = "Carbel Car",
-    )
+    ).apply { opacity = 0.0 }
 
     private val pressAnyKeyLabel = Label(width = 600, height = 100, posX = 660, posY = 800,
         visual = CompoundVisual(
@@ -40,14 +40,19 @@ class TitleScene : BoardGameScene(1920, 1080) {
         )
     ).apply { opacity = 0.0 }
 
-
     val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }
+
+    init {
+        background = ColorVisual(108, 168, 59)
+        addComponents(trigger)
+    }
 
     private fun fadeIn() {
         playAnimation(
             FadeAnimation(trigger,1.0,0.0,1000).apply { onFinished = {
                 removeComponents(trigger)
                 addComponents(gameLabel, pressAnyKeyLabel, toMenuButton)
+                playAnimation(FadeAnimation(gameLabel,0.0,1.0,1000))
                 pressAnyKeyLabelFadeAnimation()
             }}
         )
@@ -63,12 +68,6 @@ class TitleScene : BoardGameScene(1920, 1080) {
     }
 
     private fun setMasterOpacity(input : Double) {
-
-    }
-
-    init {
-        background = ColorVisual(108, 168, 59)
-        addComponents(trigger)
 
     }
 

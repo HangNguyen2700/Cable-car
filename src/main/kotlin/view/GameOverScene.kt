@@ -30,7 +30,7 @@ class GameOverScene : BoardGameScene(1920,1080) {
         )
     )
 
-    private val quitButton = Button(width = 223, height = 70, posX = 181, posY = 823,
+    val quitButton = Button(width = 223, height = 70, posX = 181, posY = 823,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
