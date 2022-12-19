@@ -5,8 +5,13 @@ import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
+
+/**
+ * Main BoardGameApplication. contains all scenes and manages scene traversing and audio playback & toggle
+ */
 
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
@@ -29,9 +34,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     private val mainMenuScene = MainMenuScene().apply {
-        backToTitleSceneButton.onMouseClicked = {
-            hideMenuScene(3000)
-        }
+        backToTitleSceneButton.onMouseClicked = { hideMenuScene(3000) }
         quitButton.onMouseClicked = { exit() }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
@@ -47,13 +50,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     private val titleScene = TitleScene().apply {
-        toMenuButton.onKeyPressed = {
-            showMenuScene(mainMenuScene,3000)
-
-        }
-        toMenuButton.onMouseClicked = {
-            showMenuScene(mainMenuScene,3000)
-        }
+        toMenuButton.onKeyPressed = { showMenuScene(mainMenuScene,3000) }
+        toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene,3000) }
     }
 
     private var musicEnabled = true
@@ -62,10 +60,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton,lobbyScene.musicToggleButton)
     private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton,lobbyScene.soundToggleButton)
 
-
     init {
         this.showGameScene(titleScene)
-        //icon = ImageVisual("")
+        icon = ImageVisual("icon.png")
     }
 
     private fun nameEmptyCheck() {
