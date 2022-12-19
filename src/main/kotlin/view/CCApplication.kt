@@ -1,6 +1,8 @@
 package view
 
+import entity.Player
 import tools.aqua.bgw.components.uicomponents.Button
+import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.util.Font
@@ -28,11 +30,14 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         quitButton.onMouseClicked = { exit() }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+
+
         backToMainMenuSceneButton.onMouseClicked = {
             hideMenuScene(3000)
-            showMenuScene(mainMenuScene,3000)
+            showMenuScene(mainMenuScene, 3000)
         }
     }
+
 
     private val mainMenuScene = MainMenuScene().apply {
         backToTitleSceneButton.onMouseClicked = { hideMenuScene(3000) }
@@ -51,15 +56,15 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     private val titleScene = TitleScene().apply {
-        toMenuButton.onKeyPressed = { showMenuScene(mainMenuScene,3000) }
-        toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene,3000) }
+        toMenuButton.onKeyPressed = { showMenuScene(mainMenuScene, 3000) }
+        toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene, 3000) }
     }
 
     private var musicEnabled = true
     private var soundEnabled = true
 
-    private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton,lobbyScene.musicToggleButton)
-    private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton,lobbyScene.soundToggleButton)
+    private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton)
+    private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton)
 
     init {
         this.showGameScene(titleScene)
@@ -67,10 +72,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     private fun nameEmptyCheck() {
-        if (mainMenuScene.nameField.text != ""){
+        if (mainMenuScene.nameField.text != "") {
             hideMenuScene(3000)
             lobbyScene.playerBoxLabel1.visual = CompoundVisual(
-                ColorVisual(63,255,63).apply { transparency = 0.3 },
+                ColorVisual(63, 255, 63).apply { transparency = 0.3 },
                 TextVisual(
                     font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                     text = mainMenuScene.nameField.text,
@@ -78,11 +83,31 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     offsetX = 20
                 )
             )
-            showMenuScene(lobbyScene,3000)
-        }
-        else
+            showMenuScene(lobbyScene, 3000)
+        } else
             mainMenuScene.nameCheck()
     }
+
+
+    private fun addNextPlayers() {
+       //  val playerListname = listOf<String>(
+           // lobbyScene.playerBoxLabel1.text, lobbyScene.playerBoxLabel2.text, lobbyScene.playerBoxLabel3.text,
+           // lobbyScene.playerBoxLabel4.text, lobbyScene.playerBoxLabel5.text, lobbyScene.playerBoxLabel6.text
+       // )
+        if(lobbyScene.playerBoxLabel1.text!=null) {
+            println("player1")
+        }
+        else if (lobbyScene.playerBoxLabel2.text == null) {
+            println("hier")
+            lobbyScene.playerBoxLabel2.text = "Click to add players"
+        } else
+            println("Not Empty")
+
+    }
+
+
+
+
 
     private fun toggleMusic() {
         musicEnabled = !musicEnabled
