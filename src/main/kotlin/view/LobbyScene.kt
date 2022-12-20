@@ -276,9 +276,11 @@ class LobbyScene : MenuScene(1920, 1080) {
             posY = 250.0 + 100.0 * playersJoined
             visual = button.visual
         }
-        playersJoined++
-        addComponents(addPlayerButton)
-        addPlayerButton.apply { posX = 120.0; posY = 250.0 + 100.0 * playersJoined}
+        if(playersJoined<5) {
+            playersJoined++
+            addComponents(addPlayerButton)
+            addPlayerButton.apply { posX = 120.0; posY = 250.0 + 100.0 * playersJoined }
+        }
     }
 
     fun addPlayer() {
