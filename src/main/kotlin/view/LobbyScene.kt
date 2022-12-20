@@ -3,6 +3,7 @@ package view
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.CheckBox
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.components.uicomponents.TextField
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
@@ -52,11 +53,9 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
                 text = "Players"
-            )
-        )
-    )
+            )))
 
-    val playerBoxLabel = listOf(
+    val playerBoxLabel = mutableListOf(
         Label(width = 800, height = 80, posX = 100, posY = 250, visual = CompoundVisual(
                 ColorVisual(63, 255, 63).apply { transparency = 0.3 },
                 TextVisual(
@@ -95,7 +94,91 @@ class LobbyScene : MenuScene(1920, 1080) {
                 )))
     )
 
-    val addPlayerButton = Button(width = 80, height = 80, text = "+")
+    val playerColorLabel = mutableListOf(
+        Label(width = 80, height = 80),
+        Label(width = 80, height = 80),
+        Label(width = 80, height = 80),
+        Label(width = 80, height = 80),
+        Label(width = 80, height = 80),
+        Label(width = 80, height = 80),
+    )
+
+    val addPlayerButton = Button(width = 80, height = 80, text = "+").apply { onMouseClicked = { addPlayer() }}
+
+    var realAISelection : Int? = null
+
+    val aiPlayerButton = Button(width = 270, height = 100, posX = 1200, posY = 500,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(
+                font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "AI"
+            )))
+
+    val aiPlayerButtonTrigger = Label(width = 270 , height = 100, posX = 1200, posY = 500,
+        visual = ColorVisual(63,255,63)
+    ).apply {
+        opacity = 0.0
+        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
+        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
+        onMouseClicked = { realAISelection = 0; realAISelected() }
+    }
+
+    val hotseatPlayerButton = Button(width=270, height=100, posX=1550, posY=500,
+            visual= CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.3 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                    text = "real"
+            ))).apply { onMouseClicked = {
+
+    }}
+
+    val hotseatPlayerButtonTrigger = Label(width = 270 , height = 100, posX = 1550, posY = 500,
+        visual = ColorVisual(63,255,63)
+    ).apply {
+        opacity = 0.0
+        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
+        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
+        onMouseClicked = { realAISelection = 1; realAISelected() }
+    }
+
+    val nameFields = mutableListOf(
+        TextField(width = 400, height = 80, posX = 100, posY = 350, prompt = "Enter player Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+        TextField(width = 400, height = 80, posX = 100, posY = 450, prompt = "Enter player Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+        TextField(width = 400, height = 80, posX = 100, posY = 550, prompt = "Enter player Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+        TextField(width = 400, height = 80, posX = 100, posY = 650, prompt = "Enter player Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+        TextField(width = 400, height = 80, posX = 100, posY = 750, prompt = "Enter player Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+    )
+
+    val smartAI = Button(
+        width = 270, height = 100, posX = 1200, posY = 630,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(
+                font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "big smart"
+            ))).apply { isDisabled = true; opacity = 0.0
+                onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked
+        } }
+
+    val smartAICheckbox = CheckBox(1500, 663).apply { isDisabled = true; opacity = 0.0 }
+
+    val confirmButton = Button(
+        width = 400, height = 100, posX = 1200, posY = 793,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(
+                font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Confirm"
+            )
+        )
+    ).apply { onMouseClicked = { playerAddFinished() } }
 
     val backToMainMenuSceneButton = Button(
         width = 600, height = 100, posX = 660, posY = 40,
@@ -104,9 +187,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Back to Main Menu"
-            )
-        )
-    )
+            )))
 
     val shuffleTurnOrderButton = Button(
         width = 600, height = 100, posX = 1200, posY = 200,
@@ -115,8 +196,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Shuffle Turn Order"
-            )
-        )
+            ))
     ).apply { onMouseClicked = { shufflePlayerSequenceCheckbox.isChecked = !shufflePlayerSequenceCheckbox.isChecked } }
 
     val shufflePlayerSequenceCheckbox = CheckBox(1830, 233)
@@ -128,8 +208,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Allow Tile Rotation"
-            )
-        )
+            ))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
     val allowTileRotationCheckbox = CheckBox(1830, 363)
@@ -141,9 +220,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Quit"
-            )
-        )
-    )
+            )))
 
     val musicToggleButton = Button(
         width = 300, height = 100, posX = 450, posY = 900,
@@ -152,9 +229,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Music"
-            )
-        )
-    )
+            )))
 
     val soundToggleButton = Button(
         width = 300, height = 100, posX = 800, posY = 900,
@@ -163,9 +238,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Sound"
-            )
-        )
-    )
+            )))
 
     init {
         addComponents(
@@ -194,8 +267,66 @@ class LobbyScene : MenuScene(1920, 1080) {
         //players[playersJoined].color = color
         for (i in 0..5) { if (!colorsPicked[i]) { removeComponents(colorPicker[i]) } }
         colorsPicked[playersJoined] = true
+        addComponents(playerColorLabel[playersJoined])
+        playerColorLabel[playersJoined].apply {
+            posX = 700.0
+            posY = 250.0 + 100.0 * playersJoined
+            visual = color
+        }
         playersJoined++
         addComponents(addPlayerButton)
-        addPlayerButton.apply { posX = 150.0; posY = 250.0 + 100.0 * playersJoined}
+        addPlayerButton.apply { posX = 120.0; posY = 250.0 + 100.0 * playersJoined}
+    }
+
+    fun addPlayer() {
+        addComponents(
+            aiPlayerButton, aiPlayerButtonTrigger,
+            hotseatPlayerButton, hotseatPlayerButtonTrigger,
+            smartAI,smartAICheckbox,
+            nameFields[playersJoined-1], confirmButton
+        )
+        removeComponents(addPlayerButton)
+    }
+
+    fun realAISelected() {
+        playerConfigured()
+        if (realAISelection == 0) {
+            hotseatPlayerButtonTrigger.opacity = 0.0
+            aiPlayerButtonTrigger.opacity = 0.5
+            if (smartAI.isDisabled) {
+                smartAI.isDisabled = false; smartAI.opacity = 1.0
+                smartAICheckbox.isDisabled = false; smartAICheckbox.opacity = 1.0
+            }
+        }
+        else {
+            hotseatPlayerButtonTrigger.opacity = 0.5
+            aiPlayerButtonTrigger.opacity = 0.0
+            if (!smartAI.isDisabled) {
+                smartAI.isDisabled = true; smartAI.opacity = 0.0
+                smartAICheckbox.isDisabled = true; smartAICheckbox.opacity = 0.0
+            }
+        }
+    }
+
+    fun playerConfigured() {
+        if (confirmButton.isDisabled && nameFields[playersJoined-1].text != "" && realAISelection != null){
+            confirmButton.isDisabled = false; confirmButton.opacity = 1.0
+        }
+    }
+
+    fun playerAddFinished() {
+        removeComponents(
+            aiPlayerButton, aiPlayerButtonTrigger,
+            hotseatPlayerButton, hotseatPlayerButtonTrigger,
+            smartAI,smartAICheckbox,
+            nameFields[playersJoined-1], confirmButton
+        )
+        realAISelection = null
+        smartAICheckbox.isChecked = false
+        showColorPicker(playersJoined)
+    }
+
+    fun namePrompt() {
+
     }
 }
