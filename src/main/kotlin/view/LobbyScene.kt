@@ -33,17 +33,17 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     val colorPicker = listOf(
         Button(width = 40, height = 40, visual = entity.Color.YELLOW.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.YELLOW.toRGB())} },
+            colorPicked(this)} },
         Button(width = 40, height = 40, visual = entity.Color.BLUE.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.BLUE.toRGB())} },
+            colorPicked(this)} },
         Button(width = 40, height = 40, visual = entity.Color.ORANGE.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.ORANGE.toRGB())} },
+            colorPicked(this)} },
         Button(width = 40, height = 40, visual = entity.Color.GREEN.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.GREEN.toRGB())} },
+            colorPicked(this)} },
         Button(width = 40, height = 40, visual = entity.Color.PURPLE.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.PURPLE.toRGB())} },
+            colorPicked(this)} },
         Button(width = 40, height = 40, visual = entity.Color.BLACK.toRGB()).apply { onMouseClicked = {
-            colorPicked(entity.Color.BLACK.toRGB())} },
+            colorPicked(this)} },
     )
 
     val playerLabel = Label(
@@ -144,15 +144,17 @@ class LobbyScene : MenuScene(1920, 1080) {
     }
 
     val nameFields = mutableListOf(
-        TextField(width = 400, height = 80, posX = 100, posY = 350, prompt = "Enter player Name",
+        TextField(width = 280, height = 80, posX = 100, posY = 350, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
-        TextField(width = 400, height = 80, posX = 100, posY = 450, prompt = "Enter player Name",
+        TextField(width = 280, height = 80, posX = 100, posY = 450, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
-        TextField(width = 400, height = 80, posX = 100, posY = 550, prompt = "Enter player Name",
+        TextField(width = 280, height = 80, posX = 100, posY = 550, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
-        TextField(width = 400, height = 80, posX = 100, posY = 650, prompt = "Enter player Name",
+        TextField(width = 280, height = 80, posX = 100, posY = 650, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
-        TextField(width = 400, height = 80, posX = 100, posY = 750, prompt = "Enter player Name",
+        TextField(width = 280, height = 80, posX = 100, posY = 750, prompt = "Enter Name",
+            font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
+        TextField(width = 280, height = 80, posX = 100, posY = 850, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),).apply { onKeyTyped = { playerConfigured() } },
     )
 
@@ -263,15 +265,16 @@ class LobbyScene : MenuScene(1920, 1080) {
         colorPicker[5].apply { posX = 780.0; posY = 290.0 + pos * 100.0 }
     }
 
-    fun colorPicked( color: ColorVisual ) {
+    fun colorPicked( button: Button ) {
         //players[playersJoined].color = color
         for (i in 0..5) { if (!colorsPicked[i]) { removeComponents(colorPicker[i]) } }
-        colorsPicked[playersJoined] = true
+        colorPicker[colorPicker.indexOf(button)].isDisabled = true
+        colorPicker[colorPicker.indexOf(button)].opacity = 0.0
         addComponents(playerColorLabel[playersJoined])
         playerColorLabel[playersJoined].apply {
             posX = 700.0
             posY = 250.0 + 100.0 * playersJoined
-            visual = color
+            visual = button.visual
         }
         playersJoined++
         addComponents(addPlayerButton)
@@ -315,14 +318,30 @@ class LobbyScene : MenuScene(1920, 1080) {
     }
 
     fun playerAddFinished() {
+        playerBoxLabel[playersJoined].visual = CompoundVisual(
+            ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+            TextVisual(
+                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                text = (nameFields[playersJoined-1].text +
+                        if (realAISelection == 0)
+                            if (smartAICheckbox.isChecked) " (AI)" else " (dumb)"
+                        else ""),
+                alignment = Alignment.CENTER_LEFT, offsetX = 20
+            ))
+        aiPlayerButtonTrigger.opacity = 0.0
+        hotseatPlayerButtonTrigger.opacity = 0.0
+        smartAICheckbox.opacity = 0.0
+        smartAI.opacity = 0.0
+        smartAI.isDisabled = true
+        smartAICheckbox.isDisabled = true
+        realAISelection = null
+        smartAICheckbox.isChecked = false
         removeComponents(
             aiPlayerButton, aiPlayerButtonTrigger,
             hotseatPlayerButton, hotseatPlayerButtonTrigger,
             smartAI,smartAICheckbox,
             nameFields[playersJoined-1], confirmButton
         )
-        realAISelection = null
-        smartAICheckbox.isChecked = false
         showColorPicker(playersJoined)
     }
 
