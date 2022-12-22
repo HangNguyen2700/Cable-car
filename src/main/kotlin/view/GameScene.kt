@@ -28,44 +28,44 @@ class GameScene : BoardGameScene(1920,1080) {
         onMouseClicked = {}
     }
 
-    private val playerCard = LabeledStackView(posX = 1400, posY = 975, label = "player's card").apply {
+    private val playerTile = LabeledStackView(posX = 1400, posY = 975, label = "player's tile").apply {
         onDragGestureEntered = {}
         onDragGestureExited = {}
     }
 
-    private val otherPlayerCard1 = LabeledStackView(posX = 150, posY = 180, label = "other player's card 1")
-    private val otherPlayerCard2 = LabeledStackView(posX = 150, posY = 190, label = "other player's card 2")
-    private val otherPlayerCard3 = LabeledStackView(posX = 150, posY = 200, label = "other player's card 3")
+    private val otherPlayerTile1 = LabeledStackView(posX = 150, posY = 180, label = "other player's tile 1")
+    private val otherPlayerTile2 = LabeledStackView(posX = 150, posY = 190, label = "other player's tile 2")
+    private val otherPlayerTile3 = LabeledStackView(posX = 150, posY = 200, label = "other player's tile 3")
 
-    private val otherPlayerCard4 = LabeledStackView(posX = 50, posY = 400, label = "other player's card 4")
-    private val otherPlayerCard5 = LabeledStackView(posX = 50, posY = 410, label = "other player's card 5")
-    private val otherPlayerCard6 = LabeledStackView(posX = 50, posY = 420, label = "other player's card 6")
+    private val otherPlayerTile4 = LabeledStackView(posX = 50, posY = 400, label = "other player's tile 4")
+    private val otherPlayerTile5 = LabeledStackView(posX = 50, posY = 410, label = "other player's tile 5")
+    private val otherPlayerTile6 = LabeledStackView(posX = 50, posY = 420, label = "other player's tile 6")
 
-    private val otherPlayerCard7 = LabeledStackView(posX = 150, posY = 620, label = "other player's card 7")
-    private val otherPlayerCard8 = LabeledStackView(posX = 150, posY = 630, label = "other player's card 8")
-    private val otherPlayerCard9 = LabeledStackView(posX = 150, posY = 640, label = "other player's card 9")
+    private val otherPlayerTile7 = LabeledStackView(posX = 150, posY = 620, label = "other player's tile 7")
+    private val otherPlayerTile8 = LabeledStackView(posX = 150, posY = 630, label = "other player's tile 8")
+    private val otherPlayerTile9 = LabeledStackView(posX = 150, posY = 640, label = "other player's tile 9")
 
-    private val otherPlayerCard10 = LabeledStackView(posX = 1650, posY = 180, label = "other player's card 10")
-    private val otherPlayerCard11 = LabeledStackView(posX = 1650, posY = 190, label = "other player's card 11")
-    private val otherPlayerCard12 = LabeledStackView(posX = 1650, posY = 200, label = "other player's card 12")
+    private val otherPlayerTile10 = LabeledStackView(posX = 1650, posY = 180, label = "other player's tile 10")
+    private val otherPlayerTile11 = LabeledStackView(posX = 1650, posY = 190, label = "other player's tile 11")
+    private val otherPlayerTile12 = LabeledStackView(posX = 1650, posY = 200, label = "other player's tile 12")
 
-    private val otherPlayerCard13 = LabeledStackView(posX = 1750, posY = 400, label = "other player's card 13")
-    private val otherPlayerCard14 = LabeledStackView(posX = 1750, posY = 410, label = "other player's card 14")
-    private val otherPlayerCard15 = LabeledStackView(posX = 1750, posY = 420, label = "other player's card 15")
+    private val otherPlayerTile13 = LabeledStackView(posX = 1750, posY = 400, label = "other player's tile 13")
+    private val otherPlayerTile14 = LabeledStackView(posX = 1750, posY = 410, label = "other player's tile 14")
+    private val otherPlayerTile15 = LabeledStackView(posX = 1750, posY = 420, label = "other player's tile 15")
 
-    private val otherPlayerCard16 = LabeledStackView(posX = 1650, posY = 620, label = "other player's card 16")
-    private val otherPlayerCard17 = LabeledStackView(posX = 1650, posY = 630, label = "other player's card 17")
-    private val otherPlayerCard18 = LabeledStackView(posX = 1650, posY = 640, label = "other player's card 18")
+    private val otherPlayerTile16 = LabeledStackView(posX = 1650, posY = 620, label = "other player's tile 16")
+    private val otherPlayerTile17 = LabeledStackView(posX = 1650, posY = 630, label = "other player's tile 17")
+    private val otherPlayerTile18 = LabeledStackView(posX = 1650, posY = 640, label = "other player's tile 18")
 
     init {
         background = ColorVisual(155,94,95,255)
-        addComponents(undoButton, redoButton, playerCard,
-            otherPlayerCard1, otherPlayerCard2, otherPlayerCard3,
-            otherPlayerCard4, otherPlayerCard5, otherPlayerCard6,
-            otherPlayerCard7, otherPlayerCard8, otherPlayerCard9,
-            otherPlayerCard10, otherPlayerCard11, otherPlayerCard12,
-            otherPlayerCard13, otherPlayerCard14, otherPlayerCard15,
-            otherPlayerCard16, otherPlayerCard17, otherPlayerCard18,
+        addComponents(undoButton, redoButton, playerTile,
+            otherPlayerTile1, otherPlayerTile2, otherPlayerTile3,
+            otherPlayerTile4, otherPlayerTile5, otherPlayerTile6,
+            otherPlayerTile7, otherPlayerTile8, otherPlayerTile9,
+            otherPlayerTile10, otherPlayerTile11, otherPlayerTile12,
+            otherPlayerTile13, otherPlayerTile14, otherPlayerTile15,
+            otherPlayerTile16, otherPlayerTile17, otherPlayerTile18,
             )
     }
 }
