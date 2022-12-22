@@ -14,7 +14,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val titleScene = TitleScene()
 
     init {
-        this.showGameScene(titleScene)
+//        this.showGameScene(titleScene)
         this.showMenuScene(mainMenuScene)
         //this.showGameScene(creditsScene)
     }

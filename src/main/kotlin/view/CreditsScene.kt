@@ -43,7 +43,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
         text = "Quit",
         font = buttonTextFont,
     ).apply {
-        visual = ColorVisual(Color.red)
+        visual = ColorVisual(194,64,64,255)
     }
 
     val musicButton: Button = Button(
