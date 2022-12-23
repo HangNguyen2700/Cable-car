@@ -120,7 +120,6 @@ class MainMenuScene : MenuScene(1920,1080) {
         addComponents(
             nameField, nameFieldLabel,
             menuLabel,
-            nameField,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton
