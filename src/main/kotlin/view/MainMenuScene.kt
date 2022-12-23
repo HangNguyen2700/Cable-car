@@ -11,99 +11,30 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * main menu hub displayed after title scene
+ *
+ * [backToTitleSceneButton]: Button for people who like the title screen
+ * [nameFieldLabel], [nameField]: player name input prompt
+ * [nameErrorLabel], [closeNameErrorButton]: displays error message
+ * [newGameLabel], [joinButton], [hostButton], [hotseatButton]:
+ * new Game Buttons with check for a name being input via CCApplication
+ * [creditsButton]: transition to Credits Scene
+ * [quitButton]: exits the Game
+ * [musicToggleButton], [soundToggleButton]: toggles music/sound on off
+ */
+
 class MainMenuScene : MenuScene(1920,1080) {
+    
+    private val buttonTextFont = Font(50, color = Color.WHITE, family = "Calibri")
 
-    private val nameField = TextField(width = 400, height = 80, posX = 200, posY = 400,
-        prompt = "Enter your Name",
-        font = Font(size = 40, family = "Calibri"),
-    )
+    val buttonColor = Color(186,136,133,255)
 
-    private val nameError = Label(width = 1200, height = 600, posX = 360, posY = 150,
+    private val menuLabel = Label(width = 600, height = 100, posX = 650, posY = 60,
         visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.8 },
             TextVisual(
-                font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
-                text = "Enter Name Before Starting Game",
-                offsetY = -200
-            )
-        )
-    )
-
-    private val closeNameErrorButton = Button(width = 300, height = 100, posX = 810, posY = 450,
-        font = Font(size = 40, family = "Calibri"),
-        visual = ColorVisual(255,40,40),
-        text = "close",
-    ).apply {
-        onMouseClicked = {
-            removeComponents(nameError,this)
-        }
-    }
-
-    private val newGameLabel = Label(width = 600, height = 100, posX = 1100, posY = 150,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.1 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
-                text = "Start New Game"
-            )
-        )
-    )
-
-    private val joinButton = Button(width = 400, height = 100, posX = 1200, posY = 300,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                alignment = Alignment.CENTER,
-                text = "Join Game"
-            )
-        )
-    ).apply {
-        onMouseClicked = {
-            if (nameField.text == "") {
-                addComponents(nameError, closeNameErrorButton)
-            }
-        }
-    }
-
-    private val hostButton = Button(width = 400, height = 100, posX = 1200, posY = 450,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Host Game"
-            )
-        )
-    ).apply {
-        onMouseClicked = {
-            if (nameField.text == "") {
-                addComponents(nameError, closeNameErrorButton)
-            }
-        }
-    }
-
-    private val hotseatButton = Button(width = 400, height = 100, posX = 1200, posY = 600,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Hotseat Mode"
-            )
-        )
-    ).apply {
-        onMouseClicked = {
-            if (nameField.text == "") {
-                addComponents(nameError, closeNameErrorButton)
-            }
-        }
-    }
-
-    private val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Credits"
+                font = Font(size = 60, color = Color.WHITE, family = "Calibri"),
+                text = "MENU"
             )
         )
     )
@@ -111,50 +42,113 @@ class MainMenuScene : MenuScene(1920,1080) {
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 40,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "back to Title"
-            )
-        )
-    )
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "back to Title")))
 
-    private val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
+    private val nameFieldLabel = Label(width = 600, height = 100, posX = 100, posY = 250,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.1 },
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
+                text = "Player Name")))
+
+    val nameField = TextField(width = 400, height = 80, posX = 200, posY = 400,
+        prompt = "Enter your Name",
+        font = Font(size = 40, family = "Calibri"))
+
+    private val nameErrorLabel = Label(width = 1200, height = 600, posX = 360, posY = 150,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.8 },
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), offsetY = -200,
+                text = "Enter Name Before Starting Game",))
+    ).apply { onMouseClicked = { nameErrorClose() } }
+
+    private val closeNameErrorButton = Button(width = 300, height = 100, posX = 810, posY = 450,
+        font = Font(size = 40, family = "Calibri"),
+        visual = ColorVisual(255,40,40),
+        text = "close",
+    ).apply { onMouseClicked = { nameErrorClose() } }
+
+    private val newGameLabel = Label(width = 600, height = 100, posX = 1200, posY = 250,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.1 },
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
+                text = "Start New Game")))
+
+    val joinButton = Button(width = 400, height = 100, posX = 1300, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Quit"
-            )
-        )
-    )
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Join Game")))
 
-    private val musicToggleButton = Button(width = 300, height = 100, posX = 450, posY = 900,
+    val hostButton = Button(width = 400, height = 100, posX = 1300, posY = 550,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Music"
-            )
-        )
-    )
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Host Game")))
 
-    private val soundToggleButton = Button(width = 300, height = 100, posX = 800, posY = 900,
+    val hotseatButton = Button(width = 400, height = 100, posX = 1300, posY = 700,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Sound"
-            )
-        )
-    )
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Hotseat Mode")))
+
+    private val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Credits")))
+
+    val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Quit")))
+
+    val musicToggleButton = Button(width = 300, height = 100, posX = 450, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Music")))
+
+    val soundToggleButton = Button(width = 300, height = 100, posX = 800, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Sound")))
 
     init{
         addComponents(
-            nameField,
+            nameField, nameFieldLabel,
+            menuLabel,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
-            quitButton, musicToggleButton, soundToggleButton)
+            quitButton, soundToggleButton, musicToggleButton
+        )
         opacity = 0.0
+    }
+
+    /**
+     * displays name error and disables new game buttons
+     */
+
+    fun nameErrorDisplay() {
+        addComponents(nameErrorLabel, closeNameErrorButton)
+        nameField.isDisabled = true
+        joinButton.isDisabled = true
+        hostButton.isDisabled = true
+        hotseatButton.isDisabled = true
+    }
+
+    /**
+     * closes error message and enables new game buttons again
+     */
+
+    private fun nameErrorClose() {
+        removeComponents(nameErrorLabel,closeNameErrorButton)
+        nameField.isDisabled = false
+        joinButton.isDisabled = false
+        hostButton.isDisabled = false
+        hotseatButton.isDisabled = false
     }
 
 }
