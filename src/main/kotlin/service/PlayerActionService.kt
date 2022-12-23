@@ -123,6 +123,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             }
         }
 
+
     private fun checkRight(placedTile: Tile, lastTile: Tile):Boolean
     {
         return (placedTile.posY == lastTile.posY+1)&&(placedTile.posX == lastTile.posX)
