@@ -176,12 +176,12 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                 for (i in 1 until 33) {
                     if (i % 2 == 1) {
                         players[0].color = Color.YELLOW
-                        players[0].cars = mutableListOf(i)
+                        players[0].cars.add(i)
 
                     }
                     else {
                         players[1].color = Color.BLUE
-                        players[1].cars = mutableListOf(i)
+                        players[1].cars.add(i)
                     }
                 }
 
@@ -193,7 +193,6 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                 for ((index, player) in players.withIndex()) {
                     player.color = colors[index]
                 }
-
             }
             4 ->  {
                 players[0].cars = mutableListOf(4, 7, 11, 16, 20, 23, 27, 32)
