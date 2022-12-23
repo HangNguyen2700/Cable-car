@@ -92,7 +92,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Hotseat Mode")))
 
-    private val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
+    val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
