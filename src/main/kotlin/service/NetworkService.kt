@@ -66,9 +66,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         // player list for local game
         // TODO remove when local startNewGame() no longer takes List<Player> instead of List<String>
         val localPlayerList = mutableListOf<Player>()
-        localPlayerList.add(Player(hostPlayerName, mutableListOf()))
+        localPlayerList.add(Player(hostPlayerName))
         for (player in joinedPlayers) {
-            localPlayerList.add(Player(player, mutableListOf()))
+            localPlayerList.add(Player(player))
         }
 
         // start game locally
@@ -88,7 +88,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         // TODO rotationAllowed boolean fehlt in enitity
         val playerList = mutableListOf<Player>()
         for (player in message.players) {
-            playerList.add(Player(player.name, mutableListOf()))
+            playerList.add(Player(player.name))
         }
 
         rootService.gameService.startNewGame(playerList)
