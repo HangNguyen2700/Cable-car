@@ -1,6 +1,6 @@
 package entity
 
-data class GameField(val stations : MutableList<Station>, val tiles : MutableList<Tile>, val tileStack : TileStack) {
+data class GameField(var stations : MutableList<Station>, var tiles : MutableList<Tile>, var tileStack : TileStack) {
 
 
 }

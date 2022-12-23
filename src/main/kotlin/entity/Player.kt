@@ -1,12 +1,11 @@
 package entity
 
-data class Player(val name : String, val cars : MutableList<Int>) {
+data class Player(var name : String, var cars : MutableList<Int>) {
 
-    init {
-        var color : Color
-        var paths = mutableListOf<Path>()
-        var handTile : Tile
-        var score = 0
-    }
+
+    var color : Color? = null
+    var handTile : Tile? = null
+    var score = 0
+    var paths = mutableListOf<Path>()
 
 }
