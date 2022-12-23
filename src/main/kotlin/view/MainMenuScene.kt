@@ -3,6 +3,7 @@ package view
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.TextField
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -24,6 +25,19 @@ import java.awt.Color
  */
 
 class MainMenuScene : MenuScene(1920,1080) {
+    
+    private val buttonTextFont = Font(50, color = Color.WHITE, family = "Calibri")
+
+    val buttonColor = Color(186,136,133,255)
+
+    private val menuLabel = Label(width = 600, height = 100, posX = 650, posY = 60,
+        visual = CompoundVisual(
+            TextVisual(
+                font = Font(size = 60, color = Color.WHITE, family = "Calibri"),
+                text = "MENU"
+            )
+        )
+    )
 
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 40,
         visual = CompoundVisual(
@@ -105,6 +119,8 @@ class MainMenuScene : MenuScene(1920,1080) {
     init{
         addComponents(
             nameField, nameFieldLabel,
+            menuLabel,
+            nameField,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton
