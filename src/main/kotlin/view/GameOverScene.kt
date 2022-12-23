@@ -22,7 +22,6 @@ import java.awt.Color
  *
  */
 
-
 class GameOverScene : BoardGameScene(1920,1080) {
 
     private val headLineLabel=Label(width = 300, height = 50, posX = 50, posY = 180,
@@ -60,24 +59,21 @@ class GameOverScene : BoardGameScene(1920,1080) {
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "Restart Game"
-            )))
+                text = "Restart Game")))
 
     private val mainMenuButton = Button(width = 223, height = 70, posX = 181, posY = 823,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "Main Menu"
-            )))
+                text = "Main Menu")))
 
     val quitButton = Button(width = 223, height = 70, posX = 181, posY = 823,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "Quit"
-            )))
+                text = "Quit")))
 
     private val crown=Button(
         width=100, height = 50, posX = 894, posY = 346,
