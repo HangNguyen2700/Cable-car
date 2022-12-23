@@ -49,6 +49,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         hostButton.onMouseClicked = { nameEmptyCheck() }
         hotseatButton.onMouseClicked = { nameEmptyCheck() }
         creditsButton.onMouseClicked = { hideMenuScene(3000); showGameScene(creditsScene)}
+        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene)}
     }
 
     private val notificationGameScene = NotificationGameScene()

@@ -34,12 +34,15 @@ class MainMenuScene : MenuScene(1920,1080) {
         visual = CompoundVisual(
             TextVisual(
                 font = Font(size = 60, color = Color.WHITE, family = "Calibri"),
-                text = "MENU"
-            )
-        )
-    )
+                text = "MENU")))
 
-    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 40,
+    val debugGameScene = Button(width = 400, height = 100, posX = 760, posY = 440,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "gameScene")))
+
+    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 240,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
@@ -122,7 +125,8 @@ class MainMenuScene : MenuScene(1920,1080) {
             menuLabel,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
-            quitButton, soundToggleButton, musicToggleButton
+            quitButton, soundToggleButton, musicToggleButton,
+            debugGameScene
         )
         opacity = 0.0
     }
