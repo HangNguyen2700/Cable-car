@@ -1,11 +1,9 @@
 package entity
 
-data class Tile(val ports : MutableList<Pair<Int,Int>>/*, val image : ImageVisual*/) {
+data class Tile(val ports : MutableList<Pair<Int,Int>>) {
 
-    init {
-        var rotationDegree = 0
-        var posX : Int
-        var posY : Int
+    var rotationDegree = 0
+    var posX = 0
+    var posY = 0
 
-    }
 }
