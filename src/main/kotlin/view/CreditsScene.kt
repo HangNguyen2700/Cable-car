@@ -5,6 +5,7 @@ import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameScene
+import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import java.awt.Color
@@ -38,9 +39,9 @@ class CreditsScene : BoardGameScene(1920,1080) {
         font = labelFont,
     )
 
-    val quitButton: Button = Button(
+    val backButton: Button = Button(
         width = 300, height = 100,
-        text = "Quit",
+        text = "Back to Menu",
         font = buttonTextFont,
     ).apply {
         visual = ColorVisual(194,64,64,255)
@@ -82,7 +83,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
         mainGrid[0,2] = thanksGrid
 
         buttonsGrid.setColumnWidths(330)
-        buttonsGrid[0,0] = quitButton
+        buttonsGrid[0,0] = backButton
         buttonsGrid[1,0] = musicButton
         buttonsGrid[2,0] = soundButton
         mainGrid[0,3] = buttonsGrid

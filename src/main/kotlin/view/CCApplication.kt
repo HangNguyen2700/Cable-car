@@ -22,7 +22,13 @@ import java.awt.Color
 
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
-    private val creditsScene = CreditsScene()
+    private val creditsScene = CreditsScene().apply {
+        backButton.onMouseClicked = {
+            //showGameScene(titleScene)
+        }
+        soundButton.onMouseClicked = { toggleSound() }
+        musicButton.onMouseClicked = { toggleMusic() }
+    }
 
     private val gameOverScene = GameOverScene().apply {
         quitButton.onMouseClicked = { exit() }
