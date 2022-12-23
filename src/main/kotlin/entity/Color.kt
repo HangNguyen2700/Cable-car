@@ -1,20 +1,31 @@
 package entity
 
+import tools.aqua.bgw.visual.ColorVisual
+
 enum class Color {
-    RED,
+    YELLOW,
     BLUE,
+    ORANGE,
     GREEN,
-    PINK,
-    WHITE,
-    BLACK,
+    PURPLE,
+    BLACK
     ;
 
     override fun toString() = when(this) {
-        RED -> "Red"
+        YELLOW -> "Yellow"
         BLUE -> "Blue"
+        ORANGE -> "Orange"
         GREEN -> "Green"
-        PINK -> "Pink"
-        WHITE -> "White"
+        PURPLE -> "Purple"
         BLACK -> "Black"
+    }
+
+    fun toRGB() = when(this) {
+        YELLOW -> ColorVisual.YELLOW
+        BLUE -> ColorVisual.BLUE
+        ORANGE -> ColorVisual.ORANGE
+        GREEN -> ColorVisual.GREEN
+        PURPLE -> ColorVisual(183,0,255)
+        BLACK -> ColorVisual.BLACK
     }
 }
