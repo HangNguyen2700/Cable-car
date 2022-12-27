@@ -41,8 +41,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         rootService.gameService.nextPlayer()
     }
 
-    fun rotate(tile: Int) {
-
+    fun rotate(tile: Tile) {
+        tile.rotationDegree += 1
     }
     /**
      * Check if the position at (posX, posY) is legal to place a tile on.
