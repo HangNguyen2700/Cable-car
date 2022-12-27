@@ -1,5 +1,7 @@
 package service
 
+import entity.Player
+import entity.Tile
 import service.message.*
 
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
@@ -21,10 +23,10 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     var joinedPlayers = mutableListOf<String>()
-    fun joinGame(secret: String, name:String, sessionID: String) {
-        if(connect(secret, name)) {
+    fun joinGame(secret: String, playerName: String, sessionID: String) {
+        if(connect(secret, playerName)) {
             client?.joinGame(sessionID, "Hallo von Gruppe 10.")
-            this.playerName = name
+            this.playerName = playerName
             rootService.gameService.isHostedGame = true
         }
     }
@@ -81,18 +83,24 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
     fun startNewJoinedGame(message: GameInitMessage) {
         // TODO rotationAllowed boolean fehlt in enitity
-        val playerList = mutableListOf<String>()
+        var tileStack = mutableListOf<Tile>()
+        // create tileStack from supplied list
+        for (tileIndex in message.tileSupply) {
+            tileStack.add(rootService.gameService.tileLookUp[tileIndex.id])
+        }
+        // add tileStack to entity
+        rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileStack
+        // add players to local entity and joined players
+        joinedPlayers = mutableListOf()
+        joinedPlayers.add(0, playerName)
+        rootService.currentGame!!.currentTurn.players.add(0, Player(playerName))
         for (player in message.players) {
-            playerList.add(player.name)
+            rootService.currentGame!!.currentTurn.players.add(Player(player.name))
+            joinedPlayers.add(player.name)
         }
 
-        rootService.gameService.startNewGame(playerList)
-
-        val tileStack = IntArray(60)
-        for (i in 0..message.tileSupply.size) {
-            tileStack[i] = message.tileSupply[i].id
-        }
-        // TODO local tileStack in entity speichern
+        rootService.gameService.startNewGame(listOf())
+        updateConnectionState(ConnectionState.GAME_INITIALIZED)
     }
 
     fun sendGameInitMessage(message: GameInitMessage) {
