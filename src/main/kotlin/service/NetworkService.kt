@@ -1,6 +1,5 @@
 package service
 
-import entity.Player
 import service.message.*
 
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
@@ -17,6 +16,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
             client?.createGame(GAME_ID, sessionID, "Hallo von Gruppe 10")
             updateConnectionState(ConnectionState.WAITING_FOR_HOST_CONFIRMATION)
             this.playerName = playerName
+            rootService.gameService.isHostedGame = true
         }
     }
 
@@ -25,6 +25,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         if(connect(secret, name)) {
             client?.joinGame(sessionID, "Hallo von Gruppe 10.")
             this.playerName = name
+            rootService.gameService.isHostedGame = true
         }
     }
 
@@ -56,7 +57,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean) {
-        // TODO set rotation allowed
+        // TODO set rotation allowed in entity
         val playerInfoList = mutableListOf<PlayerInfo>()
         playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
         for (player in joinedPlayers) {
@@ -64,15 +65,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         }
 
         // player list for local game
-        // TODO remove when local startNewGame() no longer takes List<Player> instead of List<String>
-        val localPlayerList = mutableListOf<Player>()
-        localPlayerList.add(Player(hostPlayerName))
-        for (player in joinedPlayers) {
-            localPlayerList.add(Player(player))
-        }
-
+        joinedPlayers.add(0, hostPlayerName)
         // start game locally
-        rootService.gameService.startNewGame(localPlayerList)
+        rootService.gameService.startNewGame(joinedPlayers)
 
         // TODO get TileSupply list from Entity
         val gameInitMessage = GameInitMessage(
@@ -86,9 +81,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
     fun startNewJoinedGame(message: GameInitMessage) {
         // TODO rotationAllowed boolean fehlt in enitity
-        val playerList = mutableListOf<Player>()
+        val playerList = mutableListOf<String>()
         for (player in message.players) {
-            playerList.add(Player(player.name))
+            playerList.add(player.name)
         }
 
         rootService.gameService.startNewGame(playerList)
