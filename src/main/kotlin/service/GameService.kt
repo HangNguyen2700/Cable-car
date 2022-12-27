@@ -130,7 +130,6 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     }
 
     private fun distributeTiles() {
-        println("Tiles distributed to players")
         if(isLocalOnlyGame) {
             // we have to generate the drawStack and give each player a tile
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileLookUp.toMutableList() // create copy
@@ -154,7 +153,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                 player.handTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
             }
         }
-        println("Tiles distributed")
+        println("Tiles distributed to players")
     }
 
     private fun sendGameInitMessage(drawStack: List<Tile>) {
@@ -264,7 +263,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         // create 1D tileList from 2D PairList
         val tileList = mutableListOf<Tile>()
         for (tilePairs in tilePairList) {
-            var tile = Tile(tilePairs)
+            tileList.add(Tile(tilePairs))
         }
 
         // create tileMap
