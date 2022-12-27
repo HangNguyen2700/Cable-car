@@ -54,7 +54,12 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     }
 
     fun nextPlayer() {
-
+        if(rootService.currentGame!!.currentTurn.currentPlayerIndex ==
+            rootService.currentGame!!.currentTurn.players.size) {
+            rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
+        } else {
+            rootService.currentGame!!.currentTurn.currentPlayerIndex.inc()
+        }
     }
 
     fun findWinner() {
