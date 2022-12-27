@@ -7,5 +7,6 @@ class RootService {
     var currentGame: Game? = null
 
     var gameService: GameService = GameService(this)
+    var networkService = NetworkService(this)
     var playerActionService: PlayerActionService = PlayerActionService(this)
 }

@@ -2,7 +2,7 @@ package entity
 
 data class Player(val name : String) {
 
-    val cars = mutableListOf<Int>()
+    var cars = mutableListOf<Int>()
     var color : Color? = null
     var paths = mutableListOf<Path>()
     var handTile : Tile? = null
