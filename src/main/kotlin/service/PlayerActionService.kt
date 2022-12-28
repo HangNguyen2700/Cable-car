@@ -3,15 +3,46 @@ package service
 import entity.Player
 import entity.Station
 import entity.Tile
+import service.message.TurnMessage
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
     fun placeTile(player: Player, fromHand : Boolean, posX: Int, posY: Int) {
+        if(!rootService.gameService.isLocalOnlyGame) {
+            // network game, so a turnMessage has to be sent
+            var tile: Tile? = null
+            if(fromHand) {
+                tile = rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                // give player next tile
+                rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+            } else {
+                tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+            }
+            rootService.networkService.sendTurnMessage(TurnMessage(
+                posX, posY,
+                !fromHand,
+                rootService.gameService.tileLookUp.indexOf(tile)
+            ))
+        }
 
+        // add tile to gameField
+        if (isPositionLegal(posX, posY)) {
+            rootService.currentGame!!.currentTurn.gameField.field[posX][posY]
+            if(fromHand) {
+                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
+                    rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+            } else {
+                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
+                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+            }
+        }
+
+        rootService.gameService.nextPlayer()
     }
 
-    fun rotate(tile: Int) {
-
+    fun rotate(tile: Tile) {
+        tile.rotationDegree += 1
     }
     /**
      * Check if the position at (posX, posY) is legal to place a tile on.

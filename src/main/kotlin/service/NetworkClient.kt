@@ -106,8 +106,9 @@ class NetworkClient(playerName: String,
                 }
                 println("Player: ${notification.sender} has left the game. Current Players: ${networkService.joinedPlayers.size}")
             }
-            // TODO inGame boolean, for stopping game if player disconnects during a game
-            if(false) {
+
+            if(networkService.connectionState == ConnectionState.GAME_INITIALIZED || networkService.connectionState ==
+                ConnectionState.PLAYING_TURN || networkService.connectionState == ConnectionState.WAITING_FOR_TURN) {
                 println("a player has left the game. disconnecting.")
                 disconnect()
             }
@@ -127,6 +128,7 @@ class NetworkClient(playerName: String,
     fun onTurnMessageReceived(message: TurnMessage, sender: String) {
         BoardGameApplication.runOnGUIThread {
             //execute turn
+            //next player gets called by playerActionService
         }
     }
 
