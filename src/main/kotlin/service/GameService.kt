@@ -12,7 +12,9 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     var isHostedGame = false
     var tileLookUp = mutableListOf<Tile>()
 
-    fun startNewGame(players: List<String>) {
+    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false) {
+        this.isLocalOnlyGame = isLocalOnlyGame
+        this.isHostedGame = isHostedGame
         if(rootService.currentGame == null) {
             rootService.currentGame = Game(
                 Turn(
