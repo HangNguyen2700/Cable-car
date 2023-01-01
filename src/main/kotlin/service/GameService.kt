@@ -95,7 +95,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             rootService.currentGame!!.currentTurn.players.size) {
             rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
         } else {
-            rootService.currentGame!!.currentTurn.currentPlayerIndex.inc()
+            rootService.currentGame!!.currentTurn.currentPlayerIndex++
         }
     }
 
@@ -173,7 +173,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      */
     private fun playersToPositions()
     {
-        val players  = rootService?.currentGame?.currentTurn?.players
+        val players  = rootService.currentGame?.currentTurn?.players
         val colors = listOf(Color.YELLOW, Color.BLUE, Color.ORANGE, Color.GREEN, Color.PURPLE, Color.BLACK)
         when (players?.size) {
             2 ->{
