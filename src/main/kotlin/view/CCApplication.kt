@@ -34,7 +34,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         quitButton.onMouseClicked = { exit() }
     }
 
-    private val gameScene = GameScene()
+    //init game scene
+    private val gameScene = GameScene0()
 
     private val lobbyScene = LobbyScene().apply {
         quitButton.onMouseClicked = { exit() }
@@ -76,7 +77,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton)
 
     init {
-        this.showGameScene(titleScene)
+        //this.showGameScene(titleScene)
+        this.showGameScene(gameScene)
+//        this.showGameScene(creditsScene)
         icon = ImageVisual("icon.png")
     }
 
