@@ -6,7 +6,7 @@ import service.message.TurnMessage
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    fun placeTile(player: Player, fromHand: Boolean, posX: Int, posY: Int) {
+    fun placeTile(fromHand: Boolean, posX: Int, posY: Int) {
         if (!rootService.gameService.isLocalOnlyGame) {
             // network game, so a turnMessage has to be sent
             var tile: Tile? = null
@@ -34,6 +34,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             if (fromHand) {
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
                     rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
             } else {
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
                     rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
