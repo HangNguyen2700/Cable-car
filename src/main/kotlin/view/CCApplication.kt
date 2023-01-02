@@ -48,8 +48,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         joinButton.onMouseClicked = { nameEmptyCheck() }
         hostButton.onMouseClicked = { nameEmptyCheck() }
         hotseatButton.onMouseClicked = { nameEmptyCheck() }
-        creditsButton.onMouseClicked = { hideMenuScene(3000); showGameScene(creditsScene)}
-        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene)}
+        creditsButton.onMouseClicked = { hideMenuScene(3000); showGameScene(creditsScene) }
+        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
     }
 
     private val notificationGameScene = NotificationGameScene()
@@ -83,13 +83,15 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         if (mainMenuScene.nameField.text != "") {
             hideMenuScene(3000)
             lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
-                ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-                TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                     text = mainMenuScene.nameField.text,
-                    alignment = Alignment.CENTER_LEFT, offsetX = 20))
+                    alignment = Alignment.CENTER_LEFT,
+                    offsetX = 20
+                )
+            )
             showMenuScene(lobbyScene, 3000)
-        } else
-            mainMenuScene.nameErrorDisplay()
+        } else mainMenuScene.nameErrorDisplay()
     }
 
     /**
@@ -99,14 +101,19 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleMusic() {
         musicEnabled = !musicEnabled
         for (button in musicButtons) {
-            if (!musicEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music"))}
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music"))}}}
+            if (!musicEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music")
+                )
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music")
+                )
+            }
+        }
+    }
 
     /**
      * analog to toggleMusic()
@@ -114,14 +121,19 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleSound() {
         soundEnabled = !soundEnabled
         for (button in soundButtons) {
-            if (!soundEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound"))}
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound"))}}}
+            if (!soundEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound")
+                )
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound")
+                )
+            }
+        }
+    }
 
 }
 
