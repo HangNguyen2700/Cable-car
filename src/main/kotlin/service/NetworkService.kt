@@ -12,6 +12,8 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     private var client: NetworkClient? = null
     var playerName = ""
 
+    var joinedPlayers = mutableListOf<String>()
+
 
     fun hostGame(secret: String, playerName: String, sessionID: String) {
         if(connect(secret, playerName)) {
@@ -22,7 +24,6 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         }
     }
 
-    var joinedPlayers = mutableListOf<String>()
     fun joinGame(secret: String, playerName: String, sessionID: String) {
         if(connect(secret, playerName)) {
             client?.joinGame(sessionID, "Hallo von Gruppe 10.")
@@ -58,8 +59,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         return false
     }
 
-    fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean) {
-        // TODO set rotation allowed in entity
+    fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean, drawStack: List<Tile>) {
         val playerInfoList = mutableListOf<PlayerInfo>()
         playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
         for (player in joinedPlayers) {
@@ -68,14 +68,23 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
         // player list for local game
         joinedPlayers.add(0, hostPlayerName)
-        // start game locally
-        rootService.gameService.startNewGame(joinedPlayers)
 
-        // TODO get TileSupply list from Entity
+        val tileStack = mutableListOf<service.message.Tile>()
+
+        for (tile in drawStack) {
+            val connectionInfo = mutableListOf<ConnectionInfo>()
+            for (c in tile.ports)
+                connectionInfo.add(ConnectionInfo(c.first, c.second))
+            tileStack.add(service.message.Tile(
+                rootService.gameService.tileLookUp.indexOf(tile),
+                connectionInfo
+            ))
+        }
+
         val gameInitMessage = GameInitMessage(
-            rotationAllowed = true,
+            rotationAllowed = rotationAllowed,
             players = playerInfoList,
-            tileSupply = listOf()
+            tileSupply = tileStack
         )
 
         sendGameInitMessage(gameInitMessage)
