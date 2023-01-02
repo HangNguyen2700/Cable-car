@@ -144,7 +144,12 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileLookUp.toMutableList() // create copy
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.shuffle()
 
-            sendGameInitMessage(rootService.currentGame!!.currentTurn.gameField.tileStack.tiles)
+            rootService.networkService.startNewHostedGame(
+                "Player1",
+                false,
+                rootService.currentGame!!.currentTurn.gameField.tileStack.tiles
+            )
+
 
             for (player in rootService.currentGame!!.currentTurn.players) {
                 player.handTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
@@ -158,10 +163,6 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         println("Tiles distributed to players")
     }
 
-    private fun sendGameInitMessage(drawStack: List<Tile>) {
-        TODO("Not yet implemented")
-
-    }
     /**
      * Assigns number of cars and colors to the players based on the number of players.
      *
