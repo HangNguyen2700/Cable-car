@@ -56,7 +56,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             hideMenuScene(3000); showGameScene(creditsScene)
             if (musicEnabled) playCreditsMusic()
         }
-        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene)}
+        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
     }
 
     private val notificationGameScene = NotificationGameScene()
@@ -109,20 +109,22 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleMusic() {
         musicEnabled = !musicEnabled
         for (button in musicButtons) {
-            if (!musicEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music"))
+            if (!musicEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music")
+                )
                 musicChannel.volume = 1.0
-            }
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music"))
-                musicChannel.volume = 0.0
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music")
+                )
+
             }
         }
     }
+
 
     /**
      * analog to toggleMusic()
@@ -130,16 +132,17 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleSound() {
         soundEnabled = !soundEnabled
         for (button in soundButtons) {
-            if (!soundEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound"))
+            if (!soundEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound")
+                )
                 soundChannel.volume = 0.0
-            }
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound"))
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound")
+                )
                 soundChannel.volume = 1.0
             }
         }
