@@ -1,5 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val korauVersion = "2.2.0"
+
 plugins {
     kotlin("jvm") version "1.5.21"
     application
@@ -35,6 +37,7 @@ dependencies {
     implementation(group = "tools.aqua", name = "bgw-net-common", version = "0.7.3")
     implementation(group = "tools.aqua", name = "bgw-net-client", version = "0.7.3")
     implementation(group = "edu.udo.cs.sopra", name = "ntf", version = "1.0")
+    implementation("com.soywiz.korlibs.korau:korau-jvm:$korauVersion")
 }
 
 tasks.distZip {
