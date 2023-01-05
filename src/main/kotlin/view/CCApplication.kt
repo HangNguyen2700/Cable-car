@@ -39,7 +39,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     //init game scene
-    private val gameScene = GameScene0()
+    private val gameScene = GameScene()
 
     private val lobbyScene = LobbyScene().apply {
         quitButton.onMouseClicked = { exit() }
