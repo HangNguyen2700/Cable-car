@@ -484,7 +484,7 @@ class GameScene : BoardGameScene(1920,1080) {
         boardGrid[0,2] = bottomBoardGrid
         mainGrid[1,0] = boardGrid
 
-        background = ColorVisual(155,94,95,255)
+        background = ImageVisual("game_scene.png")
         addComponents(mainGrid)
     }
 }
