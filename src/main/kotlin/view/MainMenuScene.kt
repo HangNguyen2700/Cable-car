@@ -8,6 +8,7 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
@@ -107,17 +108,13 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Quit")))
 
-    val musicToggleButton = Button(width = 300, height = 100, posX = 450, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Music")))
+    val musicToggleButton = Button(width = 140, height = 140, posX = 470, posY = 880,
+        visual = ImageVisual("music_enabled.png")
+    )
 
-    val soundToggleButton = Button(width = 300, height = 100, posX = 800, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Sound")))
+    val soundToggleButton = Button(width = 140, height = 140, posX = 660, posY = 880,
+        visual = ImageVisual("sound_enabled.png")
+    )
 
     init{
         addComponents(

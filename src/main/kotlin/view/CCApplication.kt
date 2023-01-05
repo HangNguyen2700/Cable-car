@@ -4,6 +4,7 @@ import com.soywiz.korau.sound.*
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
@@ -77,8 +78,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene, 3000) }
     }
 
-    private lateinit var musicChannel : SoundChannel
-    private lateinit var soundChannel : SoundChannel
+    private var musicChannel : SoundChannel? = null
+    private var soundChannel : SoundChannel? = null
 
     private var musicEnabled = true
     private var soundEnabled = true
@@ -86,10 +87,13 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton)
     private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton)
 
+    private val musicButtonEnableImage = ImageVisual("music_enabled.png")
+    private val musicButtonDisableImage = ImageVisual("music_disabled.png")
+    private val soundButtonEnableImage = ImageVisual("sound_enabled.png")
+    private val soundButtonDisableImage = ImageVisual("sound_disabled.png")
+
     init {
-        //this.showGameScene(titleScene)
-        this.showGameScene(gameScene)
-//        this.showGameScene(creditsScene)
+        this.showGameScene(titleScene)
         icon = ImageVisual("icon.png")
     }
 
@@ -119,17 +123,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         musicEnabled = !musicEnabled
         for (button in musicButtons) {
             if (!musicEnabled) {
-                button.visual = CompoundVisual(
-                    ColorVisual.WHITE.apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music")
-                )
-                musicChannel.volume = 1.0
+                button.visual = musicButtonDisableImage
+                if (musicChannel != null) musicChannel!!.volume = 1.0
             } else {
-                button.visual = CompoundVisual(
-                    ColorVisual.WHITE.apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music")
-                )
-
+                button.visual = musicButtonEnableImage
+                if (musicChannel != null) musicChannel!!.volume = 0.0
             }
         }
     }
@@ -142,17 +140,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         soundEnabled = !soundEnabled
         for (button in soundButtons) {
             if (!soundEnabled) {
-                button.visual = CompoundVisual(
-                    ColorVisual.WHITE.apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound")
-                )
-                soundChannel.volume = 0.0
+                button.visual = soundButtonDisableImage
+                if (soundChannel != null) soundChannel!!.volume = 1.0
             } else {
-                button.visual = CompoundVisual(
-                    ColorVisual.WHITE.apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound")
-                )
-                soundChannel.volume = 1.0
+                button.visual = soundButtonEnableImage
+                if (soundChannel != null) soundChannel!!.volume = 0.0
             }
         }
     }
@@ -165,7 +157,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         GlobalScope.async {
             val music = resourcesVfs["credits_music.wav"].readMusic()
             musicChannel = music.play(infinitePlaybackTimes)
-            musicChannel.await()
+            musicChannel!!.await()
         }
     }
 
