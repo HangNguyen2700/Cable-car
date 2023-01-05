@@ -22,7 +22,7 @@ class GameScene : BoardGameScene(1920,1080) {
     private var isDrawn = false
 
     private val mainGrid =
-        GridPane<GridPane<GridPane<GridPane<ComponentView>>>>(0, 50, columns = 3, rows = 1, layoutFromCenter = false)
+        GridPane<GridPane<GridPane<GridPane<ComponentView>>>>(posX = 60, posY = 40, columns = 3, rows = 1, layoutFromCenter = false)
     private val outerOtherPlayersGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
     private val boardGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 3)
     private val outerMyGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
