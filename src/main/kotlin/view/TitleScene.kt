@@ -8,6 +8,7 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
@@ -26,9 +27,9 @@ class TitleScene : BoardGameScene(1920, 1080) {
         visual = ColorVisual(0,0,0),
     ).apply { onMouseEntered = { println("Scene initialized"); fadeIn() }}
 
-    private val gameLabel = Label(width = 1920, height = 1080, posX = 0, posY = -100,
-        font = Font(size = 400, color = Color.PINK, family = "Calibri"),
-        text = "Carbel Car",
+    private val gameLabel = Label(width = 1860, height = 441, posX = 30, posY = 100,
+        /*font = Font(size = 300, color = Color.PINK, family = "Comic Sans MS"), text = "Carbel Car",*/
+        visual = ImageVisual("game_banner.png")
     ).apply { opacity = 0.0 }
 
     private val pressAnyKeyLabel = Label(width = 600, height = 100, posX = 660, posY = 800,

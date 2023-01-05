@@ -1,5 +1,9 @@
 package view
 
+import com.soywiz.korau.sound.*
+import com.soywiz.korio.async.async
+import com.soywiz.korio.file.std.resourcesVfs
+import kotlinx.coroutines.GlobalScope
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
@@ -55,8 +59,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         joinButton.onMouseClicked = { nameEmptyCheck() }
         hostButton.onMouseClicked = { nameEmptyCheck() }
         hotseatButton.onMouseClicked = { nameEmptyCheck() }
-        creditsButton.onMouseClicked = { hideMenuScene(3000); showGameScene(creditsScene)}
-        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene)}
+        creditsButton.onMouseClicked = {
+            hideMenuScene(3000); showGameScene(creditsScene)
+            if (musicEnabled) playCreditsMusic()
+        }
+        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
     }
 
     private val notificationGameScene = NotificationGameScene()
@@ -69,6 +76,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         toMenuButton.onKeyPressed = { showMenuScene(mainMenuScene, 3000) }
         toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene, 3000) }
     }
+
+    private lateinit var musicChannel : SoundChannel
+    private lateinit var soundChannel : SoundChannel
 
     private var musicEnabled = true
     private var soundEnabled = true
@@ -108,14 +118,22 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleMusic() {
         musicEnabled = !musicEnabled
         for (button in musicButtons) {
-            if (!musicEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music"))}
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music"))}}}
+            if (!musicEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Music")
+                )
+                musicChannel.volume = 1.0
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Music")
+                )
+
+            }
+        }
+    }
+
 
     /**
      * analog to toggleMusic()
@@ -123,14 +141,33 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun toggleSound() {
         soundEnabled = !soundEnabled
         for (button in soundButtons) {
-            if (!soundEnabled) { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound"))}
-            else { button.visual =
-                    CompoundVisual(
-                        ColorVisual.WHITE.apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound"))}}}
+            if (!soundEnabled) {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.GREEN, family = "Calibri"), text = "Sound")
+                )
+                soundChannel.volume = 0.0
+            } else {
+                button.visual = CompoundVisual(
+                    ColorVisual.WHITE.apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Sound")
+                )
+                soundChannel.volume = 1.0
+            }
+        }
+    }
+
+    /**
+     * playback of music in credits scene via KorAU audio library
+     */
+
+    private fun playCreditsMusic() {
+        GlobalScope.async {
+            val music = resourcesVfs["credits_music.wav"].readMusic()
+            musicChannel = music.play(infinitePlaybackTimes)
+            musicChannel.await()
+        }
+    }
 
 }
 
