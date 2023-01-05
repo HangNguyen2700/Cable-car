@@ -75,7 +75,7 @@ class NetworkClient(playerName: String,
 
     override fun onPlayerJoined(notification: PlayerJoinedNotification) {
         if(networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {
-            if (networkService.connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
+            if (networkService.connectionState != ConnectionState.WAITING_FOR_PLAYERS) {
                 println("unexpected player joined notification")
                 return
             }
