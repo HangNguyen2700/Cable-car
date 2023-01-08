@@ -338,10 +338,13 @@ class LobbyScene : MenuScene(1920, 1080) {
             soundToggleButton
 
         )
-
+        for (i in 0..4) {
+            deletePlayerLabel[i].isDisabled = true
+            deletePlayerLabel[i].opacity = 0.0
+        }
         opacity = 0.0
         showColorPicker(playersJoined)
-        deletePlayerLabel[playersJoined]
+       // deletePlayerLabel[playersJoined]
     }
 
     /**
