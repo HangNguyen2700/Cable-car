@@ -1,10 +1,12 @@
 package view
 
-import com.soywiz.korau.sound.*
+import com.soywiz.korau.sound.SoundChannel
+import com.soywiz.korau.sound.await
+import com.soywiz.korau.sound.infinitePlaybackTimes
+import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
-import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
@@ -43,7 +45,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val gameScene = GameScene().apply {
         quickMenuButton.onMouseClicked={
             hideMenuScene()
-            showMenuScene(quickMenuGameScene)
+            showMenuScene( quickMenuGameScene)
         }
     }
 
@@ -74,9 +76,21 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private val notificationGameScene = NotificationGameScene()
 
+    private val menuPopUp = MenuPopUp()
+
+
+
+
     private val quickMenuGameScene = QuickMenuGameScene().apply {
         soundToggleButton.onMouseClicked={toggleSound()}
         musicToggleButton.onMouseClicked={toggleMusic()}
+        exitMenu.onMouseClicked={
+            hideMenuScene()
+        }
+        quitButton.onMouseClicked={
+            hideMenuScene()
+        }
+
 
         /*quitButton.onMouseClicked = { exit() }*/
     }
@@ -174,4 +188,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
 }
+
+
 
