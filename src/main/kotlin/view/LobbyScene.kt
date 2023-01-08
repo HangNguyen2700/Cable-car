@@ -377,10 +377,10 @@ class LobbyScene : MenuScene(1920, 1080) {
             }
         }
 
-
         colorPos = colorPicker.indexOf(button)
 
         colorPicker[colorPicker.indexOf(button)].isDisabled = true
+        colorsPicked[colorPicker.indexOf(button)] = true
         colorPicker[colorPicker.indexOf(button)].opacity = 0.0
 
         if (playersJoined >= 2) {
