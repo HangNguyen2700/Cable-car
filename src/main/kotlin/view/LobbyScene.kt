@@ -426,39 +426,64 @@ class LobbyScene : MenuScene(1920, 1080) {
      * clears playerName from the Table containing players Name
      */
     fun deletePlayer(pos: Int) {
-        if (playersJoined >= 2) {
 
+        //  playersJoined--
 
-            //addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
-            //nameFields[pos]
-            //colorPicker[colorPos].isVisible = true
-
-            removeComponents(playerColorLabel[pos])
-            removeComponents(deletePlayerLabel[pos])
-
-            playerBoxLabel[pos].visual = CompoundVisual(
-                ColorVisual.WHITE.apply { transparency = 0.1 },
-                TextVisual(
-                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""
-                )
+        playerBoxLabel[pos].visual = CompoundVisual(ColorVisual.WHITE.apply { transparency = 0.3 },
+            ColorVisual.WHITE.apply { transparency = 0.1 },
+            TextVisual(
+                font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""
             )
+        )
 
-            removeComponents(
-                aiPlayerButton,
-                aiPlayerButtonTrigger,
-                hotseatPlayerButton,
-                hotseatPlayerButtonTrigger,
-                smartAI,
-                smartAICheckbox,
-                nameFields[playersJoined - 1],
-                confirmButton
-            )
-            playersJoined -= 1
-            println(playersJoined)
-           // addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
+        //  for(pos in 1..4) {
+//
+        // println("pos =$pos")
+        // println("pos" + playerBoxLabel[pos].text)
+        // println("pos+1" + playerBoxLabel[pos + 1].text)
+        //  println("playerBoxLabel[pos].posY = " + playerBoxLabel[pos].posY)
+        // println("addPlayerButton.posY = " + addPlayerButton.posY)
+
+        // playerBoxLabel[pos].posY = (playerBoxLabel[pos + 1].posY)
+        // playerBoxLabel[pos].text = playerBoxLabel[pos + 1].text
+
+        addPlayerButton.apply { posX = 120.0; posY = playerBoxLabel[pos].posY }
+        //nameFields[pos].apply {  posX = 120.0; posY = nameFields[pos+1].posY }
+        println("pos$pos")
+        // nameFields[pos].posY=nameFields[pos+1].posY
+        // addComponents(nameFields[pos])
+        //nameFields[pos].reposition(100, posY = playerBoxLabel[pos].posY)
+
+        // TextField(
+        //            width = 280, height = 80, posX = 100, posY = 350, prompt = "Enter Name",
+        //            font = Font(size = 40, family = "Calibri"),
+        //        )
+
+        //  addPlayerButton.posY=playerBoxLabel[pos].posY
+
+        // }
+
+        // addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
+
+        //nameFields[pos]
+        //nameFields[pos].text=""
+        println("colorPos" + colorPos)
+
+        println(colorsPicked[0])
+        println(colorsPicked[1])
+        println(colorsPicked[2])
+        println(colorsPicked[3])
+        println(colorsPicked[4])
+        println(colorsPicked[5])
+
+        colorsPicked[colorPos]=true
+        colorPicker[colorPos].isVisible = true
+
+        addComponents(colorPicker[colorPos])
 
 
-        }
+        removeComponents(playerColorLabel[pos])
+        removeComponents(deletePlayerLabel[pos])
     }
 
 
