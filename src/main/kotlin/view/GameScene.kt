@@ -20,10 +20,8 @@ import java.awt.Color
 
 class GameScene : BoardGameScene(1920,1080) {
 
-    val quickMenuButton: Button = Button(
-        width = 50, height = 50,posX = 100, posY = 68,
-       visual = ImageVisual("menu button.png")
-    )
+    val quickMenuButton: Button = Button(width = 140 , height = 140 ,posX = 40, posY = 40,
+       visual = ImageVisual("quick_menu_button.png"))
 
 
     private val mockTile = Tile(mutableListOf(Pair(0, 7), Pair(1, 6), Pair(2, 5), Pair(3, 4)), tilePos = 2)

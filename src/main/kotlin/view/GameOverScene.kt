@@ -6,6 +6,7 @@ import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
@@ -68,12 +69,8 @@ class GameOverScene : BoardGameScene(1920,1080) {
                 font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
                 text = "Main Menu")))
 
-    val quitButton = Button(width = 223, height = 70, posX = 181, posY = 823,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "Quit")))
+    val quitButton = Button(width = 140, height = 140, posX = 1700, posY = 40,
+        visual = ImageVisual("quit_button.png"))
 
     private val crown=Button(
         width=100, height = 50, posX = 894, posY = 346,

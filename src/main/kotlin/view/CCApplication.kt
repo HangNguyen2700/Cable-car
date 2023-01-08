@@ -10,6 +10,7 @@ import kotlinx.coroutines.GlobalScope
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
@@ -30,9 +31,7 @@ import java.awt.Color
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private val creditsScene = CreditsScene().apply {
-        backButton.onMouseClicked = {
-            //showGameScene(titleScene)
-        }
+        //backButton.onMouseClicked = { showGameScene(titleScene) }         //recursive issue :(
         soundButton.onMouseClicked = { toggleSound() }
         musicButton.onMouseClicked = { toggleMusic() }
     }
@@ -41,64 +40,71 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         quitButton.onMouseClicked = { exit() }
     }
 
-    //init game scene
     private val gameScene = GameScene().apply {
-        quickMenuButton.onMouseClicked={
-            hideMenuScene()
-            showMenuScene( quickMenuGameScene)
+        quickMenuButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showAndStoreMenuScene(quickMenuGameScene,3000)
         }
     }
 
     private val lobbyScene = LobbyScene().apply {
-        quitButton.onMouseClicked = { exit() }
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
+        }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
         backToMainMenuSceneButton.onMouseClicked = {
             hideMenuScene(3000)
-            showMenuScene(mainMenuScene, 3000)
+            showAndStoreMenuScene(mainMenuScene, 3000)
         }
     }
 
     private val mainMenuScene = MainMenuScene().apply {
         backToTitleSceneButton.onMouseClicked = { hideMenuScene(3000) }
-        quitButton.onMouseClicked = { exit() }
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
+        }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
         joinButton.onMouseClicked = { nameEmptyCheck() }
         hostButton.onMouseClicked = { nameEmptyCheck() }
         hotseatButton.onMouseClicked = { nameEmptyCheck() }
         creditsButton.onMouseClicked = {
-            hideMenuScene(3000); showGameScene(creditsScene)
+            hideMenuScene(3000)
+            showGameScene(creditsScene)
             if (musicEnabled) playCreditsMusic()
         }
-        debugGameScene.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
+        debugGameSceneButton.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
     }
 
     private val notificationGameScene = NotificationGameScene()
 
-    private val menuPopUp = MenuPopUp()
-
-
-
+    private val confirmQuitMenuScene = ConfirmQuitMenuScene().apply {
+        yesButton.onMouseClicked = { exit() }
+        noButton.onMouseClicked = {
+            hideMenuScene()
+            showAndStoreMenuScene(activeMenuScene!!,3000)
+        }
+    }
 
     private val quickMenuGameScene = QuickMenuGameScene().apply {
-        soundToggleButton.onMouseClicked={toggleSound()}
-        musicToggleButton.onMouseClicked={toggleMusic()}
-        exitMenu.onMouseClicked={
-            hideMenuScene()
+        soundToggleButton.onMouseClicked = { toggleSound() }
+        musicToggleButton.onMouseClicked = { toggleMusic() }
+        exitQuitMenuSceneButton.onMouseClicked={ hideMenuScene(3000) }
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
         }
-        quitButton.onMouseClicked={
-            hideMenuScene()
-        }
-
-
-        /*quitButton.onMouseClicked = { exit() }*/
     }
 
     private val titleScene = TitleScene().apply {
-        toMenuButton.onKeyPressed = { showMenuScene(mainMenuScene, 3000) }
-        toMenuButton.onMouseClicked = { showMenuScene(mainMenuScene, 3000) }
+        toMenuButton.onKeyPressed = { showAndStoreMenuScene(mainMenuScene, 3000) }
+        toMenuButton.onMouseClicked = { showAndStoreMenuScene(mainMenuScene, 3000) }
     }
+
+    private var activeMenuScene : MenuScene? = null
 
     private var musicChannel : SoundChannel? = null
     private var soundChannel : SoundChannel? = null
@@ -107,21 +113,19 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var soundEnabled = true
 
     private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
-                                                        lobbyScene.musicToggleButton,quickMenuGameScene.musicToggleButton)
+        quickMenuGameScene.musicToggleButton)
     private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
-                                                        lobbyScene.soundToggleButton,quickMenuGameScene.soundToggleButton)
+        quickMenuGameScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
     private val soundButtonEnableImage = ImageVisual("sound_enabled.png")
     private val soundButtonDisableImage = ImageVisual("sound_disabled.png")
 
-
     init {
         this.showGameScene(titleScene)
         icon = ImageVisual("icon.png")
     }
-
 
     /**
      * checks if name is input in mainMenuScene and passes it to the first entry in player table in lobbyScene
@@ -136,7 +140,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                     text = mainMenuScene.nameField.text,
                     alignment = Alignment.CENTER_LEFT, offsetX = 20))
-            showMenuScene(lobbyScene, 3000)
+            showAndStoreMenuScene(lobbyScene, 3000)
         } else
             mainMenuScene.nameErrorDisplay()
     }
@@ -158,10 +162,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
-
     /**
      * analog to toggleMusic()
      */
+
     private fun toggleSound() {
         soundEnabled = !soundEnabled
         for (button in soundButtons) {
@@ -185,6 +189,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             musicChannel = music.play(infinitePlaybackTimes)
             musicChannel!!.await()
         }
+    }
+
+    private fun showAndStoreMenuScene(menuScene: MenuScene, fadeTime : Int) {
+        activeMenuScene = menuScene
+        showMenuScene(menuScene,fadeTime)
     }
 
 }

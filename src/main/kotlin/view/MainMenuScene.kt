@@ -3,7 +3,6 @@ package view
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.TextField
-import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -37,7 +36,7 @@ class MainMenuScene : MenuScene(1920,1080) {
                 font = Font(size = 60, color = Color.WHITE, family = "Calibri"),
                 text = "MENU")))
 
-    val debugGameScene = Button(width = 400, height = 100, posX = 760, posY = 440,
+    val debugGameSceneButton = Button(width = 400, height = 100, posX = 760, posY = 440,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
@@ -102,19 +101,14 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Credits")))
 
-    val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Quit")))
+    val quitButton = Button(width = 140, height = 140, posX = 1700, posY = 40,
+        visual = ImageVisual("quit_button.png"))
 
     val musicToggleButton = Button(width = 140, height = 140, posX = 470, posY = 880,
-        visual = ImageVisual("music_enabled.png")
-    )
+        visual = ImageVisual("music_enabled.png"))
 
     val soundToggleButton = Button(width = 140, height = 140, posX = 660, posY = 880,
-        visual = ImageVisual("sound_enabled.png")
-    )
+        visual = ImageVisual("sound_enabled.png"))
 
     init{
         addComponents(
@@ -123,7 +117,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton,
-            debugGameScene
+            debugGameSceneButton
         )
         opacity = 0.0
     }
