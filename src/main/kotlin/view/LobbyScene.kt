@@ -145,14 +145,14 @@ class LobbyScene : MenuScene(1920, 1080) {
         width = 80, height = 80, posX = 800.0, posY = 250.0, visual = CompoundVisual(
             TextVisual(text = "-")
         )
-    ).apply { onMouseClicked = { deletePlayer(0) } },
+    ).apply { onMouseClicked = { deletePlayer(playersJoined) } },
 
         Button(
             width = 80, height = 80, posX = 800.0, posY = 350.0, visual = CompoundVisual(
                 TextVisual(text = "-")
             )
         ).apply {
-            onMouseClicked = { deletePlayer(1) }
+            onMouseClicked = { deletePlayer(playersJoined) }
         },
 
         Button(
@@ -160,7 +160,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 TextVisual(text = "-")
             )
         ).apply {
-            onMouseClicked = { deletePlayer(2) }
+            onMouseClicked = { deletePlayer(playersJoined) }
         },
 
         Button(
@@ -168,7 +168,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 TextVisual(text = "-")
             )
         ).apply {
-            onMouseClicked = { deletePlayer(3) }
+            onMouseClicked = { deletePlayer(playersJoined) }
         },
 
         Button(
@@ -176,7 +176,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 TextVisual(text = "-")
             )
         ).apply {
-            onMouseClicked = { deletePlayer(4) }
+            onMouseClicked = { deletePlayer(playersJoined) }
         },
 
         Button(
@@ -184,7 +184,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 TextVisual(text = "-")
             )
         ).apply {
-            onMouseClicked = { deletePlayer(5) }
+            onMouseClicked = { deletePlayer(playersJoined) }
         })
 
     val colorPicker = listOf(
@@ -309,11 +309,13 @@ class LobbyScene : MenuScene(1920, 1080) {
         )
     )
 
-    val musicToggleButton = Button(width = 140, height = 140, posX = 430, posY = 880,
+    val musicToggleButton = Button(
+        width = 140, height = 140, posX = 430, posY = 880,
         visual = ImageVisual("music_enabled.png")
     )
 
-    val soundToggleButton = Button(width = 140, height = 140, posX = 600, posY = 880,
+    val soundToggleButton = Button(
+        width = 140, height = 140, posX = 600, posY = 880,
         visual = ImageVisual("sound_enabled.png")
     )
 
@@ -375,22 +377,24 @@ class LobbyScene : MenuScene(1920, 1080) {
             }
         }
 
+
         colorPos = colorPicker.indexOf(button)
 
         colorPicker[colorPicker.indexOf(button)].isDisabled = true
         colorPicker[colorPicker.indexOf(button)].opacity = 0.0
 
-        if (playersJoined >= 1) {
+        if (playersJoined >= 2) {
             addComponents(deletePlayerLabel[playersJoined])
         }
 
         addComponents(playerColorLabel[playersJoined])
+
         playerColorLabel[playersJoined].apply {
             posX = 700.0
             posY = 250.0 + 100.0 * playersJoined
             visual = button.visual
         }
-
+        println(colorsPicked)
         playersJoined++
         if (playersJoined < 6) {
             addComponents(addPlayerButton)
@@ -422,22 +426,39 @@ class LobbyScene : MenuScene(1920, 1080) {
      * clears playerName from the Table containing players Name
      */
     fun deletePlayer(pos: Int) {
+        if (playersJoined >= 2) {
 
-        playersJoined--
-        playerBoxLabel[pos].visual = CompoundVisual(ColorVisual.WHITE.apply { transparency = 0.3 },
-            ColorVisual.WHITE.apply { transparency = 0.1 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""
+
+            //addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
+            //nameFields[pos]
+            //colorPicker[colorPos].isVisible = true
+
+            removeComponents(playerColorLabel[pos])
+            removeComponents(deletePlayerLabel[pos])
+
+            playerBoxLabel[pos].visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.1 },
+                TextVisual(
+                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""
+                )
             )
-        )
 
-        addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
-        nameFields[pos]
-        colorPicker[colorPos].isVisible = true
+            removeComponents(
+                aiPlayerButton,
+                aiPlayerButtonTrigger,
+                hotseatPlayerButton,
+                hotseatPlayerButtonTrigger,
+                smartAI,
+                smartAICheckbox,
+                nameFields[playersJoined - 1],
+                confirmButton
+            )
+            playersJoined -= 1
+            println(playersJoined)
+           // addPlayerButton.reposition(100, playerBoxLabel[pos].posY)
 
-        removeComponents(playerColorLabel[pos])
-        removeComponents(deletePlayerLabel[pos])
 
+        }
     }
 
 

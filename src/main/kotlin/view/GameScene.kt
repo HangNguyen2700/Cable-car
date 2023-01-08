@@ -8,6 +8,7 @@ import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -15,7 +16,16 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
+
+
 class GameScene : BoardGameScene(1920,1080) {
+
+    val quickMenuButton: Button = Button(
+        width = 50, height = 50,posX = 100, posY = 68,
+       visual = ImageVisual("menu button.png")
+    )
+
+
     private val mockTile = Tile(mutableListOf(Pair(0, 7), Pair(1, 6), Pair(2, 5), Pair(3, 4)), tilePos = 2)
     private val mockDrawnTile = Tile(mutableListOf(Pair(0, 5), Pair(1, 2), Pair(3, 6), Pair(4, 7)), tilePos = 3)
     private var currentTile: Tile? = null
@@ -485,6 +495,6 @@ class GameScene : BoardGameScene(1920,1080) {
         mainGrid[1,0] = boardGrid
 
         background = ImageVisual("game_scene.png")
-        addComponents(mainGrid)
+        addComponents(mainGrid,quickMenuButton)
     }
 }

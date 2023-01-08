@@ -40,7 +40,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     //init game scene
-    private val gameScene = GameScene()
+    private val gameScene = GameScene().apply {
+        quickMenuButton.onMouseClicked={
+            hideMenuScene()
+            showMenuScene(quickMenuGameScene)
+        }
+    }
 
     private val lobbyScene = LobbyScene().apply {
         quitButton.onMouseClicked = { exit() }
@@ -70,6 +75,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val notificationGameScene = NotificationGameScene()
 
     private val quickMenuGameScene = QuickMenuGameScene().apply {
+        soundToggleButton.onMouseClicked={toggleSound()}
+        musicToggleButton.onMouseClicked={toggleMusic()}
+
         /*quitButton.onMouseClicked = { exit() }*/
     }
 
@@ -84,18 +92,22 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var musicEnabled = true
     private var soundEnabled = true
 
-    private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton)
-    private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton)
+    private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
+                                                        lobbyScene.musicToggleButton,quickMenuGameScene.musicToggleButton)
+    private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
+                                                        lobbyScene.soundToggleButton,quickMenuGameScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
     private val soundButtonEnableImage = ImageVisual("sound_enabled.png")
     private val soundButtonDisableImage = ImageVisual("sound_disabled.png")
 
+
     init {
         this.showGameScene(titleScene)
         icon = ImageVisual("icon.png")
     }
+
 
     /**
      * checks if name is input in mainMenuScene and passes it to the first entry in player table in lobbyScene
