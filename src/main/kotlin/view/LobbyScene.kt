@@ -336,8 +336,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     fun playerConfigured() {
         if (confirmButton.isDisabled &&
-            nameFields[playersJoined - 1].text != "" &&
-            realAISelection != null) {
+            nameFields[playersJoined - 1].text != "" && realAISelection != null) {
             confirmButton.isDisabled = false; confirmButton.opacity = 1.0
         }
     }
