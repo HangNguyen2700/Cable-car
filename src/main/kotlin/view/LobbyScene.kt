@@ -24,7 +24,7 @@ import java.awt.Color
  * [shuffleTurnOrderButton], [shuffleTurnOrderCheckbox]: Checkbox for order shuffling option
  * [allowTileRotationButton], [allowTileRotationCheckbox]: Checkbox for tile rotation option
  * [playerLabel],[playerBoxLabel]: Table showing player Names on the left
- * [deletePlayerLabel]: deletes a player Name from the Table containing player Names
+ * [deletePlayerButtons]: deletes a player Name from the Table containing player Names
  * [colorPicker]: Buttons to pick leftover color for players
  * [playerColorLabel]:  Color square appears in player Table to display picked color for player
  * [addPlayerButton]: Button for addPlayer dialogue to start. only appears if players < 6
@@ -43,142 +43,105 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     var realAISelection: Int? = null
 
-    var colorsPicked = mutableListOf(false, false, false, false, false, false)
-    var colorPos = 0
+    var colorsPicked = mutableListOf(0,0,0,0,0,0)
 
-    val backToMainMenuSceneButton = Button(
-        width = 600, height = 100, posX = 660, posY = 40, visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
+    val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
-    val shuffleTurnOrderButton = Button(
-        width = 600, height = 100, posX = 1200, posY = 200, visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Turn Order"))
+    val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1120, posY = 250,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Turn Order"))
     ).apply { onMouseClicked = { shuffleTurnOrderCheckbox.isChecked = !shuffleTurnOrderCheckbox.isChecked } }
 
-    val shuffleTurnOrderCheckbox = CheckBox(1830, 233)
+    val shuffleTurnOrderCheckbox = CheckBox(1750, 283)
 
-    val allowTileRotationButton = Button(
-        width = 600, height = 100, posX = 1200, posY = 330, visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Allow Tile Rotation" ))
+    val allowTileRotationButton = Button(width = 600, height = 100, posX = 1120, posY = 380,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Allow Tile Rotation"))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
-    val allowTileRotationCheckbox = CheckBox(1830, 363)
+    val allowTileRotationCheckbox = CheckBox(1750, 413)
 
-    val playerLabel = Label(
-        width = 300, height = 100, posX = 100, posY = 100, visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.1 }, TextVisual(
-                font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Players")))
+    val playerLabel = Label(width = 300, height = 100, posX = 100, posY = 100,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.1 },
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Players")))
 
     val playerBoxLabel = mutableListOf(
         Label(width = 800, height = 80, posX = 100, posY = 250, visual = CompoundVisual(
-                ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                    text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
+            ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
         Label(width = 800, height = 80, posX = 100, posY = 350, visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                 text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
         Label(width = 800, height = 80, posX = 100, posY = 450, visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                 text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
         Label(width = 800, height = 80, posX = 100, posY = 550, visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                 text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
         Label(width = 800, height = 80, posX = 100, posY = 650, visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                 text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))),
         Label(width = 800, height = 80, posX = 100, posY = 750, visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                 text = "", alignment = Alignment.CENTER_LEFT, offsetX = 20))))
 
-    private val deletePlayerLabel = listOf(
-        Button(width = 80, height = 80, posX = 800.0, posY = 250.0,
-            visual = TextVisual(text = "-", font = Font(size = 20, family = "Calibri"))
-        ).apply { onMouseClicked = { deletePlayer(playersJoined,colorPos) } },
+    private val deletePlayerButtons = listOf(
         Button(width = 80, height = 80, posX = 800.0, posY = 350.0,
-            visual = TextVisual(text = "-", font = Font(size = 20, family = "Calibri"))
-        ).apply { onMouseClicked = { deletePlayer(playersJoined,colorPos) } },
+            visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
+        ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(1) } },
         Button(width = 80, height = 80, posX = 800.0, posY = 450.0,
-            visual = TextVisual(text = "-", font = Font(size = 20, family = "Calibri"))
-        ).apply { onMouseClicked = { deletePlayer(playersJoined,colorPos) } },
+            visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
+        ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(2) } },
         Button(width = 80, height = 80, posX = 800.0, posY = 550.0,
-            visual = TextVisual(text = "-", font = Font(size = 20, family = "Calibri"))
-        ).apply { onMouseClicked = { deletePlayer(playersJoined,colorPos) } },
+            visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
+        ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(3) } },
         Button(width = 80, height = 80, posX = 800.0, posY = 650.0,
-            visual = TextVisual(text = "-", font = Font(size = 20, family = "Calibri"))
-        ).apply { onMouseClicked = { deletePlayer(playersJoined,colorPos) } })
+            visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
+        ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(4) } },
+        Button(width = 80, height = 80, posX = 800.0, posY = 750.0,
+            visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
+        ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(5) } })
 
     val colorPicker = listOf(
-        Button(width = 40, height = 40, visual = entity.Color.YELLOW.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.YELLOW.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, visual = entity.Color.BLUE.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.BLUE.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, visual = entity.Color.ORANGE.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.ORANGE.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, visual = entity.Color.GREEN.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.GREEN.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, visual = entity.Color.PURPLE.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.PURPLE.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, visual = entity.Color.BLACK.toRGB()).apply {
+        Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.BLACK.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }
             isDisabled = true; opacity = 0.0 })
 
     val playerColorLabel = mutableListOf(
-        Label(width = 80, height = 80), Label(width = 80, height = 80), Label(width = 80, height = 80),
-        Label(width = 80, height = 80), Label(width = 80, height = 80), Label(width = 80, height = 80))
+        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0),
+        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0),
+        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0))
 
-    val addPlayerButton = Button(width = 80, height = 80, text = "+").apply { onMouseClicked = { addPlayer() } }
-
-    val aiPlayerButton = Button(width = 270, height = 100, posX = 1200, posY = 500,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI")))
-
-    val aiPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1200, posY = 500,
-        visual = ColorVisual(63, 255, 63)
-    ).apply {
-        opacity = 0.0
-        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
-        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
-        onMouseClicked = { realAISelection = 0; realAISelected() }
-    }
-
-    val hotseatPlayerButton = Button(width = 270, height = 100, posX = 1550, posY = 500,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "real")))
-
-    val hotseatPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1550, posY = 500,
-        visual = ColorVisual(63, 255, 63)
-    ).apply {
-        opacity = 0.0
-        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
-        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
-        onMouseClicked = { realAISelection = 1; realAISelected() }
-    }
-
-    val smartAI = Button(width = 270, height = 100, posX = 1200, posY = 630,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "big smart"))
-    ).apply {
-        isDisabled = true; opacity = 0.0
-        onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked }
-    }
-
-    val smartAICheckbox = CheckBox(1500, 663).apply { isDisabled = true; opacity = 0.0 }
+    val addPlayerButton = Button(width = 80, height = 80, posX = 120.0,
+        visual = TextVisual(font = Font(size = 50, family = "Calibri"), text = "+")
+    ).apply { onMouseClicked = { addPlayer() } }
 
     val nameFields = mutableListOf(
         TextField(width = 280, height = 80, posX = 100, posY = 350, prompt = "Enter Name",
@@ -195,45 +158,81 @@ class LobbyScene : MenuScene(1920, 1080) {
         ).apply { onKeyTyped = { playerConfigured() } },
         TextField(width = 280, height = 80, posX = 100, posY = 750, prompt = "Enter Name",
             font = Font(size = 40, family = "Calibri"),
-        ).apply { onKeyTyped = { playerConfigured() } },
-        TextField(width = 280, height = 80, posX = 100, posY = 850, prompt = "Enter Name",
-            font = Font(size = 40, family = "Calibri"),
-        ).apply { onKeyTyped = { playerConfigured() } },)
+        ).apply { onKeyTyped = { playerConfigured() }})
 
-    val confirmButton = Button(width = 400, height = 100, posX = 1200, posY = 793,
+    val aiPlayerButton = Button(width = 270, height = 100, posX = 1120, posY = 550,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI")))
+
+    val aiPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1120, posY = 550,
+        visual = ColorVisual(63, 255, 63)
+    ).apply {
+        opacity = 0.0
+        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
+        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
+        onMouseClicked = { realAISelection = 0; realAISelected() }}
+
+    val hotseatPlayerButton = Button(width = 270, height = 100, posX = 1470, posY = 550,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "real")))
+
+    val hotseatPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1470, posY = 550,
+        visual = ColorVisual(63, 255, 63)
+    ).apply {
+        opacity = 0.0
+        onMouseEntered = { if (realAISelection == null) opacity = 0.5 }
+        onMouseExited = { if (realAISelection == null) opacity = 0.0 }
+        onMouseClicked = { realAISelection = 1; realAISelected() }}
+
+    val smartAI = Button(width = 270, height = 100, posX = 1120, posY = 680,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "big smart"))
+    ).apply {
+        isDisabled = true; opacity = 0.0
+        onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked }}
+
+    val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
+
+    val confirmButton = Button(width = 400, height = 100, posX = 1120, posY = 850,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Confirm"))
     ).apply { onMouseClicked = { playerAddFinished() } }
 
-    val quitButton = Button(width = 140, height = 140, posX = 1700, posY = 40,
+    val startGameButton = Button(width = 300, height = 100, posX = 100 , posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
+    ).apply { isDisabled = true; opacity = 0.0 }
+
+    val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
 
-    val musicToggleButton = Button(width = 140, height = 140, posX = 430, posY = 880,
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 60,
         visual = ImageVisual("music_enabled.png"))
 
-    val soundToggleButton = Button(width = 140, height = 140, posX = 600, posY = 880,
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 60,
         visual = ImageVisual("sound_enabled.png"))
 
     init {
+
         addComponents(
-            backToMainMenuSceneButton, playerLabel,
+            backToMainMenuSceneButton, playerLabel, quitButton, musicToggleButton, soundToggleButton,
             playerBoxLabel[0], playerBoxLabel[1], playerBoxLabel[2],
             playerBoxLabel[3], playerBoxLabel[4], playerBoxLabel[5],
             shuffleTurnOrderButton, shuffleTurnOrderCheckbox, allowTileRotationButton, allowTileRotationCheckbox,
-            quitButton,
-            musicToggleButton, soundToggleButton,
             colorPicker[0], colorPicker[1], colorPicker[2], colorPicker[3], colorPicker[4], colorPicker[5],
-            deletePlayerLabel[0],deletePlayerLabel[1],deletePlayerLabel[2],
-            deletePlayerLabel[3],deletePlayerLabel[4]
+            deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
+            deletePlayerButtons[3],deletePlayerButtons[4],
+            startGameButton
         )
-        for (i in 0..4) {
-            deletePlayerLabel[i].isDisabled = true
-            deletePlayerLabel[i].opacity = 0.0
-        }
+
         opacity = 0.0
         showColorPicker(playersJoined)
-       // deletePlayerLabel[playersJoined]
+
     }
 
     /**
@@ -243,17 +242,14 @@ class LobbyScene : MenuScene(1920, 1080) {
     fun showColorPicker(pos: Int) {
 
         for (i in 0..5) {
-            if (!colorsPicked[i]) {
+            if (colorsPicked[i] == 0) {
                 colorPicker[i].isDisabled = false
                 colorPicker[i].opacity = 1.0
-            }
-        }
-        colorPicker[0].apply { posX = 700.0; posY = 250.0 + pos * 100.0 }
-        colorPicker[1].apply { posX = 700.0; posY = 290.0 + pos * 100.0 }
-        colorPicker[2].apply { posX = 740.0; posY = 250.0 + pos * 100.0 }
-        colorPicker[3].apply { posX = 740.0; posY = 290.0 + pos * 100.0 }
-        colorPicker[4].apply { posX = 780.0; posY = 250.0 + pos * 100.0 }
-        colorPicker[5].apply { posX = 780.0; posY = 290.0 + pos * 100.0 }
+            } }
+
+        colorPicker[0].apply { posY = 250.0 + pos * 100.0 }; colorPicker[1].apply { posY = 290.0 + pos * 100.0 }
+        colorPicker[2].apply { posY = 250.0 + pos * 100.0 }; colorPicker[3].apply { posY = 290.0 + pos * 100.0 }
+        colorPicker[4].apply { posY = 250.0 + pos * 100.0 }; colorPicker[5].apply { posY = 290.0 + pos * 100.0 }
     }
 
     /**
@@ -261,48 +257,36 @@ class LobbyScene : MenuScene(1920, 1080) {
      */
 
     fun colorPicked(button: Button) {
-        //players[playersJoined].color = color
-        for (i in 0..5) {
-            if (!colorsPicked[i]) {
-                colorPicker[i].isDisabled = true
-                colorPicker[i].opacity = 0.0
-            }
-        }
 
-        colorPos = colorPicker.indexOf(button)
-        println(colorPos)
+        for (i in 0..5) {
+            if (colorsPicked[i] == 0) {
+                colorPicker[i].isDisabled = true; colorPicker[i].opacity = 0.0
+            } }
 
         colorPicker[colorPicker.indexOf(button)].isDisabled = true
         colorPicker[colorPicker.indexOf(button)].opacity = 0.0
-        colorsPicked[colorPicker.indexOf(button)] = true
-
-        var flag =1
-        if (playersJoined >=1) {
-            deletePlayerLabel[playersJoined].isDisabled = false
-            deletePlayerLabel[playersJoined].opacity = 1.0
-
-            for (i in flag..playersJoined-1) {
-                deletePlayerLabel[i].isDisabled = true
-                deletePlayerLabel[i].opacity = 0.0
-            }
-        }
 
         addComponents(playerColorLabel[playersJoined])
-
-        playerColorLabel[playersJoined].apply {
-            posX = 700.0
-            posY = 250.0 + 100.0 * playersJoined
-            visual = button.visual
-        }
-
-        println(colorsPicked)
+        playerColorLabel[playersJoined].apply { posY = 250.0 + 100.0 * playersJoined; visual = button.visual }
 
         playersJoined++
-        if (playersJoined < 6) {
-            addComponents(addPlayerButton)
-            addPlayerButton.apply { posX = 120.0; posY = 250.0 + 100.0 * playersJoined }
+
+        colorsPicked[colorPicker.indexOf(button)] = playersJoined
+
+        println("color at index " + colorPicker.indexOf(button) + " picked by player at index " + playersJoined)
+        println("now there are " + playersJoined + " Players in the lobby")
+
+        if (playersJoined > 1) {
+            deletePlayerButtons[playersJoined-2].isDisabled = false
+            deletePlayerButtons[playersJoined-2].opacity = 1.0
+            startGameButton.isDisabled = false
+            startGameButton.opacity = 1.0
         }
 
+        if (playersJoined < 6) {
+            addComponents(addPlayerButton)
+            addPlayerButton.apply { posY = 250.0 + 100.0 * playersJoined }
+        }
     }
 
     /**
@@ -316,43 +300,10 @@ class LobbyScene : MenuScene(1920, 1080) {
             nameFields[playersJoined - 1],
             confirmButton
         )
+
         removeComponents(addPlayerButton)
-    }
-
-    /**
-     * clears playerName from the Table containing players Name
-     */
-
-    fun deletePlayer(pos: Int, colorPos: Int) {
-
-        println("colorPos" + colorPos)
-        colorsPicked[colorPos] = false
-        //colorPicker[colorPos].isDisabled = false
-        //colorPicker[colorPos].opacity = 1.0
-        if (playersJoined >= 1) {
-            playerBoxLabel[playersJoined - 1].visual = CompoundVisual(ColorVisual.WHITE.apply { transparency = 0.1 },
-                TextVisual(
-                    font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""
-                )
-            )
-            removeComponents(
-                nameFields[playersJoined - 2]
-
-            )
-
-            nameFields[pos - 1].text = ""
-            nameFields[pos].text = ""
-
-            println("colorpoos" + colorsPicked[colorPos])
-
-            removeComponents(nameFields[pos - 1])
-            removeComponents(playerColorLabel[pos - 1])
-            removeComponents(deletePlayerLabel[pos - 1])
-
-            addPlayerButton.reposition(100, playerBoxLabel[pos - 1].posY)
-            playersJoined--
-            println(playersJoined)
-
+        if (playersJoined > 1) {
+            deletePlayerButtons[playersJoined-2].isDisabled = true; deletePlayerButtons[playersJoined-2].opacity = 0.0
         }
     }
 
@@ -420,6 +371,48 @@ class LobbyScene : MenuScene(1920, 1080) {
         )
 
         showColorPicker(playersJoined)
+    }
+
+    /**
+     * clears playerName from the Table containing players Name
+     */
+
+    fun deletePlayer(delPos : Int) {
+
+        colorsPicked[colorsPicked.indexOf(delPos+1)] = 0
+        println("delete player at " +  delPos + ". color at index " + colorsPicked.indexOf(delPos+1) + " is now free")
+
+        //colorPicker[colorPos].isDisabled = false
+        //colorPicker[colorPos].opacity = 1.0
+
+        if (playersJoined > 1) {
+
+            playerBoxLabel[playersJoined - 1].visual = CompoundVisual(
+                ColorVisual.WHITE.apply { transparency = 0.3 },
+                TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""))
+
+            nameFields[delPos-1].text = ""
+
+            removeComponents(nameFields[delPos - 1], playerColorLabel[delPos])
+
+            deletePlayerButtons[delPos - 1].isDisabled = true; deletePlayerButtons[delPos - 1].opacity = 0.0
+
+            playersJoined--
+
+            addPlayerButton.apply { posY = playerBoxLabel[playersJoined].posY }
+            if (playersJoined > 1) {
+                deletePlayerButtons[delPos-2].isDisabled = false; deletePlayerButtons[delPos-2].opacity = 1.0 }
+
+            println("players joined after deletion " + playersJoined)
+
+            if (playersJoined == 5) {
+                addComponents(addPlayerButton)
+                addPlayerButton.apply { posY = 250.0 + 100.0 * playersJoined+1 }
+            }
+
+            if (playersJoined == 1) { startGameButton.isDisabled = true; startGameButton.opacity = 0.0 }
+
+        }
     }
 
 }

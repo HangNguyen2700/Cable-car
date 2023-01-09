@@ -25,15 +25,11 @@ import java.awt.Color
  */
 
 class MainMenuScene : MenuScene(1920,1080) {
-    
-    private val buttonTextFont = Font(50, color = Color.WHITE, family = "Calibri")
 
-    val buttonColor = Color(186,136,133,255)
-
-    private val menuLabel = Label(width = 600, height = 100, posX = 650, posY = 60,
+    private val menuLabel = Label(width = 600, height = 200, posX = 650, posY = 10,
         visual = CompoundVisual(
             TextVisual(
-                font = Font(size = 60, color = Color.WHITE, family = "Calibri"),
+                font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
                 text = "MENU")))
 
     val debugGameSceneButton = Button(width = 400, height = 100, posX = 760, posY = 440,
@@ -42,7 +38,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "gameScene")))
 
-    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 240,
+    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 460, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
@@ -95,19 +91,19 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Hotseat Mode")))
 
-    val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
+    val creditsButton = Button(width = 300, height = 100, posX = 80, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Credits")))
 
-    val quitButton = Button(width = 140, height = 140, posX = 1700, posY = 40,
+    val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
 
-    val musicToggleButton = Button(width = 140, height = 140, posX = 470, posY = 880,
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1720, posY = 880,
         visual = ImageVisual("music_enabled.png"))
 
-    val soundToggleButton = Button(width = 140, height = 140, posX = 660, posY = 880,
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
 
     init{
