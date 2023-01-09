@@ -23,7 +23,6 @@ class GameScene : BoardGameScene(1920,1080) {
     val quickMenuButton: Button = Button(width = 140 , height = 140 ,posX = 40, posY = 40,
        visual = ImageVisual("quick_menu_button.png"))
 
-
     private val mockTile = Tile(mutableListOf(Pair(0, 7), Pair(1, 6), Pair(2, 5), Pair(3, 4)), tilePos = 2)
     private val mockDrawnTile = Tile(mutableListOf(Pair(0, 5), Pair(1, 2), Pair(3, 6), Pair(4, 7)), tilePos = 3)
     private var currentTile: Tile? = null
@@ -34,12 +33,6 @@ class GameScene : BoardGameScene(1920,1080) {
     private val outerOtherPlayersGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
     private val boardGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 3)
     private val outerMyGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
-
-    private val labelFont = Font(50, Color.WHITE)
-    private val buttonTextFont = Font(30, color = Color.WHITE)
-
-    private val otherPlayersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6)
-    private val otherPlayers = mutableListOf<Player>(Player("p1"), Player("p2"), Player("p3"), Player("p4"))
 
     private val myInfo = Player("p0")
     private val myInfoGrid = GridPane<ComponentView>(columns = 3, rows = 1)
@@ -58,6 +51,16 @@ class GameScene : BoardGameScene(1920,1080) {
     private val bottomStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
     private val mainBoardGrid = GridPane<ComponentView>(columns = 8, rows = 8)
 
+
+    private val labelFont = Font(50, Color.WHITE)
+    private val buttonTextFont = Font(30, color = Color.WHITE)
+
+    private val otherPlayersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6)
+    private val otherPlayers = mutableListOf<Player>(Player("p1"), Player("p2"), Player("p3"), Player("p4"))
+
+    /**
+     * initializes player's information
+     */
     private val myNameLabel = Label(
         text = myInfo.name,
         /*height = 200,
@@ -78,6 +81,9 @@ class GameScene : BoardGameScene(1920,1080) {
         )
     )
 
+    /**
+     * initializes player's current tile(s) and drawn tile (/tilestack)
+     */
     private val cardImageLoader = CardImageLoader()
 
     private var currentTileCardView: CardView? = null
@@ -134,6 +140,11 @@ class GameScene : BoardGameScene(1920,1080) {
 //        back = ImageVisual(cardImageLoader.backImage)
 //    )
 
+    /**
+     * 2D-array performs all stations around the game board and their car's colors according to player number
+     * when number of players is 1,2,4: 32 cars with color
+     * when number of players is 3,5,6: no car at positions 16 & 17 (30 cars with color)
+     */
     private fun initStationArray() : Array<Array<Pair<entity.Color, Boolean>>>{
         val numOfPlayers = 5 // TODO: get number of players
         val stations = Array(4) { Array(8) { Pair(entity.Color.YELLOW, false) } }
@@ -324,6 +335,10 @@ class GameScene : BoardGameScene(1920,1080) {
         }
     }
 
+    /**
+     * initializes all stations in 2d-array to positions around the game board
+     * position 16 & 17 that have no car, have light gray color
+     */
     private fun initStationPosition() {
         val stations = initStationArray()
         for(i in 0..3) {
@@ -350,99 +365,11 @@ class GameScene : BoardGameScene(1920,1080) {
         }
     }
 
-
-    val undoButton: Button = Button(
-        width = 150, height = 50,
-        text = "Undo",
-        font = buttonTextFont
-    ).apply {
-        visual = ColorVisual(186, 136, 133, 255)
-    }
-
-    val redoButton: Button = Button(
-        width = 150, height = 50,
-        text = "Redo",
-        font = buttonTextFont
-    ).apply {
-        visual = ColorVisual(186, 136, 133, 255)
-    }
-
-    val rotateButton: Button = Button(
-        width = 150, height = 50,
-        text = "Rotate",
-        font = buttonTextFont
-    ).apply {
-        visual = ColorVisual(186, 136, 133, 255)
-        onMouseClicked = {
-            if (currentTile != null && currentTileCardView != null) {
-                currentTile!!.rotationDegree += 90
-                currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble()
-            }
-        }
-    }
-
-
-
-    init {
-        // TODO: changed players number
-        for (i in 0 until otherPlayers.size) {
-            val otherPlayerGrid = GridPane<ComponentView>(columns = 3, rows = 1)
-            val otherPlayerNameLabel = Label(
-                text = otherPlayers[i].name,
-                /*height = 200,
-                width = 1000,*/
-                font = labelFont,
-            )
-            otherPlayerGrid[1,0] = otherPlayerNameLabel
-            val otherPlayerScoreLabel = Label(
-                text = otherPlayers[i].score.toString(),
-                /*height = 200,
-                width = 1000,*/
-                font = labelFont,
-            )
-            otherPlayerGrid[2,0] = otherPlayerScoreLabel
-            val otherPlayerColorLabel = Label(
-                height = 50,
-                width = 50,
-                visual = CompoundVisual(
-                    ColorVisual.GREEN  //TODO: change player color: != null
-                )
-            )
-            otherPlayerGrid[0,0] = otherPlayerColorLabel
-            otherPlayersGrid[0,i] = otherPlayerGrid
-        }
-        outerOtherPlayersGrid[0,0] = otherPlayersGrid
-        otherPlayersGrid.setColumnWidths(400)
-        mainGrid[0,0] = outerOtherPlayersGrid
-
-        myInfoGrid[1,0] = myNameLabel
-        myInfoGrid[2,0] = myScoreLabel
-        myInfoGrid[0,0] = myColorLabel
-
-        myTilesGrid[0, 0] = myTileCardView
-
-        myGrid[0, 0] = myInfoGrid
-        myGrid[0, 1] = myTilesGrid
-
-        drawnStackGrid[0, 0] = drawnTilesLabel
-        drawnStackGrid[0, 1] = drawnTilesCardView0
-        myGrid[0, 2] = drawnStackGrid
-
-        buttonsGrid[0, 0] = undoButton
-        buttonsGrid[1, 0] = redoButton
-        buttonsGrid[0, 1] = rotateButton
-        buttonsGrid.setRowHeights(70)
-        buttonsGrid.setColumnWidths(200)
-        myGrid[0, 3] = buttonsGrid
-
-        myGrid.setRowHeight(0,100)
-        myGrid.setRowHeight(1, 100)
-        myGrid.setRowHeight(2, 200)
-        myGrid.setRowHeight(3, 300)
-        myGrid.setColumnWidths(500)
-        outerMyGrid[0, 0] = myGrid
-        mainGrid[2, 0] = outerMyGrid
-
+    /**
+     * initializes game board,
+     * each board cell is a card view, click on board cell to place tile
+     */
+    private fun initGameBoard(){
         val mainStationPos = 3..4
         for (i in 0..7) {
             for (j in 0..7) {
@@ -480,7 +407,123 @@ class GameScene : BoardGameScene(1920,1080) {
                 mainBoardGrid[i,j] = boardCellLabel
             }
         }
+    }
 
+    /**
+     * buttons
+     */
+    val undoButton: Button = Button(
+        width = 150, height = 50,
+        text = "Undo",
+        font = buttonTextFont
+    ).apply {
+        visual = ColorVisual(186, 136, 133, 255)
+    }
+
+    val redoButton: Button = Button(
+        width = 150, height = 50,
+        text = "Redo",
+        font = buttonTextFont
+    ).apply {
+        visual = ColorVisual(186, 136, 133, 255)
+    }
+
+    /**
+     * rotates the current opened player tile by 90 degrees each time
+     * when the drawn tile is already opened, then only drawn tile can be rotated
+     */
+    val rotateButton: Button = Button(
+        width = 150, height = 50,
+        text = "Rotate",
+        font = buttonTextFont
+    ).apply {
+        visual = ColorVisual(186, 136, 133, 255)
+        onMouseClicked = {
+            if (currentTile != null && currentTileCardView != null) {
+                currentTile!!.rotationDegree += 90
+                currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble()
+            }
+        }
+    }
+
+
+
+    init {
+        /**
+         * displays other players's information
+         */
+        // TODO: changed players number
+        for (i in 0 until otherPlayers.size) {
+            val otherPlayerGrid = GridPane<ComponentView>(columns = 3, rows = 1)
+            val otherPlayerNameLabel = Label(
+                text = otherPlayers[i].name,
+                /*height = 200,
+                width = 1000,*/
+                font = labelFont,
+            )
+            otherPlayerGrid[1,0] = otherPlayerNameLabel
+            val otherPlayerScoreLabel = Label(
+                text = otherPlayers[i].score.toString(),
+                /*height = 200,
+                width = 1000,*/
+                font = labelFont,
+            )
+            otherPlayerGrid[2,0] = otherPlayerScoreLabel
+            val otherPlayerColorLabel = Label(
+                height = 50,
+                width = 50,
+                visual = CompoundVisual(
+                    ColorVisual.GREEN  //TODO: change player color: != null
+                )
+            )
+            otherPlayerGrid[0,0] = otherPlayerColorLabel
+            otherPlayersGrid[0,i] = otherPlayerGrid
+        }
+        outerOtherPlayersGrid[0,0] = otherPlayersGrid
+        otherPlayersGrid.setColumnWidths(400)
+        mainGrid[0,0] = outerOtherPlayersGrid
+
+        /**
+         * displays player information and current tiles
+         */
+        myInfoGrid[1,0] = myNameLabel
+        myInfoGrid[2,0] = myScoreLabel
+        myInfoGrid[0,0] = myColorLabel
+
+        myTilesGrid[0, 0] = myTileCardView
+
+        myGrid[0, 0] = myInfoGrid
+        myGrid[0, 1] = myTilesGrid
+
+        /**
+         * display drawn tile (-stack)
+         */
+        drawnStackGrid[0, 0] = drawnTilesLabel
+        drawnStackGrid[0, 1] = drawnTilesCardView0
+        myGrid[0, 2] = drawnStackGrid
+
+        /**
+         * displays buttons
+         */
+        buttonsGrid[0, 0] = undoButton
+        buttonsGrid[1, 0] = redoButton
+        buttonsGrid[0, 1] = rotateButton
+        buttonsGrid.setRowHeights(70)
+        buttonsGrid.setColumnWidths(200)
+        myGrid[0, 3] = buttonsGrid
+
+        myGrid.setRowHeight(0,100)
+        myGrid.setRowHeight(1, 100)
+        myGrid.setRowHeight(2, 200)
+        myGrid.setRowHeight(3, 300)
+        myGrid.setColumnWidths(500)
+        outerMyGrid[0, 0] = myGrid
+        mainGrid[2, 0] = outerMyGrid
+
+        /**
+         * displays game board with stations
+         */
+        initGameBoard()
         initStationPosition()
         topBoardGrid[1,0] = topStationGrid
         middleBoardGrid[0,0] = leftStationGrid
