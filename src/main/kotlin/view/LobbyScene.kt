@@ -18,21 +18,22 @@ import java.awt.Color
  *
  * [playersJoined]: counter representing amount of players in Table
  * [realAISelection]: stores player input in addPlayer dialogue
- * [colorsPicked]: stores if a color is claimed by a player
+ * [colorsPicked]: stores which color is claimed by which player (0 for unclaimed)
  * [backToMainMenuSceneButton]: button to return to the main Menu
- * [playerLabel]: Header for the Player List
+ * [hintLabel]: hint player to pick a color
  * [shuffleTurnOrderButton], [shuffleTurnOrderCheckbox]: Checkbox for order shuffling option
  * [allowTileRotationButton], [allowTileRotationCheckbox]: Checkbox for tile rotation option
  * [playerLabel],[playerBoxLabel]: Table showing player Names on the left
- * [deletePlayerButtons]: deletes a player Name from the Table containing player Names
+ * [deletePlayerButtons]: deletes a player entry from the player table
  * [colorPicker]: Buttons to pick leftover color for players
  * [playerColorLabel]:  Color square appears in player Table to display picked color for player
  * [addPlayerButton]: Button for addPlayer dialogue to start. only appears if players < 6
+ * [nameFields]: appears in corresponding line in player table for input in addPlayer dialogue
  * [aiPlayerButton], [aiPlayerButtonTrigger]: highlighted Button; if selected smartAI Checkbox appears
  * [hotseatPlayerButton], [hotseatPlayerButtonTrigger]: highlighted Button
  * [smartAI], [smartAICheckbox]: Checkbox for big smart AI option
- * [nameFields]: appears in corresponding line in player table for input in addPlayer dialogue
  * [confirmButton]: Button to appear in addPlayer dialogue when necessary options are input
+ * [startGameButton]: starts a game when all criteria are met
  * [quitButton]: exits the Game
  * [musicToggleButton], [soundToggleButton]: toggles music/sound on off
  */
@@ -49,6 +50,12 @@ class LobbyScene : MenuScene(1920, 1080) {
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
+
+    val hintLabel = Label(width = 400, height = 100, posX = 100, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.5 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
+                text = "pick a color!")))
 
     val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1120, posY = 250,
         visual = CompoundVisual(
@@ -116,23 +123,17 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     val colorPicker = listOf(
         Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.YELLOW.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 },
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.BLUE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 },
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.ORANGE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 },
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.GREEN.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 },
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.PURPLE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 },
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.BLACK.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }
-            isDisabled = true; opacity = 0.0 })
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 })
 
     val playerColorLabel = mutableListOf(
         Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0),
@@ -227,7 +228,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             colorPicker[0], colorPicker[1], colorPicker[2], colorPicker[3], colorPicker[4], colorPicker[5],
             deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
             deletePlayerButtons[3],deletePlayerButtons[4],
-            startGameButton
+            startGameButton, hintLabel
         )
 
         opacity = 0.0
@@ -265,6 +266,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
         colorPicker[colorPicker.indexOf(button)].isDisabled = true
         colorPicker[colorPicker.indexOf(button)].opacity = 0.0
+        hintLabel.isDisabled = true; hintLabel.opacity = 0.0
 
         addComponents(playerColorLabel[playersJoined])
         playerColorLabel[playersJoined].apply { posY = 250.0 + 100.0 * playersJoined; visual = button.visual }
@@ -274,7 +276,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         colorsPicked[colorPicker.indexOf(button)] = playersJoined
 
         println("color at index " + colorPicker.indexOf(button) + " picked by player at index " + playersJoined)
-        println("now there are " + playersJoined + " Players in the lobby")
+        println("now there are $playersJoined Players in the lobby")
 
         if (playersJoined > 1) {
             deletePlayerButtons[playersJoined-2].isDisabled = false
@@ -302,6 +304,8 @@ class LobbyScene : MenuScene(1920, 1080) {
         )
 
         removeComponents(addPlayerButton)
+        startGameButton.isDisabled = true; startGameButton.opacity = 0.0
+        confirmButton.isDisabled = true; confirmButton.opacity = 0.0
         if (playersJoined > 1) {
             deletePlayerButtons[playersJoined-2].isDisabled = true; deletePlayerButtons[playersJoined-2].opacity = 0.0
         }
@@ -407,7 +411,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             if (playersJoined > 1) {
                 deletePlayerButtons[delPos-2].isDisabled = false; deletePlayerButtons[delPos-2].opacity = 1.0 }
 
-            println("players joined after deletion " + playersJoined)
+            println("players joined after deletion $playersJoined")
 
             if (playersJoined == 5) {
                 addComponents(addPlayerButton)
