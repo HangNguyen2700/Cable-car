@@ -200,7 +200,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Confirm"))
-    ).apply { onMouseClicked = { playerAddFinished() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerAddFinished() } }
 
     val startGameButton = Button(width = 300, height = 100, posX = 100 , posY = 900,
         visual = CompoundVisual(
@@ -335,7 +335,9 @@ class LobbyScene : MenuScene(1920, 1080) {
      */
 
     fun playerConfigured() {
-        if (confirmButton.isDisabled && nameFields[playersJoined - 1].text != "" && realAISelection != null) {
+        if (confirmButton.isDisabled &&
+            nameFields[playersJoined - 1].text != "" &&
+            realAISelection != null) {
             confirmButton.isDisabled = false; confirmButton.opacity = 1.0
         }
     }
@@ -347,30 +349,33 @@ class LobbyScene : MenuScene(1920, 1080) {
      */
 
     fun playerAddFinished() {
-        playerBoxLabel[playersJoined].visual = CompoundVisual(
-            ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-            TextVisual(
-                font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                text = (nameFields[playersJoined - 1].text +
-                        if (realAISelection == 0)
-                            if (smartAICheckbox.isChecked) " (AI)"
-                            else " (dumb)"
-                        else ""),
-                alignment = Alignment.CENTER_LEFT, offsetX = 20))
+        if (nameFields[playersJoined - 1].text != "") {
+            playerBoxLabel[playersJoined].visual = CompoundVisual(
+                ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+                TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                    text = (nameFields[playersJoined - 1].text +
+                            if (realAISelection == 0)
+                                if (smartAICheckbox.isChecked) " (AI)"
+                                else " (dumb)"
+                            else ""),
+                    alignment = Alignment.CENTER_LEFT, offsetX = 20))
 
-        aiPlayerButtonTrigger.opacity = 0.0; hotseatPlayerButtonTrigger.opacity = 0.0
-        smartAICheckbox.opacity = 0.0; smartAICheckbox.isDisabled = true
-        smartAI.opacity = 0.0; smartAI.isDisabled = true
-        realAISelection = null
-        smartAICheckbox.isChecked = false
-        removeComponents(
-            aiPlayerButton, aiPlayerButtonTrigger, hotseatPlayerButton, hotseatPlayerButtonTrigger,
-            smartAI, smartAICheckbox,
-            nameFields[playersJoined - 1],
-            confirmButton
-        )
+            aiPlayerButtonTrigger.opacity = 0.0; hotseatPlayerButtonTrigger.opacity = 0.0
+            smartAICheckbox.opacity = 0.0; smartAICheckbox.isDisabled = true
+            smartAI.opacity = 0.0; smartAI.isDisabled = true
+            realAISelection = null
+            smartAICheckbox.isChecked = false
+            removeComponents(
+                aiPlayerButton, aiPlayerButtonTrigger, hotseatPlayerButton, hotseatPlayerButtonTrigger,
+                smartAI, smartAICheckbox,
+                nameFields[playersJoined - 1],
+                confirmButton
+            )
+            showColorPicker(playersJoined)
+        } else {
+            confirmButton.isDisabled = true; confirmButton.opacity = 0.0
+        }
 
-        showColorPicker(playersJoined)
     }
 
     /**
