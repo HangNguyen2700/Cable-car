@@ -28,7 +28,7 @@ class TitleScene : BoardGameScene(1920, 1080) {
         visual = ColorVisual(0,0,0),
     ).apply { onMouseEntered = { println("Scene initialized"); fadeIn() }}
 
-    private val gameLabel = Label(width = 1860, height = 441, posX = 30, posY = 100,
+    val gameLabel = Label(width = 1860, height = 441, posX = 30, posY = 100,
         /*font = Font(size = 300, color = Color.PINK, family = "Comic Sans MS"), text = "Carbel Car",*/
         visual = ImageVisual("game_banner.png")
     ).apply { opacity = 0.0 }
@@ -44,7 +44,7 @@ class TitleScene : BoardGameScene(1920, 1080) {
     val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }
 
     init {
-        background = ColorVisual(108, 168, 59)
+        background = ColorVisual(255, 0, 0)
         addComponents(trigger)
     }
 

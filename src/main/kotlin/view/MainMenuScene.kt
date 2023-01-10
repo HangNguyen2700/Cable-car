@@ -42,7 +42,7 @@ class MainMenuScene : MenuScene(1920,1080) {
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "back to Title")))
+                text = "Back to Title")))
 
     private val nameFieldLabel = Label(width = 600, height = 100, posX = 100, posY = 250,
         visual = CompoundVisual(

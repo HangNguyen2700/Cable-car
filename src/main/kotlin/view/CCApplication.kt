@@ -31,9 +31,26 @@ import java.awt.Color
 class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private val creditsScene = CreditsScene().apply {
-        //backButton.onMouseClicked = { showGameScene(titleScene) }         //recursive issue :(
-        soundButton.onMouseClicked = { toggleSound() }
-        musicButton.onMouseClicked = { toggleMusic() }
+        backToTitleSceneButton.onMouseClicked = {
+            timesClicked++
+            when (timesClicked) {
+                1 -> { backToTitleSceneButton.apply { posX = 1400.0; posY = 300.0 }; playNopeSound() }
+                2 -> { backToTitleSceneButton.apply { posX = 700.0; posY = 200.0 }; playNopeSound() }
+                3 -> { backToTitleSceneButton.apply { posX = 1500.0; posY = 500.0 }; playNopeSound() }
+                4 -> { backToTitleSceneButton.apply { posX = 200.0; posY = 800.0 }; playNopeSound() }
+                5 -> { backToTitleSceneButton.apply { posX = 1400.0; posY = 200.0 }; playNopeSound() }
+                6 -> {
+                    backToTitleSceneButton.apply { posX = 100.0; posY = 930.0 }
+                    timesClicked = 0
+                    if (musicChannel != null) musicChannel!!.stop()
+                    showGameScene(titleScene)
+                    titleScene.gameLabel.opacity = 1.0
+                    repaint()
+                }
+            }
+        }
+        soundToggleButton.onMouseClicked = { toggleSound() }
+        musicToggleButton.onMouseClicked = { toggleMusic() }
     }
 
     private val gameOverScene = GameOverScene().apply {
@@ -73,7 +90,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         hotseatButton.onMouseClicked = { nameEmptyCheck() }
         creditsButton.onMouseClicked = {
             hideMenuScene(3000)
-            showGameScene(creditsScene)
+            explicitlyShowCreditsScene()
             if (musicEnabled) playCreditsMusic()
         }
         debugGameSceneButton.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
@@ -112,10 +129,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var musicEnabled = true
     private var soundEnabled = true
 
-    private val musicButtons = listOf<Button>(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
-        quickMenuGameScene.musicToggleButton)
-    private val soundButtons = listOf<Button>(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
-        quickMenuGameScene.soundToggleButton)
+    private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
+        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton)
+    private val soundButtons = listOf(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
+        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
@@ -141,8 +158,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     text = mainMenuScene.nameField.text,
                     alignment = Alignment.CENTER_LEFT, offsetX = 20))
             showAndStoreMenuScene(lobbyScene, 3000)
-        } else
+        } else {
             mainMenuScene.nameErrorDisplay()
+            playNopeSound()
+        }
+
     }
 
     /**
@@ -154,10 +174,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         for (button in musicButtons) {
             if (!musicEnabled) {
                 button.visual = musicButtonDisableImage
-                if (musicChannel != null) musicChannel!!.volume = 1.0
+                if (musicChannel != null) musicChannel!!.volume = 0.0
             } else {
                 button.visual = musicButtonEnableImage
-                if (musicChannel != null) musicChannel!!.volume = 0.0
+                if (musicChannel != null) musicChannel!!.volume = 1.0
             }
         }
     }
@@ -171,10 +191,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         for (button in soundButtons) {
             if (!soundEnabled) {
                 button.visual = soundButtonDisableImage
-                if (soundChannel != null) soundChannel!!.volume = 1.0
+                if (soundChannel != null) soundChannel!!.volume = 0.0
             } else {
                 button.visual = soundButtonEnableImage
-                if (soundChannel != null) soundChannel!!.volume = 0.0
+                if (soundChannel != null) soundChannel!!.volume = 1.0
             }
         }
     }
@@ -184,12 +204,39 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
      */
 
     private fun playCreditsMusic() {
-        GlobalScope.async {
-            val music = resourcesVfs["credits_music.wav"].readMusic()
-            musicChannel = music.play(infinitePlaybackTimes)
-            musicChannel!!.await()
+        if (musicEnabled) {
+            GlobalScope.async {
+                val music = resourcesVfs["credits_music.wav"].readMusic()
+                musicChannel = music.play(infinitePlaybackTimes)
+                musicChannel!!.await()
+            }
         }
     }
+
+    /**
+     * playback of sound via KorAU audio library
+     */
+
+    private fun playNopeSound() {
+        if(soundEnabled) {
+            GlobalScope.async {
+            val sound = resourcesVfs["nope_sound_effect.wav"].readMusic()
+            soundChannel = sound.play()
+            soundChannel!!.await()
+            }
+        }
+    }
+
+    /**
+     * workaround for kotlin compiler warning
+     */
+
+    private fun explicitlyShowCreditsScene() { showGameScene(creditsScene); creditsScene.trigger() }
+
+    /**
+     * when a MenuScene is called it needs to be saved for confirmQuit MenuScene
+     * to revert to formerly displayed MenuScene
+     */
 
     private fun showAndStoreMenuScene(menuScene: MenuScene, fadeTime : Int) {
         activeMenuScene = menuScene

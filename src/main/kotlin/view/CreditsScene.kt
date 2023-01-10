@@ -1,74 +1,57 @@
 package view
 
+import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.components.uicomponents.UIComponent
 import tools.aqua.bgw.core.BoardGameScene
-import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
 class CreditsScene : BoardGameScene(1920,1080) {
-    private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 520, columns = 1, rows = 4)
+
+    private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 1500, columns = 1, rows = 4)
     private val creditsGrid = GridPane<UIComponent>(columns = 1, rows = 1)
-    private val membersGrid = GridPane<UIComponent>(columns = 1, rows = 8)
+    private val membersGrid = GridPane<UIComponent>(columns = 1, rows = 15)
     private val thanksGrid = GridPane<UIComponent>(columns = 1, rows = 1)
-    private val buttonsGrid = GridPane<UIComponent>(columns = 3, rows = 1)
 
     private val labelFont = Font(50, Color.WHITE)
-    private val buttonTextFont = Font(30, color = Color.WHITE)
 
-    private val creditsLabel = Label(
-        text = "CREDITS",
-        height = 200,
-        width = 1000,
-        font = labelFont,
-    )
+    private val creditsLabel = Label(height = 200, width = 1000, font = labelFont, text = "CREDITS")
 
-    private val memberNames = listOf<String>("Leonard Sander", "Mohamed Aziz Feriani", "Jonah Hadt", "Tobias Grabert", "Altayebabdalsalam I. M. Ikhlawi",
-        "Anastasiia Korzhylova", "Ashma Poudyal","Hang Nguyen Nguyen")
+    private val memberNames = listOf(
+        "Leonard Sander", "", "Mohamed Aziz Feriani", "", "Jonah Hadt", "",
+        "Tobias Grabert", "", "Altayebabdalsalam I. M. Ikhlawi",  "",
+        "Anastasiia Korzhylova", "", "Ashma Poudyal", "", "Hang Nguyen Nguyen")
 
     private val membersLabel = mutableListOf<Label>()
 
-    private val thanksLabel = Label(
-        text = "SPECIAL THANKS",
-        height = 200,
-        width = 1000,
-        font = labelFont,
-    )
+    private val thanksLabel = Label(height = 200, width = 1000, font = labelFont, text = "SPECIAL THANKS")
 
-    val backButton: Button = Button(
-        width = 300, height = 100,
-        text = "Back to Menu",
-        font = buttonTextFont,
-    ).apply {
-        visual = ColorVisual(194,64,64,255)
-    }
+    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 100, posY = 930,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Title")))
 
-    val musicButton: Button = Button(
-        width = 300, height = 100,
-        text = "Music",
-        font = buttonTextFont
-    ).apply {
-        visual = ColorVisual(186,136,133,255)
-    }
+    var timesClicked : Int = 0
 
-    val soundButton: Button = Button(
-        width = 300, height = 100,
-        text = "Sound",
-        font = buttonTextFont
-    ).apply {
-        visual = ColorVisual(186,136,133,255)
-    }
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1720, posY = 880,
+        visual = ImageVisual("music_enabled.png"))
+
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
+        visual = ImageVisual("sound_enabled.png"))
 
     init {
         creditsGrid[0,0] = creditsLabel
         mainGrid[0,0] = creditsGrid
 
         membersGrid.setColumnWidth(0,1080)
-        for(i in 0..7){
+        for(i in 0..13){
             val memberLabel = Label(width = 1920, height = 1080,
                 text = memberNames[i],
                 font = labelFont
@@ -82,13 +65,16 @@ class CreditsScene : BoardGameScene(1920,1080) {
         thanksGrid[0,0] = thanksLabel
         mainGrid[0,2] = thanksGrid
 
-        buttonsGrid.setColumnWidths(330)
-        buttonsGrid[0,0] = backButton
-        buttonsGrid[1,0] = musicButton
-        buttonsGrid[2,0] = soundButton
-        mainGrid[0,3] = buttonsGrid
+        background = ColorVisual(0,0,0)
+        addComponents(mainGrid,backToTitleSceneButton, soundToggleButton, musicToggleButton)
+    }
 
-        background = ColorVisual(155,94,95,255)
-        addComponents(mainGrid)
+    fun trigger() {
+        println("trigger credits roll animation")
+        /*playAnimation(MovementAnimation(                      funktioniert nicht :(
+            componentView = mainGrid,
+            byY = -2000
+            duration = 20000
+        ))*/
     }
 }
