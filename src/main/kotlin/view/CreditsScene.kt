@@ -13,6 +13,11 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ *[mainGrid]:frame for the contents
+ *[membersGrid]:frame for the members
+ */
+
 class CreditsScene : BoardGameScene(1920,1080) {
 
     private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 1500, columns = 1, rows = 4)
@@ -71,10 +76,16 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
     fun trigger() {
         println("trigger credits roll animation")
-        /*playAnimation(MovementAnimation(                      funktioniert nicht :(
-            componentView = mainGrid,
-            byY = -2000
+        playAnimation(MovementAnimation(
+            componentView = creditsGrid,
+            byY = -2000,
             duration = 20000
-        ))*/
+        ))
+
+        playAnimation(MovementAnimation(
+            componentView = membersGrid,
+            byY = -2000,
+            duration = 20000
+        ))
     }
 }
