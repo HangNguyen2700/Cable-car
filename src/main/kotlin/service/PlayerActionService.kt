@@ -47,37 +47,40 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
     fun rotate(tile: Tile) {
         tile.rotationDegree += 1
+
     }
 
     /**
+     * @author Ikhlawi
      * Check if the position at (posX, posY) is legal to place a tile on.
      *
      * @param posX The x-coordinate of the position to check.
      * @param posY The y-coordinate of the position to check.
      * @return True if the position is legal to place a tile on, false otherwise.
      */
-    fun isPositionLegal(posX: Int, posY: Int): Boolean {
-        /*
+     fun isPositionLegal(posX: Int, posY: Int): Boolean {
+
         val player: Player? = null
         val isFree = isSpotFree(posX, posY)
-        val boardEdge = isConnectedToEdgeOfBoard(posX, posY)
         val tileEdge = isConnectedToTile(posX, posY)
 
-        if (boardEdge || tileEdge) {
-            if (isFree) {
-                player!!.paths.forEach { path ->
-                    if ((path.tiles.size > 1 && path.complete) || player.handTile == null) {
-
+        if (isFree) {
+            if (tileEdge) {
+                /*for (path in player!!.paths) {
+                    rootService.gameService.nextPlayer()
+                    if ((path.tiles.size > 1 && path.complete) || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null) {
                         return true
                     }
-                }
+                }*/
+            return true
             }
         }
-        */
-        return true
+
+        return false
     }
 
     /**
+     * @author Ikhlawi
      * Check if the spot at (posX, posY) is free.
      *
      * @param posX The x-coordinate of the spot to check.
@@ -85,33 +88,12 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * @return True if the spot is free, false if it is already occupied.
      */
     private fun isSpotFree(posX: Int, posY: Int): Boolean {
-        rootService.currentGame?.currentTurn?.gameField?.tiles?.forEach { tile ->
-            if (tile.posX == posX && tile.posY == posY) {
-                return false
-            }
-        }
-        return true
+
+       return rootService.currentGame!!.currentTurn.gameField.field[posX][posY] == null
     }
 
     /**
-     * Check if the spot at (posX, posY) is connected to the edge of the board.
-     *
-     * @param posX The x-coordinate of the spot to check.
-     * @param posY The y-coordinate of the spot to check.
-     * @return True if the spot is connected to the edge of the board, false otherwise.
-     */
-    private fun isConnectedToEdgeOfBoard(posX: Int, posY: Int): Boolean {
-        if ((posX == 0) && (posY in 0..7)
-            || (posX == 7) && (posY in 0..7)
-            || (posY == 0) && (posX in 0..7)
-            || (posY == 7) && (posX in 0..7)
-        ) {
-            return true
-        }
-        return false
-    }
-
-    /**
+     * @author Ikhlawi
      * Check if there is an adjacent tile at the spot (posX, posY).
      *
      * @param posX The x-coordinate of the spot to check.
@@ -120,19 +102,17 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      */
     private fun isConnectedToTile(posX: Int, posY: Int): Boolean {
 
-        rootService.currentGame?.currentTurn?.gameField?.tiles?.forEach { tile ->
-            if (tile.posX + 1 == posX
-                || tile.posX - 1 == posX
-                || tile.posY + 1 == posY
-                || tile.posY - 1 == posY
-            ) {
+        var currentField = rootService.currentGame!!.currentTurn.gameField.field
 
-                return true
-            }
-        }
-        return false
+        return (currentField[posX][posY + 1] != null ||
+                currentField[posX][posY - 1] != null ||
+                currentField[posX + 1][posY] != null ||
+                currentField[posX - 1][posY] != null)
     }
-
+    /**
+     * @author Ikhlawi
+     *
+     * */
     fun buildPaths(player: Player, placedTile: Tile) {
         var checkAgain = false
         val currentGame = rootService.currentGame
@@ -200,10 +180,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                 }
 
-                if (placedTile.posX == 0 ||
-                    placedTile.posX == 7 ||
-                    placedTile.posY == 0 ||
-                    placedTile.posY == 7
+                if (placedTile.posX == 1 ||
+                    placedTile.posX == 8 ||
+                    placedTile.posY == 1 ||
+                    placedTile.posY == 8
                 ) {
                     path.tiles.add(placedTile)
                     inPort = when (path.startPos) {
@@ -233,19 +213,27 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         }
     }
 
-
+    /**
+     * @author Ikhlawi
+     */
     private fun checkRight(placedTile: Tile, lastTile: Tile): Boolean {
         return (placedTile.posY == lastTile.posY + 1) && (placedTile.posX == lastTile.posX)
     }
-
+    /**
+     * @author Ikhlawi
+     */
     private fun checkLeft(placedTile: Tile, lastTile: Tile): Boolean {
         return (placedTile.posY == lastTile.posY - 1) && (placedTile.posX == lastTile.posX)
     }
-
+    /**
+     * @author Ikhlawi
+     */
     private fun checkTop(placedTile: Tile, lastTile: Tile): Boolean {
         return (placedTile.posY == lastTile.posY) && (placedTile.posX == lastTile.posX + 1)
     }
-
+    /**
+     * @author Ikhlawi
+     */
     private fun checkBottom(placedTile: Tile, lastTile: Tile): Boolean {
         return (placedTile.posY == lastTile.posY) && (placedTile.posX == lastTile.posX - 1)
     }
