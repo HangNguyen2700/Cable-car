@@ -45,6 +45,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     playTitleMusic()
                     showGameScene(titleScene)
                     titleScene.gameLabel.opacity = 1.0
+                    titleScene.trigger.opacity = 0.0
                     repaint()
                 }
             }
@@ -142,6 +143,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     init {
         this.showGameScene(titleScene)
+        //isFullScreen = true
         icon = ImageVisual("icon.png")
     }
 

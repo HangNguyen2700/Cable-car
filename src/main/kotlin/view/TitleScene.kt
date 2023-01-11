@@ -44,7 +44,7 @@ class TitleScene(val cc : CCApplication) : BoardGameScene(1920, 1080) {
     val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }.apply { isDisabled = true }
 
     init {
-        background = ColorVisual(255, 0, 0)
+        background = ColorVisual(0, 0, 0)
         addComponents(gameLabel, pressAnyKeyLabel, toMenuButton, trigger)
     }
 
@@ -56,7 +56,7 @@ class TitleScene(val cc : CCApplication) : BoardGameScene(1920, 1080) {
         backgroundHueShiftAnimation()
         playAnimation(
             FadeAnimation(trigger,1.0,0.0,1000).apply { onFinished = {
-                removeComponents(trigger)
+                trigger.isDisabled = true
                 toMenuButton.isDisabled = false
                 playAnimation(FadeAnimation(gameLabel,0.0,1.0,1000))
                 pressAnyKeyLabelFadeAnimation()

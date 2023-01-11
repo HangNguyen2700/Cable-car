@@ -59,13 +59,13 @@ class MainMenuScene : MenuScene(1920,1080) {
             ColorVisual.WHITE.apply { transparency = 0.8 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), offsetY = -200,
                 text = "Enter Name Before Starting Game",))
-    ).apply { onMouseClicked = { nameErrorClose() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { nameErrorClose() } }
 
     private val closeNameErrorButton = Button(width = 300, height = 100, posX = 810, posY = 450,
         font = Font(size = 40, family = "Calibri"),
         visual = ColorVisual(255,40,40),
         text = "close",
-    ).apply { onMouseClicked = { nameErrorClose() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { nameErrorClose() } }
 
     private val newGameLabel = Label(width = 600, height = 100, posX = 1200, posY = 250,
         visual = CompoundVisual(
@@ -113,7 +113,8 @@ class MainMenuScene : MenuScene(1920,1080) {
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton,
-            debugGameSceneButton
+            debugGameSceneButton,
+            nameErrorLabel, closeNameErrorButton,
         )
         background = ColorVisual(0,0,0)
         opacity = 0.3
@@ -124,7 +125,10 @@ class MainMenuScene : MenuScene(1920,1080) {
      */
 
     fun nameErrorDisplay() {
-        addComponents(nameErrorLabel, closeNameErrorButton)
+        nameErrorLabel.opacity = 1.0
+        closeNameErrorButton.opacity = 1.0
+        nameErrorLabel.isDisabled = false
+        closeNameErrorButton.isDisabled = false
         nameField.isDisabled = true
         joinButton.isDisabled = true
         hostButton.isDisabled = true
@@ -136,7 +140,10 @@ class MainMenuScene : MenuScene(1920,1080) {
      */
 
     private fun nameErrorClose() {
-        removeComponents(nameErrorLabel,closeNameErrorButton)
+        nameErrorLabel.opacity = 0.0
+        closeNameErrorButton.opacity = 0.0
+        nameErrorLabel.isDisabled = true
+        closeNameErrorButton.isDisabled = true
         nameField.isDisabled = false
         joinButton.isDisabled = false
         hostButton.isDisabled = false
