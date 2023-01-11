@@ -115,7 +115,8 @@ class MainMenuScene : MenuScene(1920,1080) {
             quitButton, soundToggleButton, musicToggleButton,
             debugGameSceneButton
         )
-        opacity = 0.0
+        background = ColorVisual(0,0,0)
+        opacity = 0.3
     }
 
     /**

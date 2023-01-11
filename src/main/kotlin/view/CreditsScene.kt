@@ -20,7 +20,7 @@ import java.awt.Color
 
 class CreditsScene : BoardGameScene(1920,1080) {
 
-    private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 1500, columns = 1, rows = 4)
+    private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 1700, columns = 1, rows = 4)
     private val creditsGrid = GridPane<UIComponent>(columns = 1, rows = 1)
     private val membersGrid = GridPane<UIComponent>(columns = 1, rows = 15)
     private val thanksGrid = GridPane<UIComponent>(columns = 1, rows = 1)

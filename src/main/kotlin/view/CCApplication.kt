@@ -42,7 +42,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 6 -> {
                     backToTitleSceneButton.apply { posX = 100.0; posY = 930.0 }
                     timesClicked = 0
-                    if (musicChannel != null) musicChannel!!.stop()
+                    playTitleMusic()
                     showGameScene(titleScene)
                     titleScene.gameLabel.opacity = 1.0
                     repaint()
@@ -116,9 +116,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
-    private val titleScene = TitleScene().apply {
+    private val titleScene = TitleScene(this).apply {
         toMenuButton.onKeyPressed = { showAndStoreMenuScene(mainMenuScene, 3000) }
         toMenuButton.onMouseClicked = { showAndStoreMenuScene(mainMenuScene, 3000) }
+        trigger.onMouseEntered = { playTitleMusic(); fadeIn() }
     }
 
     private var activeMenuScene : MenuScene? = null
@@ -203,7 +204,23 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
      * playback of music in credits scene via KorAU audio library
      */
 
+    private fun playTitleMusic() {
+        if (musicChannel != null) { musicChannel!!.stop() }
+        if (musicEnabled) {
+            GlobalScope.async {
+                val music = resourcesVfs["title_music.wav"].readMusic()
+                musicChannel = music.play(infinitePlaybackTimes)
+                musicChannel!!.await()
+            }
+        }
+    }
+
+    /**
+     * playback of music in credits scene via KorAU audio library
+     */
+
     private fun playCreditsMusic() {
+        if (musicChannel != null) { musicChannel!!.stop() }
         if (musicEnabled) {
             GlobalScope.async {
                 val music = resourcesVfs["credits_music.wav"].readMusic()
@@ -218,6 +235,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
      */
 
     private fun playNopeSound() {
+        if (soundChannel != null) { soundChannel!!.stop() }
         if(soundEnabled) {
             GlobalScope.async {
             val sound = resourcesVfs["nope_sound_effect.wav"].readMusic()

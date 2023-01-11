@@ -5,6 +5,7 @@ import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -22,11 +23,10 @@ import java.awt.Color
  * [toMenuButton]: click anywhere or press any key to get to main menu
  */
 
-class TitleScene : BoardGameScene(1920, 1080) {
+class TitleScene(val cc : CCApplication) : BoardGameScene(1920, 1080) {
 
-    private val trigger = Button(width = 1920, height = 1080, posX = 0, posY = 0,
-        visual = ColorVisual(0,0,0),
-    ).apply { onMouseEntered = { println("Scene initialized"); fadeIn() }}
+    val trigger = Button(width = 1920, height = 1080, posX = 0, posY = 0,
+        visual = ColorVisual(0,0,0))
 
     val gameLabel = Label(width = 1860, height = 441, posX = 30, posY = 100,
         /*font = Font(size = 300, color = Color.PINK, family = "Comic Sans MS"), text = "Carbel Car",*/
@@ -41,28 +41,32 @@ class TitleScene : BoardGameScene(1920, 1080) {
                 text = "press any key..."
             ))).apply { opacity = 0.0 }
 
-    val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }
+    val toMenuButton = Button(width = 1920, height = 1080).apply { opacity = 0.0 }.apply { isDisabled = true }
 
     init {
         background = ColorVisual(255, 0, 0)
-        addComponents(trigger)
+        addComponents(gameLabel, pressAnyKeyLabel, toMenuButton, trigger)
     }
 
     /**
      * fades from black and starts fade in of elements
      */
 
-    private fun fadeIn() {
+    fun fadeIn() {
         backgroundHueShiftAnimation()
         playAnimation(
             FadeAnimation(trigger,1.0,0.0,1000).apply { onFinished = {
                 removeComponents(trigger)
-                addComponents(gameLabel, pressAnyKeyLabel, toMenuButton)
+                toMenuButton.isDisabled = false
                 playAnimation(FadeAnimation(gameLabel,0.0,1.0,1000))
                 pressAnyKeyLabelFadeAnimation()
             }}
         )
     }
+
+    /**
+     * hue Shift Animation by replacing scene background color visual over time
+     */
 
     private fun backgroundHueShiftAnimation() {
         playAnimation(

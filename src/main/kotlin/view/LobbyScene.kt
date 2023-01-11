@@ -231,7 +231,8 @@ class LobbyScene : MenuScene(1920, 1080) {
             startGameButton, hintLabel
         )
 
-        opacity = 0.0
+        background = ColorVisual(0,0,0)
+        opacity = 0.3
         showColorPicker(playersJoined)
 
     }
