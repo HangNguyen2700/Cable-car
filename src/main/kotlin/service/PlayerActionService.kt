@@ -45,8 +45,26 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         rootService.gameService.nextPlayer()
     }
 
+    /**
+     * @author Jonah
+     * Rotate a tile 90 degrees clockwise Sense
+     *
+     * @param tile The tile which should rotate
+     */
     fun rotate(tile: Tile) {
-        tile.rotationDegree += 1
+        tile.rotationDegree = (tile.rotationDegree + 1) % 4
+
+        for (i in 0 until 4 ) {
+            val tempPortTuple : Pair<Int,Int> = tile.ports[i]
+
+            var tempFirst = tempPortTuple.copy().first
+            tempFirst = (tempFirst + 2) % 8
+
+            var tempSecond= tempPortTuple.copy().second
+            tempSecond = (tempSecond + 2) % 8
+
+            tile.ports[i] = Pair(tempFirst, tempSecond)
+        }
 
     }
 
