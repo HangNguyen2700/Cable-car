@@ -3,7 +3,8 @@ package service
 import entity.Game
 
 /**
- * The RootService class is the root of all services in the application. It serves as a central point of access to all other services.
+ * The RootService class is the root of all services in the application.
+ * It serves as a central point of access to all other services.
  *
  * @property currentGame : The current instance of the Game that the application is currently running.
  * @property gameService : The service responsible for managing the game itself, such as starting new games, undo/redo actions, finding winners, and so on.
