@@ -1,4 +1,9 @@
 package entity
 
-data class TileStack(var tiles : MutableList<Tile>) {
+/**
+ * The TileStack class represents a stack of tiles in the game, including information about the tiles in the stack.
+ *
+ * @property tiles a mutable list of Tile objects representing the tiles in the stack
+ */
+data class TileStack(var tiles: MutableList<Tile>) {
 }
