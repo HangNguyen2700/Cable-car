@@ -10,11 +10,13 @@ import entity.Turn
 class GameService(private val rootService: RootService) : AbstractRefreshingService() {
     var isLocalOnlyGame = false
     var isHostedGame = false
+    var rotationAllowed = false
     var tileLookUp = mutableListOf<Tile>()
 
-    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false) {
+    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false, rotationAllowed: Boolean = false) {
         this.isLocalOnlyGame = isLocalOnlyGame
         this.isHostedGame = isHostedGame
+        this.rotationAllowed = rotationAllowed
         if(rootService.currentGame == null) {
             rootService.currentGame = Game(
                 Turn(
@@ -140,8 +142,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.shuffle()
 
             rootService.networkService.startNewHostedGame(
-                "Player1",
-                false,
+                rootService.networkService.playerName,
+                this.rotationAllowed,
                 rootService.currentGame!!.currentTurn.gameField.tileStack.tiles
             )
 
