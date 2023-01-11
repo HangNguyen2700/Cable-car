@@ -1,12 +1,21 @@
 package service
 
+import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
+import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.Player
 import entity.Tile
-import service.message.TurnMessage
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int) {
+        // add new Turn
+        val newTurn = rootService.currentGame!!.currentTurn.copy()
+        rootService.currentGame!!.currentTurn.nextTurn = newTurn
+        newTurn.previousTurn = rootService.currentGame!!.currentTurn
+
+        rootService.currentGame!!.currentTurn = newTurn
+
+
         if (!rootService.gameService.isLocalOnlyGame) {
             // network game, so a turnMessage has to be sent
             var tile: Tile? = null
@@ -23,7 +32,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 TurnMessage(
                     posX, posY,
                     !fromHand,
-                    rootService.gameService.tileLookUp.indexOf(tile)
+                    rootService.gameService.tileLookUp.indexOf(tile),
+                    GameStateVerificationInfo(listOf(), listOf(), listOf())
                 )
             )
         }
@@ -77,7 +87,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * @return True if the position is legal to place a tile on, false otherwise.
      */
      fun isPositionLegal(posX: Int, posY: Int): Boolean {
-
+        /*
         val player: Player? = null
         val isFree = isSpotFree(posX, posY)
         val tileEdge = isConnectedToTile(posX, posY)
@@ -93,8 +103,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             return true
             }
         }
-
-        return false
+        */
+        return true
     }
 
     /**

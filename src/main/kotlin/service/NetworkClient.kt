@@ -1,7 +1,7 @@
 package service
 
-import service.message.GameInitMessage
-import service.message.TurnMessage
+import edu.udo.cs.sopra.ntf.GameInitMessage
+import edu.udo.cs.sopra.ntf.TurnMessage
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.client.NetworkLogging
