@@ -9,6 +9,9 @@ import kotlin.test.*
  */
 class CardImageLoaderTest {
     /**
+     *
+
+    /**
      * The [CardImageLoader] that is tested with this test class
      */
     private val imageLoader: CardImageLoader = CardImageLoader()
@@ -108,5 +111,5 @@ private infix fun BufferedImage.sameAs(other: Any?): Boolean {
 
     // if we reach this point, dimensions and pixels match
     return true
-
+     */
 }

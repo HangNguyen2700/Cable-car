@@ -1,0 +1,141 @@
+package service
+
+import entity.Player
+import entity.Tile
+import service.message.*
+
+class NetworkService(var rootService: RootService): AbstractRefreshingService() {
+    var connectionState: ConnectionState = ConnectionState.DISCONNECTED
+    private val SERVER_ADDRESS = "sopra.cs.tu-dortmund.de:80/bgw-net/connect"
+    private val GAME_ID = "CableCar"
+
+    private var client: NetworkClient? = null
+    var playerName = ""
+
+    var joinedPlayers = mutableListOf<String>()
+
+
+    fun hostGame(secret: String, playerName: String, sessionID: String) {
+        if(connect(secret, playerName)) {
+            client?.createGame(GAME_ID, sessionID, "Hallo von Gruppe 10")
+            updateConnectionState(ConnectionState.WAITING_FOR_HOST_CONFIRMATION)
+            this.playerName = playerName
+            rootService.gameService.isHostedGame = true
+        }
+    }
+
+    fun joinGame(secret: String, playerName: String, sessionID: String) {
+        if(connect(secret, playerName)) {
+            client?.joinGame(sessionID, "Hallo von Gruppe 10.")
+            this.playerName = playerName
+            rootService.gameService.isHostedGame = true
+        }
+    }
+
+
+    /**
+     * Opens a connection to the Server via creating the client
+     */
+    private fun connect(secret: String, playerName: String): Boolean {
+        require(connectionState == ConnectionState.DISCONNECTED && client == null)
+        { "already connected to another game" }
+
+        require(secret.isNotBlank()) { "server secret must be given" }
+        require(playerName.isNotBlank()) { "player name must be given" }
+
+        val newClient =
+            NetworkClient(
+                playerName = playerName,
+                host = SERVER_ADDRESS,
+                secret = secret,
+                networkService = this
+            )
+
+        if(newClient.connect()) {
+            this.client = newClient
+            updateConnectionState(ConnectionState.CONNECTED)
+            return true
+        }
+        return false
+    }
+
+    fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean, drawStack: List<Tile>) {
+        val playerInfoList = mutableListOf<PlayerInfo>()
+        playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
+        for (player in joinedPlayers) {
+            playerInfoList.add(PlayerInfo(player, PlayerType.HUMAN))
+        }
+
+        // player list for local game
+        joinedPlayers.add(0, hostPlayerName)
+
+        val tileStack = mutableListOf<service.message.Tile>()
+
+        for (tile in drawStack) {
+            val connectionInfo = mutableListOf<ConnectionInfo>()
+            for (c in tile.ports)
+                connectionInfo.add(ConnectionInfo(c.first, c.second))
+            tileStack.add(service.message.Tile(
+                rootService.gameService.tileLookUp.indexOf(tile),
+                connectionInfo
+            ))
+        }
+
+        val gameInitMessage = GameInitMessage(
+            rotationAllowed = rotationAllowed,
+            players = playerInfoList,
+            tileSupply = tileStack
+        )
+
+        sendGameInitMessage(gameInitMessage)
+    }
+
+    fun startNewJoinedGame(message: GameInitMessage) {
+        // TODO rotationAllowed boolean fehlt in enitity
+        var tileStack = mutableListOf<Tile>()
+        // create tileStack from supplied list
+        for (tileIndex in message.tileSupply) {
+            tileStack.add(rootService.gameService.tileLookUp[tileIndex.id])
+        }
+        // add tileStack to entity
+        rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileStack
+        // add players to local entity and joined players
+        joinedPlayers = mutableListOf()
+        joinedPlayers.add(0, playerName)
+        rootService.currentGame!!.currentTurn.players.add(0, Player(playerName))
+        for (player in message.players) {
+            rootService.currentGame!!.currentTurn.players.add(Player(player.name))
+            joinedPlayers.add(player.name)
+        }
+
+        rootService.gameService.startNewGame(listOf())
+        updateConnectionState(ConnectionState.GAME_INITIALIZED)
+    }
+
+    fun sendGameInitMessage(message: GameInitMessage) {
+        // send GameInitMessage
+
+        if (connectionState != ConnectionState.READY_FOR_GAME) {
+            if (connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
+                println("Not enough or too many Players have joined the Game. Current Amount: ${joinedPlayers.size}")
+            }
+            return
+        }
+        client?.sendGameActionMessage(message)
+        updateConnectionState(ConnectionState.GAME_INITIALIZED)
+    }
+
+    fun sendTurnMessage(message: TurnMessage) {
+        // TODO sendTurnMessage
+    }
+
+    fun updateConnectionState(newState: ConnectionState) {
+        connectionState = newState
+    }
+
+    fun disconnect() {
+        client?.disconnect()
+        println("disconnecting.")
+        updateConnectionState(ConnectionState.DISCONNECTED)
+    }
+}
