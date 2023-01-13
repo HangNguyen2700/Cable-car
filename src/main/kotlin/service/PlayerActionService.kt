@@ -140,7 +140,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     /**
      * @author Ikhlawi
      *
-     * */
+     *
+     * buildPaths is a function that builds paths in a game and increases the player's score.
+     * @param player: Player - An object representing the current player.
+     * @param placedTile: Tile - An object representing the tile that has been placed on the board.
+     * The function starts by setting the variable "checkAgain" to false and getting a reference to the current game.
+     * Then, it iterates through the player's existing paths. For each path, it checks if the path is complete. If not,
+     * the function sets the variable "checkAgain" to true and starts a loop that runs until "checkAgain" is set to false.
+     * Within the loop, the function checks various conditions to determine if the placed tile can be added to the path by
+     * comparing the ports of the last tile in the path to the ports of the placed tile. If the tile can be added, it is added
+     * and the "lastPort" variable is updated. If the path is completed, either by the last tile matching the start tile or
+     * by the last tile being in a specific position --powerstation-- (x=4, y=4 or x=4, y=5 or x=5, y=4 or x=5, y=5)
+     * the player's score is incremented by the number of
+     * tiles in the path, and the "complete" variable of the path is set to true.
+     */
     fun buildPaths(player: Player, placedTile: Tile) {
         var checkAgain = false
         val currentGame = rootService.currentGame
@@ -228,7 +241,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             }
             if (path.tiles.last().equals(path.startPos)) { //mit x und y
 
-                player.score += path.tiles.count()
+                player.score = path.tiles.count()
                 path.complete = true
             }
             if ((path.tiles.last().posX == 4 && path.tiles.last().posY == 4)
