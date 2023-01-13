@@ -9,7 +9,7 @@ package entity
  * @property posY an integer representing the tile's y position on the game board
  * @param tilePos: to locate card deck in CardImageLoader
  */
-data class Tile(val ports: MutableList<Pair<Int, Int>>, val tilePos: Int) {
+data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
     var rotationDegree = 0
     var posX = 0
     var posY = 0
