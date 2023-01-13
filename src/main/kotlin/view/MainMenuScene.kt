@@ -7,6 +7,7 @@ import tools.aqua.bgw.core.MenuScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
+import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
@@ -25,11 +26,23 @@ import java.awt.Color
 
 class MainMenuScene : MenuScene(1920,1080) {
 
-    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 760, posY = 40,
+    private val menuLabel = Label(width = 600, height = 200, posX = 650, posY = 10,
+        visual = CompoundVisual(
+            TextVisual(
+                font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
+                text = "MENU")))
+
+    val debugGameSceneButton = Button(width = 400, height = 100, posX = 760, posY = 440,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "back to Title")))
+                text = "gameScene")))
+
+    val backToTitleSceneButton = Button(width = 400, height = 100, posX = 460, posY = 900,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "Back to Title")))
 
     private val nameFieldLabel = Label(width = 600, height = 100, posX = 100, posY = 250,
         visual = CompoundVisual(
@@ -46,13 +59,13 @@ class MainMenuScene : MenuScene(1920,1080) {
             ColorVisual.WHITE.apply { transparency = 0.8 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), offsetY = -200,
                 text = "Enter Name Before Starting Game",))
-    ).apply { onMouseClicked = { nameErrorClose() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { nameErrorClose() } }
 
     private val closeNameErrorButton = Button(width = 300, height = 100, posX = 810, posY = 450,
         font = Font(size = 40, family = "Calibri"),
         visual = ColorVisual(255,40,40),
         text = "close",
-    ).apply { onMouseClicked = { nameErrorClose() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { nameErrorClose() } }
 
     private val newGameLabel = Label(width = 600, height = 100, posX = 1200, posY = 250,
         visual = CompoundVisual(
@@ -78,38 +91,33 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Hotseat Mode")))
 
-    private val creditsButton = Button(width = 300, height = 100, posX = 1500, posY = 900,
+    val creditsButton = Button(width = 300, height = 100, posX = 80, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Credits")))
 
-    val quitButton = Button(width = 300, height = 100, posX = 100, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Quit")))
+    val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
+        visual = ImageVisual("quit_button.png"))
 
-    val musicToggleButton = Button(width = 300, height = 100, posX = 450, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Music")))
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1720, posY = 880,
+        visual = ImageVisual("music_enabled.png"))
 
-    val soundToggleButton = Button(width = 300, height = 100, posX = 800, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
-                text = "Sound")))
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
+        visual = ImageVisual("sound_enabled.png"))
 
     init{
         addComponents(
             nameField, nameFieldLabel,
+            menuLabel,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
-            quitButton, soundToggleButton, musicToggleButton
+            quitButton, soundToggleButton, musicToggleButton,
+            debugGameSceneButton,
+            nameErrorLabel, closeNameErrorButton,
         )
-        opacity = 0.0
+        background = ColorVisual(0,0,0)
+        opacity = 0.3
     }
 
     /**
@@ -117,7 +125,10 @@ class MainMenuScene : MenuScene(1920,1080) {
      */
 
     fun nameErrorDisplay() {
-        addComponents(nameErrorLabel, closeNameErrorButton)
+        nameErrorLabel.opacity = 1.0
+        closeNameErrorButton.opacity = 1.0
+        nameErrorLabel.isDisabled = false
+        closeNameErrorButton.isDisabled = false
         nameField.isDisabled = true
         joinButton.isDisabled = true
         hostButton.isDisabled = true
@@ -129,7 +140,10 @@ class MainMenuScene : MenuScene(1920,1080) {
      */
 
     private fun nameErrorClose() {
-        removeComponents(nameErrorLabel,closeNameErrorButton)
+        nameErrorLabel.opacity = 0.0
+        closeNameErrorButton.opacity = 0.0
+        nameErrorLabel.isDisabled = true
+        closeNameErrorButton.isDisabled = true
         nameField.isDisabled = false
         joinButton.isDisabled = false
         hostButton.isDisabled = false
