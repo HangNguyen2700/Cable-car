@@ -7,6 +7,7 @@ import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
+import service.RootService
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
@@ -29,6 +30,8 @@ import java.awt.Color
  * */
 
 class CCApplication : BoardGameApplication("Carbel Car Game") {
+
+    val rootService = RootService()
 
     private val creditsScene = CreditsScene().apply {
         backToTitleSceneButton.onMouseClicked = {
@@ -75,6 +78,19 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         backToMainMenuSceneButton.onMouseClicked = {
             hideMenuScene(3000)
             showAndStoreMenuScene(mainMenuScene, 3000)
+        }
+        startGameButton.onMouseClicked = {
+            this@CCApplication.rootService.gameService.startNewGame(
+                listOfNotNull(
+                    mainMenuScene.nameField.text,
+                    this.nameFields[0].text,
+                    if (this.nameFields[1].text != "") this.nameFields[1].text else null,
+                    if (this.nameFields[2].text != "") this.nameFields[2].text else null,
+                    if (this.nameFields[3].text != "") this.nameFields[3].text else null,
+                    if (this.nameFields[4].text != "") this.nameFields[4].text else null,
+                ),
+                isLocalOnlyGame = true, isHostedGame = false
+            )
         }
     }
 
