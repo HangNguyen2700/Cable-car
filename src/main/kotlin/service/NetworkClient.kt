@@ -1,7 +1,7 @@
 package service
 
-import service.message.GameInitMessage
-import service.message.TurnMessage
+import edu.udo.cs.sopra.ntf.GameInitMessage
+import edu.udo.cs.sopra.ntf.TurnMessage
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.net.client.BoardGameClient
 import tools.aqua.bgw.net.client.NetworkLogging
@@ -75,7 +75,7 @@ class NetworkClient(playerName: String,
 
     override fun onPlayerJoined(notification: PlayerJoinedNotification) {
         if(networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {
-            if (networkService.connectionState == ConnectionState.WAITING_FOR_PLAYERS) {
+            if (networkService.connectionState != ConnectionState.WAITING_FOR_PLAYERS) {
                 println("unexpected player joined notification")
                 return
             }

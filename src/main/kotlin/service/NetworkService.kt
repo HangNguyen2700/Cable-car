@@ -1,8 +1,8 @@
 package service
 
+import edu.udo.cs.sopra.ntf.*
 import entity.Player
 import entity.Tile
-import service.message.*
 
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
     var connectionState: ConnectionState = ConnectionState.DISCONNECTED
@@ -69,16 +69,18 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         // player list for local game
         joinedPlayers.add(0, hostPlayerName)
 
-        val tileStack = mutableListOf<service.message.Tile>()
+        val tileStack = mutableListOf<edu.udo.cs.sopra.ntf.Tile>()
 
         for (tile in drawStack) {
             val connectionInfo = mutableListOf<ConnectionInfo>()
             for (c in tile.ports)
                 connectionInfo.add(ConnectionInfo(c.first, c.second))
-            tileStack.add(service.message.Tile(
-                rootService.gameService.tileLookUp.indexOf(tile),
-                connectionInfo
-            ))
+            tileStack.add(
+                edu.udo.cs.sopra.ntf.Tile(
+                    rootService.gameService.tileLookUp.indexOf(tile),
+                    connectionInfo
+                )
+            )
         }
 
         val gameInitMessage = GameInitMessage(
@@ -92,7 +94,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
     fun startNewJoinedGame(message: GameInitMessage) {
         // TODO rotationAllowed boolean fehlt in enitity
-        var tileStack = mutableListOf<Tile>()
+        val tileStack = mutableListOf<entity.Tile>()
         // create tileStack from supplied list
         for (tileIndex in message.tileSupply) {
             tileStack.add(rootService.gameService.tileLookUp[tileIndex.id])
