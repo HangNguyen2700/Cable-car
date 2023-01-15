@@ -10,9 +10,20 @@ package entity
  * @param tilePos: to locate card deck in CardImageLoader
  */
 data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
+
+    var id: Int = -1
+    val originalPorts = mutableListOf<Pair<Int, Int>>()
     var rotationDegree = 0
     var posX = 0
     var posY = 0
+    init {
+        for (pair in ports) {
+            originalPorts.add(pair.copy())
+        }
+    }
+
+
+
 
     fun copy(): Tile {
         val nTile = Tile(ports.toMutableList())
@@ -20,5 +31,9 @@ data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
         nTile.posX = posX
         nTile.posY = posY
         return nTile
+    }
+
+    fun compare(otherTile: Tile): Boolean {
+        return this.id == otherTile.id
     }
 }
