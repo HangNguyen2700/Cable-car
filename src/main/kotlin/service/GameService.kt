@@ -10,11 +10,13 @@ import entity.Turn
 class GameService(private val rootService: RootService) : AbstractRefreshingService() {
     var isLocalOnlyGame = false
     var isHostedGame = false
+    var rotationAllowed = false
     var tileLookUp = mutableListOf<Tile>()
 
-    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false) {
+    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false, rotationAllowed: Boolean = false) {
         this.isLocalOnlyGame = isLocalOnlyGame
         this.isHostedGame = isHostedGame
+        this.rotationAllowed = rotationAllowed
         if(rootService.currentGame == null) {
             rootService.currentGame = Game(
                 Turn(
@@ -50,51 +52,43 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             println("a game is currently in progress")
         }
     }
-    private var gameCounter = 0
 
-    private fun gamePointer(): MutableList<Turn> {
-        val gameStates: MutableList<Turn> = mutableListOf()
-        gameStates.add(rootService.currentGame!!.currentTurn.copy())
-        gameCounter = gameStates.size - 1
-        return gameStates
-    }
+
     /**
+     * @author Ikhlawi
      * Reverts the game to the previous state. If the current game state has been modified,
      * removes all future game states from the game history.
      *
      * @throws IllegalArgumentException if there is no previous game state.
      */
     fun undo() {
-        if (gameCounter > 0) {
-            val previousGameState = gamePointer()[gameCounter - 1]
-            if (rootService.currentGame!!.currentTurn != previousGameState) {
-                // Current game state has been modified, clear future game states
-                gamePointer().subList(gameCounter, gamePointer().size).clear()
-            }
-            gameCounter--
-            rootService.currentGame!!.currentTurn = previousGameState
-        } else {
-            throw IllegalArgumentException("There is no previous game")
+        var currentGame = rootService.currentGame
+        checkNotNull(currentGame)
+        if(currentGame.currentTurn.previousTurn!=null)
+        {
+            currentGame.currentTurn = currentGame.currentTurn.previousTurn!!
+
         }
     }
-
     /**
+     * @author Ikhlawi
      * Moves the game to the next state.
      *
      * @throws IllegalArgumentException if there is no next game state.
      */
     fun redo() {
-        if (gameCounter < gamePointer().size - 1) {
-            gameCounter++
-            rootService.currentGame!!.currentTurn = gamePointer()[gameCounter]
-        } else {
-            throw IllegalArgumentException("There is no after game")
+        var currentGame = rootService.currentGame
+        checkNotNull(currentGame)
+        if(currentGame.currentTurn.nextTurn!=null)
+        {
+            currentGame.currentTurn = currentGame.currentTurn.nextTurn!!
+
         }
     }
 
     fun nextPlayer() {
         if(rootService.currentGame!!.currentTurn.currentPlayerIndex ==
-            rootService.currentGame!!.currentTurn.players.size) {
+            rootService.currentGame!!.currentTurn.players.size-1) {
             rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
         } else {
             rootService.currentGame!!.currentTurn.currentPlayerIndex++
@@ -102,11 +96,12 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     }
 
     /**
+     * @author Ikhlawi
      * findWinner() is a function that finds the winner of the current game.
      *
      * @return a mutable list of Player objects representing the winners of the current game.
      */
-    fun findWinner(): MutableList<Player> {
+     fun findWinner(): MutableList<Player> {
 
         // Get the maximum score of the players in the current game
         val maxScore = rootService.currentGame!!.currentTurn.players.maxOf { it.score }
@@ -129,6 +124,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     fun endGame() {
 
+        findWinner()
+
     }
 
     private fun distributeTiles() {
@@ -145,8 +142,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.shuffle()
 
             rootService.networkService.startNewHostedGame(
-                "Player1",
-                false,
+                rootService.networkService.playerName,
+                this.rotationAllowed,
                 rootService.currentGame!!.currentTurn.gameField.tileStack.tiles
             )
 
@@ -164,6 +161,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     }
 
     /**
+     * @author Ikhlawi
      * Assigns number of cars and colors to the players based on the number of players.
      *
      * The number of cars and colors are assigned as follows:
@@ -174,7 +172,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * - For 6 players: Yellow, Blue, Orange, Green, Purple, and Black
      *
      */
-    private fun playersToPositions()
+     fun playersToPositions()
     {
         val players  = rootService.currentGame?.currentTurn?.players
         val colors = listOf(Color.YELLOW, Color.BLUE, Color.ORANGE, Color.GREEN, Color.PURPLE, Color.BLACK)
@@ -233,7 +231,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     }
 
-    fun readTileCSV() {
+    private fun readTileCSV() {
         // read file lines into lines array
         val file = File("./tiles.csv").inputStream()
         val reader = file.bufferedReader()
