@@ -44,18 +44,18 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     var realAISelection: Int? = null
 
-    var colorsPicked = mutableListOf(0,0,0,0,0,0)
+    /*var colorsPicked = mutableListOf(0,0,0,0,0,0)*/
 
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
-    val hintLabel = Label(width = 400, height = 100, posX = 100, posY = 900,
+    /*val hintLabel = Label(width = 400, height = 100, posX = 100, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.5 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "pick a color!")))
+                text = "pick a color!")))*/
 
     val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1120, posY = 250,
         visual = CompoundVisual(
@@ -121,7 +121,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
         ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(5) } })
 
-    val colorPicker = listOf(
+    /*val colorPicker = listOf(
         Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.YELLOW.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.BLUE.toRGB()).apply {
@@ -133,12 +133,15 @@ class LobbyScene : MenuScene(1920, 1080) {
         Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.PURPLE.toRGB()).apply {
             onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
         Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.BLACK.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 })
+            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 })*/
 
     val playerColorLabel = mutableListOf(
-        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0),
-        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0),
-        Label(width = 80, height = 80, posX = 700.0), Label(width = 80, height = 80, posX = 700.0))
+        Label(width = 80, height = 80, posX = 700.0, posY = 250, visual = ColorVisual.YELLOW),
+        Label(width = 80, height = 80, posX = 700.0, posY = 350, visual = ColorVisual.BLUE),
+        Label(width = 80, height = 80, posX = 700.0, posY = 450, visual = ColorVisual.ORANGE),
+        Label(width = 80, height = 80, posX = 700.0, posY = 550, visual = ColorVisual.GREEN),
+        Label(width = 80, height = 80, posX = 700.0, posY = 650, visual = ColorVisual(100,0,100)),
+        Label(width = 80, height = 80, posX = 700.0, posY = 750, visual = ColorVisual.BLACK))
 
     val addPlayerButton = Button(width = 80, height = 80, posX = 120.0,
         visual = TextVisual(font = Font(size = 50, family = "Calibri"), text = "+")
@@ -225,19 +228,19 @@ class LobbyScene : MenuScene(1920, 1080) {
             playerBoxLabel[0], playerBoxLabel[1], playerBoxLabel[2],
             playerBoxLabel[3], playerBoxLabel[4], playerBoxLabel[5],
             shuffleTurnOrderButton, shuffleTurnOrderCheckbox, allowTileRotationButton, allowTileRotationCheckbox,
-            colorPicker[0], colorPicker[1], colorPicker[2], colorPicker[3], colorPicker[4], colorPicker[5],
+            /*colorPicker[0], colorPicker[1], colorPicker[2], colorPicker[3], colorPicker[4], colorPicker[5],*/
             deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
             deletePlayerButtons[3],deletePlayerButtons[4],
-            startGameButton, hintLabel
+            startGameButton, /*hintLabel*/
         )
 
         background = ColorVisual(0,0,0)
         opacity = 0.3
-        showColorPicker(playersJoined)
+        ready()
 
     }
 
-    /**
+    /*/**
      * displays leftover player color selection in corresponding line in player table
      */
 
@@ -252,31 +255,30 @@ class LobbyScene : MenuScene(1920, 1080) {
         colorPicker[0].apply { posY = 250.0 + pos * 100.0 }; colorPicker[1].apply { posY = 290.0 + pos * 100.0 }
         colorPicker[2].apply { posY = 250.0 + pos * 100.0 }; colorPicker[3].apply { posY = 290.0 + pos * 100.0 }
         colorPicker[4].apply { posY = 250.0 + pos * 100.0 }; colorPicker[5].apply { posY = 290.0 + pos * 100.0 }
-    }
+    }*/
 
     /**
      * stores color selection after removing selection buttons and displays it in player table
      */
 
-    fun colorPicked(button: Button) {
+    fun ready() {
 
-        for (i in 0..5) {
+        /*for (i in 0..5) {
             if (colorsPicked[i] == 0) {
                 colorPicker[i].isDisabled = true; colorPicker[i].opacity = 0.0
             } }
 
         colorPicker[colorPicker.indexOf(button)].isDisabled = true
         colorPicker[colorPicker.indexOf(button)].opacity = 0.0
-        hintLabel.isDisabled = true; hintLabel.opacity = 0.0
+        hintLabel.isDisabled = true; hintLabel.opacity = 0.0*/
 
         addComponents(playerColorLabel[playersJoined])
-        playerColorLabel[playersJoined].apply { posY = 250.0 + 100.0 * playersJoined; visual = button.visual }
 
         playersJoined++
 
-        colorsPicked[colorPicker.indexOf(button)] = playersJoined
+        /*colorsPicked[colorPicker.indexOf(button)] = playersJoined*/
 
-        println("color at index " + colorPicker.indexOf(button) + " picked by player at index " + playersJoined)
+        /*println("color at index " + colorPicker.indexOf(button) + " picked by player at index " + playersJoined)*/
         println("now there are $playersJoined Players in the lobby")
 
         if (playersJoined > 1) {
@@ -375,7 +377,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 nameFields[playersJoined - 1],
                 confirmButton
             )
-            showColorPicker(playersJoined)
+            ready()
         } else {
             confirmButton.isDisabled = true; confirmButton.opacity = 0.0
         }
@@ -388,8 +390,8 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     fun deletePlayer(delPos : Int) {
 
-        colorsPicked[colorsPicked.indexOf(delPos+1)] = 0
-        println("delete player at " +  delPos + ". color at index " + colorsPicked.indexOf(delPos+1) + " is now free")
+        /*colorsPicked[colorsPicked.indexOf(delPos+1)] = 0
+        println("delete player at " +  delPos + ". color at index " + colorsPicked.indexOf(delPos+1) + " is now free")*/
 
         //colorPicker[colorPos].isDisabled = false
         //colorPicker[colorPos].opacity = 1.0

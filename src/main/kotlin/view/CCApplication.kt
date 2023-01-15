@@ -89,7 +89,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     if (this.nameFields[3].text != "") this.nameFields[3].text else null,
                     if (this.nameFields[4].text != "") this.nameFields[4].text else null,
                 ),
-                isLocalOnlyGame = true, isHostedGame = false
+                isLocalOnlyGame = true, isHostedGame = false,
+                rotationAllowed = this.allowTileRotationCheckbox.isChecked
             )
         }
     }
