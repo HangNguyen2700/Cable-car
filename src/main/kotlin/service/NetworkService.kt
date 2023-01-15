@@ -138,7 +138,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun sendTurnMessage(message: TurnMessage) {
-        // TODO sendTurnMessage
+        client?.sendGameActionMessage(message)
     }
 
     fun updateConnectionState(newState: ConnectionState) {
