@@ -23,8 +23,8 @@ class GameScene : BoardGameScene(1920,1080) {
     val quickMenuButton: Button = Button(width = 140 , height = 140 ,posX = 40, posY = 40,
        visual = ImageVisual("quick_menu_button.png"))
 
-    private val mockTile = Tile(mutableListOf(Pair(0, 7), Pair(1, 6), Pair(2, 5), Pair(3, 4)), /*tilePos = 2*/)
-    private val mockDrawnTile = Tile(mutableListOf(Pair(0, 5), Pair(1, 2), Pair(3, 6), Pair(4, 7)), /*tilePos = 3*/)
+    private val mockTile = Tile(mutableListOf(Pair(0, 7), Pair(1, 6), Pair(2, 5), Pair(3, 4)), tilePos = 2)
+    private val mockDrawnTile = Tile(mutableListOf(Pair(0, 5), Pair(1, 2), Pair(3, 6), Pair(4, 7)), tilePos = 3)
     private var currentTile: Tile? = null
     private var isDrawn = false
 
@@ -91,7 +91,7 @@ class GameScene : BoardGameScene(1920,1080) {
     private val myTileCardView = CardView(
         height = 100,
         width = 100,
-        front = ImageVisual(cardImageLoader.backImage/*cardImageLoader.frontImage(mockTile.tilePos)*/),
+        front = ImageVisual(cardImageLoader.frontImage(mockTile.tilePos)),
         back = ImageVisual(cardImageLoader.backImage)
     ).apply {
         onMouseClicked = {
@@ -111,7 +111,7 @@ class GameScene : BoardGameScene(1920,1080) {
     private val drawnTilesCardView0 = CardView(
         height = 100,
         width = 100,
-        front = ImageVisual(cardImageLoader.backImage/*cardImageLoader.frontImage(mockDrawnTile.tilePos)*/),
+        front = ImageVisual(cardImageLoader.frontImage(mockDrawnTile.tilePos)),
         back = ImageVisual(cardImageLoader.backImage)
     ).apply {
         onMouseClicked = {
@@ -390,7 +390,7 @@ class GameScene : BoardGameScene(1920,1080) {
                     ).apply {
                         onMouseClicked = {
                             if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                /*this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos))*/
+                                this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos))
                                 this.rotation = currentTile!!.rotationDegree.toDouble()
                                 showFront()
                                 myTileCardView.showBack()
