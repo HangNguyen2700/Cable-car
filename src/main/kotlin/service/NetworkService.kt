@@ -1,7 +1,7 @@
 package service
 
 import edu.udo.cs.sopra.ntf.*
-import entity.Player
+import entity.*
 import entity.Tile
 
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
@@ -73,15 +73,16 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
         for (tile in drawStack) {
             val connectionInfo = mutableListOf<ConnectionInfo>()
-            for (c in tile.ports)
+            for (c in tile.originalPorts)
                 connectionInfo.add(ConnectionInfo(c.first, c.second))
             tileStack.add(
                 edu.udo.cs.sopra.ntf.Tile(
-                    rootService.gameService.tileLookUp.indexOf(tile),
+                    tile.id,
                     connectionInfo
                 )
             )
         }
+
 
         val gameInitMessage = GameInitMessage(
             rotationAllowed = rotationAllowed,
@@ -93,7 +94,16 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
-        // TODO rotationAllowed boolean fehlt in enitity
+        rootService.currentGame = Game(
+            Turn(
+                GameField(
+                    mutableListOf(),
+                    mutableListOf(),
+                    TileStack(mutableListOf())
+                ), mutableListOf()
+            )
+        )
+
         val tileStack = mutableListOf<entity.Tile>()
         // create tileStack from supplied list
         for (tileIndex in message.tileSupply) {
@@ -103,14 +113,14 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileStack
         // add players to local entity and joined players
         joinedPlayers = mutableListOf()
-        joinedPlayers.add(0, playerName)
-        rootService.currentGame!!.currentTurn.players.add(0, Player(playerName))
+
         for (player in message.players) {
             rootService.currentGame!!.currentTurn.players.add(Player(player.name))
             joinedPlayers.add(player.name)
         }
 
-        rootService.gameService.startNewGame(listOf())
+        rootService.gameService.distributeTiles()
+        rootService.gameService.playersToPositions()
         updateConnectionState(ConnectionState.GAME_INITIALIZED)
     }
 
