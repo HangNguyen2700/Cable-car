@@ -48,7 +48,7 @@ class NetworkClient(playerName: String,
     }
 
     override fun onCreateGameResponse(response: CreateGameResponse) {
-        if (networkService.connectionState == ConnectionState.WAITING_FOR_HOST_CONFIRMATION) {
+        if (networkService.connectionState != ConnectionState.WAITING_FOR_HOST_CONFIRMATION) {
             println("unexpected host confirmation")
         }
 
