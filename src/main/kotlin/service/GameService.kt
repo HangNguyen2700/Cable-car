@@ -104,7 +104,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      fun findWinner(): MutableList<Player> {
 
         // Get the maximum score of the players in the current game
-        val maxScore = rootService.currentGame!!.currentTurn.players.maxOf { it.score }
+        val maxScore = rootService.currentGame!!.currentTurn.players.sortByDescending { it.score }
 
         // Create a mutable list to store the winners
         val winners = mutableListOf<Player>()
@@ -112,10 +112,9 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         // Iterate through the players in the current game
         for (player in rootService.currentGame!!.currentTurn.players) {
             // If the player has the maximum score, add them to the winners list
-            if (maxScore == player.score) {
                 winners.add(player)
-            }
         }
+        winners.sortByDescending { it.score }
         // Return the winners list
         return winners
     }
