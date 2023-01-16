@@ -12,13 +12,13 @@ package entity
 data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
 
     var id: Int = -1
-    val originalPorts = mutableListOf<Pair<Int, Int>>()
+    var originalPorts = mutableListOf<Pair<Int, Int>>()
     var rotationDegree = 0
     var posX = 0
     var posY = 0
     init {
         for (pair in ports) {
-            originalPorts.add(pair.copy())
+            originalPorts.add(Pair(pair.first, pair.second))
         }
     }
 
@@ -26,14 +26,15 @@ data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
 
 
     fun copy(): Tile {
-        val nTile = Tile(ports.toMutableList())
+        val nTile = Tile(mutableListOf())
+        for (pair in ports) {
+            nTile.ports.add(Pair(pair.first, pair.second))
+        }
+        nTile.originalPorts = originalPorts
         nTile.rotationDegree = rotationDegree
         nTile.posX = posX
         nTile.posY = posY
+        nTile.id = id
         return nTile
-    }
-
-    fun compare(otherTile: Tile): Boolean {
-        return this.id == otherTile.id
     }
 }
