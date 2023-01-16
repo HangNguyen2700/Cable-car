@@ -139,6 +139,25 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         debugGameEndSceneButton.onMouseClicked={hideMenuScene(3000); showGameScene(gameOverScene)}
     }
 
+    private val networkJoinScene = NetworkJoinScene().apply {
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
+        }
+        soundToggleButton.onMouseClicked = { toggleSound() }
+        musicToggleButton.onMouseClicked = { toggleMusic() }
+        backToMainMenuSceneButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showAndStoreMenuScene(mainMenuScene, 3000)
+        }
+        joinGameButton.onMouseClicked = {
+            if(secretTextField.text != "" && sessionIDTextField.text != "") {
+                hideMenuScene(3000)
+                //switch to gameScene from another host
+            } else { playNopeSound() }
+        }
+    }
+
     private val notificationGameScene = NotificationGameScene()
 
     private val confirmQuitMenuScene = ConfirmQuitMenuScene().apply {
@@ -174,9 +193,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var soundEnabled = true
 
     private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
-        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton)
+        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton,
+        networkJoinScene.musicToggleButton)
     private val soundButtons = listOf(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
-        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton,gameOverScene.soundToggleButton)
+        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton,gameOverScene.soundToggleButton,
+        networkJoinScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
@@ -196,16 +217,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private fun nameEmptyCheck(case : Int) {
         if (mainMenuScene.nameField.text != "") {
-            if (case == 1) { //host network
+            if (case == 1) { //join network
                 hideMenuScene(3000)
-                lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
-                    ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                        text = mainMenuScene.nameField.text,
-                        alignment = Alignment.CENTER_LEFT, offsetX = 20))
-                showAndStoreMenuScene(lobbyScene, 3000)
-            } else if(case == 2) {  //join network
-                networkJoin()
+                showAndStoreMenuScene(networkJoinScene,3000)
+            } else if(case == 2) {  //host network
+
             } else {    //hotseat
                 hideMenuScene(3000)
                 lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
@@ -220,9 +236,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             playNopeSound()
         }
 
-    }
-
-    fun networkJoin() {
     }
 
     /**
