@@ -73,6 +73,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
+
+
     private val lobbyScene = LobbyScene().apply {
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
