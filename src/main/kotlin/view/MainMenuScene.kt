@@ -27,10 +27,8 @@ import java.awt.Color
 class MainMenuScene : MenuScene(1920,1080) {
 
     private val menuLabel = Label(width = 600, height = 200, posX = 650, posY = 10,
-        visual = CompoundVisual(
-            TextVisual(
-                font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
-                text = "MENU")))
+        visual = TextVisual(font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
+            text = "MENU"))
 
     val debugGameSceneButton = Button(width = 400, height = 100, posX = 760, posY = 440,
         visual = CompoundVisual(
