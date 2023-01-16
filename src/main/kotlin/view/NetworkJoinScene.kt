@@ -76,7 +76,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
 
     fun parametersInput() {
         if (joinGameButton.isDisabled &&
-            sessionIDLabel.text != "" && sessionIDLabel.text != "") {
+            sessionIDTextField.text != "" && secretTextField.text != "") {
             joinGameButton.isDisabled = false; joinGameButton.opacity = 1.0
         }
     }
