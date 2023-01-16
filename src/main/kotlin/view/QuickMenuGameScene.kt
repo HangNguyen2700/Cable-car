@@ -12,11 +12,11 @@ import java.awt.Color
 
 class QuickMenuGameScene : MenuScene(600, 1080) {
 
-    val menuLabel = Label(width = 600, height = 100, posX = 0, posY = 140,
+    private val menuLabel = Label(width = 600, height = 100, posX = 0, posY = 140,
         font = Font(size = 100, color = Color.BLUE, family = "Calibri"),
         text = "Quick Menu")
 
-    val soundToggleLabel = Label(width = 600, height = 100, posX = 0, posY = 300,
+    private val soundToggleLabel = Label(width = 600, height = 100, posX = 0, posY = 300,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.5 },
             TextVisual(
@@ -26,7 +26,7 @@ class QuickMenuGameScene : MenuScene(600, 1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 230, posY = 400,
         visual = ImageVisual("sound_enabled.png"))
 
-    val musicToggleLabel = Label(width = 600, height = 100, posX = 0, posY = 600,
+    private val musicToggleLabel = Label(width = 600, height = 100, posX = 0, posY = 600,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.5 },
             TextVisual(
