@@ -73,7 +73,18 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
-
+    private val hostLobbyScene = HostLobbyScene().apply {
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
+        }
+        soundToggleButton.onMouseClicked = { toggleSound() }
+        musicToggleButton.onMouseClicked = { toggleMusic() }
+        backToMainMenuSceneButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showAndStoreMenuScene(mainMenuScene, 3000)
+        }
+    }
 
     private val lobbyScene = LobbyScene().apply {
         quitButton.onMouseClicked = {
@@ -221,7 +232,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 hideMenuScene(3000)
                 showAndStoreMenuScene(networkJoinScene,3000)
             } else if(case == 2) {  //host network
-
+                hideMenuScene(3000)
+                showAndStoreMenuScene(hostLobbyScene, 3000)
             } else {    //hotseat
                 hideMenuScene(3000)
                 lobbyScene.playerBoxLabel[0].visual = CompoundVisual(

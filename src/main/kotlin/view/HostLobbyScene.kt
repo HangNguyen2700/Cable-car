@@ -25,12 +25,12 @@ class HostLobbyScene: MenuScene(1920, 1080) {
 
     //Music / sound
     val musicToggleButton = Button(
-        width = 140, height = 140, posX = 1620, posY = 880,
+        width = 140, height = 140, posX = 1520, posY = 60,
         visual = ImageVisual("music_enabled.png")
     )
 
     val soundToggleButton = Button(
-        width = 140, height = 140, posX = 1320, posY = 880,
+        width = 140, height = 140, posX = 1320, posY = 60,
         visual = ImageVisual("sound_enabled.png")
     )
 
@@ -38,7 +38,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     val allowKITurnier = Button(width = 600, height = 100, posX = 620, posY = 244,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "KI Turnier Mode"))
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
     ).apply { onMouseClicked = { allowKITurnierCheckbox.isChecked = !allowKITurnierCheckbox.isChecked } }
 
     val allowKITurnierCheckbox = CheckBox(width = 115, height = 70, posX = 1300, posY =  242)
