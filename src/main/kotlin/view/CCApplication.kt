@@ -58,7 +58,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     private val gameOverScene = GameOverScene().apply {
-        quitButton.onMouseClicked = { exit() }
+        soundToggleButton.onMouseClicked = { toggleSound() }
+        musicToggleButton.onMouseClicked = { toggleMusic() }
+        quitButton.onMouseClicked = {
+            hideMenuScene(3000)
+            showMenuScene(confirmQuitMenuScene)
+        }
     }
 
     private val gameScene = GameScene().apply {
@@ -111,6 +116,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             if (musicEnabled) playCreditsMusic()
         }
         debugGameSceneButton.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
+        debugGameEndSceneButton.onMouseClicked={hideMenuScene(3000); showGameScene(gameOverScene)}
     }
 
     private val notificationGameScene = NotificationGameScene()
@@ -148,9 +154,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var soundEnabled = true
 
     private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
-        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton)
+        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton)
     private val soundButtons = listOf(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
-        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton)
+        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton,gameOverScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")

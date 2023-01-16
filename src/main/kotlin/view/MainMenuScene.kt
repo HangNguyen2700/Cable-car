@@ -38,6 +38,13 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "gameScene")))
 
+    val debugGameEndSceneButton = Button(width = 400, height = 100, posX = 760, posY = 550,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "End GameScene")))
+
+
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 460, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
@@ -114,6 +121,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton,
             debugGameSceneButton,
+            debugGameEndSceneButton,
             nameErrorLabel, closeNameErrorButton,
         )
         background = ColorVisual(0,0,0)
