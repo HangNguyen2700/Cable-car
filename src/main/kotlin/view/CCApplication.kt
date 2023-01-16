@@ -112,6 +112,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     rotationAllowed = this.allowTileRotationCheckbox.isChecked
                 )
             }
+            hideMenuScene(3000)
+            showGameScene(gameScene)
         }
     }
 
@@ -123,9 +125,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
-        joinButton.onMouseClicked = { nameEmptyCheck() }
-        hostButton.onMouseClicked = { nameEmptyCheck() }
-        hotseatButton.onMouseClicked = { nameEmptyCheck() }
+        joinButton.onMouseClicked = { nameEmptyCheck(1) }
+        hostButton.onMouseClicked = { nameEmptyCheck(2) }
+        hotseatButton.onMouseClicked = { nameEmptyCheck(3) }
         creditsButton.onMouseClicked = {
             hideMenuScene(3000)
             explicitlyShowCreditsScene()
@@ -190,20 +192,35 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
      * for scene transition
      */
 
-    private fun nameEmptyCheck() {
+    private fun nameEmptyCheck(case : Int) {
         if (mainMenuScene.nameField.text != "") {
-            hideMenuScene(3000)
-            lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
-                ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-                TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                    text = mainMenuScene.nameField.text,
-                    alignment = Alignment.CENTER_LEFT, offsetX = 20))
-            showAndStoreMenuScene(lobbyScene, 3000)
+            if (case == 1) { //host network
+                hideMenuScene(3000)
+                lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
+                    ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                        text = mainMenuScene.nameField.text,
+                        alignment = Alignment.CENTER_LEFT, offsetX = 20))
+                showAndStoreMenuScene(lobbyScene, 3000)
+            } else if(case == 2) {  //join network
+                networkJoin()
+            } else {    //hotseat
+                hideMenuScene(3000)
+                lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
+                    ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+                    TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                        text = mainMenuScene.nameField.text,
+                        alignment = Alignment.CENTER_LEFT, offsetX = 20))
+                showAndStoreMenuScene(lobbyScene, 3000)
+            }
         } else {
             mainMenuScene.nameErrorDisplay()
             playNopeSound()
         }
 
+    }
+
+    fun networkJoin() {
     }
 
     /**
