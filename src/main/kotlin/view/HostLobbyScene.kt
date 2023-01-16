@@ -14,12 +14,15 @@ import java.awt.Color
 
 class HostLobbyScene: MenuScene(1920, 1080) {
 
-    val hostGameLabel = Label(width = 300, height = 100, posX = 617, posY = 141,
+    val hostGameLabel = Label(width = 1920, height = 200, posY = 100,
+        visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
+            text = "HOST YOUR GAME"))
+
+    val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 100, posY = 880,
         visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.1 },
-            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Host Game")
-        )
-    )
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
+
     //Music / sound
     val musicToggleButton = Button(
         width = 140, height = 140, posX = 1620, posY = 880,
@@ -38,7 +41,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "KI Turnier Mode"))
     ).apply { onMouseClicked = { allowKITurnierCheckbox.isChecked = !allowKITurnierCheckbox.isChecked } }
 
-    val allowKITurnierCheckbox = CheckBox(width = 115, height = 70, posX = 976, posY =  242)
+    val allowKITurnierCheckbox = CheckBox(width = 115, height = 70, posX = 1300, posY =  242)
 
     //Shuffle Player
     val allowShufflePlayerOrder = Button(width = 600, height = 100, posX = 620, posY = 330,
@@ -47,7 +50,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Player Order"))
     ).apply { onMouseClicked = { allowShufflePlayerOrderCheckbox.isChecked = !allowShufflePlayerOrderCheckbox.isChecked } }
 
-    val allowShufflePlayerOrderCheckbox = CheckBox(width = 115, height = 70, posX = 976, posY =  328)
+    val allowShufflePlayerOrderCheckbox = CheckBox(width = 115, height = 70, posX = 1300, posY =  328)
 
     //Tile Rotation
 
@@ -57,7 +60,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Tile Rotation"))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
-    val allowTileRotationCheckbox = CheckBox(width = 115, height = 70,posX=976,posY= 417)
+    val allowTileRotationCheckbox = CheckBox(width = 115, height = 70,posX=1300,posY= 417)
 
     // Secret
     val secretLabel = Label(width = 300, height = 100, posX = 620, posY = 515,
@@ -83,16 +86,23 @@ class HostLobbyScene: MenuScene(1920, 1080) {
         TextField(width = 544, height = 70, posX = 976, posY = 619, prompt = "",
             font = Font(size = 40, family = "Calibri"))
 
+    val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
+        visual = ImageVisual("quit_button.png"))
+
+
+
     init{
         addComponents(
+            backToMainMenuSceneButton,
             soundToggleButton, musicToggleButton,
             hostGameLabel,allowKITurnier,allowKITurnierCheckbox,
             allowShufflePlayerOrder,allowShufflePlayerOrderCheckbox,
             allowTileRotationButton,allowTileRotationCheckbox,
-            secretLabel,secretTextField,sessionIdLabel,secretTextField
+            secretLabel,secretTextField,sessionIdLabel,sessionIdTextField,
+            quitButton
         )
-        background = ColorVisual(175, 238, 238)
-        opacity = 0.4
+        background = ColorVisual(0,0,0)
+        opacity = 0.3
     }
 
 

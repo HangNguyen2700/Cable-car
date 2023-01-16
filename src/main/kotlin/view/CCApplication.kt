@@ -194,10 +194,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
         quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton,
-        networkJoinScene.musicToggleButton)
+        networkJoinScene.musicToggleButton,hostLobbyScene.musicToggleButton)
     private val soundButtons = listOf(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
         quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton,gameOverScene.soundToggleButton,
-        networkJoinScene.soundToggleButton)
+        networkJoinScene.soundToggleButton,hostLobbyScene.soundToggleButton)
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
@@ -310,9 +310,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         if (soundChannel != null) { soundChannel!!.stop() }
         if(soundEnabled) {
             GlobalScope.async {
-            val sound = resourcesVfs["nope_sound_effect.wav"].readMusic()
-            soundChannel = sound.play()
-            soundChannel!!.await()
+                val sound = resourcesVfs["nope_sound_effect.wav"].readMusic()
+                soundChannel = sound.play()
+                soundChannel!!.await()
             }
         }
     }
