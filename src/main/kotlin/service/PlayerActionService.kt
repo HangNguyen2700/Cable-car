@@ -7,7 +7,7 @@ import entity.Tile
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    fun placeTile(fromHand: Boolean, posX: Int, posY: Int) {
+    fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0) {
         // add new Turn
         val newTurn = rootService.currentGame!!.currentTurn.copy()
         rootService.currentGame!!.currentTurn.nextTurn = newTurn
@@ -16,42 +16,47 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         rootService.currentGame!!.currentTurn = newTurn
 
 
-        if (!rootService.gameService.isLocalOnlyGame) {
-            // network game, so a turnMessage has to be sent
-            var tile: Tile? = null
-            if (fromHand) {
-                tile =
-                    rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
-                // give player next tile
-                rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
-                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
-            } else {
-                tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
-            }
-            rootService.networkService.sendTurnMessage(
-                TurnMessage(
-                    posX, posY,
-                    !fromHand,
-                    tile!!.rotationDegree,
-                    GameStateVerificationInfo(listOf(), listOf(), listOf())
-                )
-            )
-        }
+        var tile: Tile?
 
-        // add tile to gameField
+        // add tile to gameField and send TurnMessage
         if (isPositionLegal(posX, posY)) {
-            rootService.currentGame!!.currentTurn.gameField.field[posX][posY]
             if (fromHand) {
-                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
-                    rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                // tile from hand
+                tile = rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                // rotate tile if needed
+                if (rotationDegree != 0) {
+                    while (rotationDegree > tile!!.rotationDegree) {
+                        rotate(tile)
+                    }
+                }
+                // put tile onto Field
+                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
+                // give player new tile from tileStack
                 rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
                     rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
             } else {
-                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] =
-                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                // tile from tileStack
+                tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                // rotate tile if needed
+                if (rotationDegree != 0) {
+                    while (rotationDegree > tile.rotationDegree) {
+                        rotate(tile)
+                    }
+                }
+                // remove tile from tileStack and put it onto the field
+                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
+            }
+            if (!rootService.gameService.isLocalOnlyGame) {
+                rootService.networkService.sendTurnMessage(
+                    TurnMessage(
+                        posX, posY,
+                        !fromHand,
+                        tile!!.rotationDegree,
+                        GameStateVerificationInfo(listOf(), listOf(), listOf())
+                    )
+                )
             }
         }
-
         rootService.gameService.nextPlayer()
     }
 
