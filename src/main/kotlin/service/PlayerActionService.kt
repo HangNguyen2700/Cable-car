@@ -244,6 +244,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 player.score = path.tiles.count()
                 path.complete = true
             }
+            /*if ((path.tiles.last().posX == 4 && path.tiles.last().posY == 4)
+                || (path.tiles.last().posX == 4 && path.tiles.last().posY == 5)
+                || (path.tiles.last().posX == 5 && path.tiles.last().posY == 4)
+                || (path.tiles.last().posX == 5 && path.tiles.last().posY == 5)
+            ) {
+                player.score += path.tiles.count()
+            }*/
+        }
+    }
+    fun buildPathWithPowerStation(player: Player, placedTile: Tile)
+    {
+        val currentGame = rootService.currentGame
+        checkNotNull(currentGame)
+        for (path in player.paths) {
             if ((path.tiles.last().posX == 4 && path.tiles.last().posY == 4)
                 || (path.tiles.last().posX == 4 && path.tiles.last().posY == 5)
                 || (path.tiles.last().posX == 5 && path.tiles.last().posY == 4)
