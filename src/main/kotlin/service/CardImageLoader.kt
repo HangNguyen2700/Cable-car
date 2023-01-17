@@ -4,10 +4,13 @@ import entity.Color
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
-private const val CARDS_FILE = "/cardDeck.png"
+private const val TILES_FILE = "/tiles_assembled.png"
+private const val TILES_FILE_IMG_HEIGHT = 400
+private const val TILES_FILE_IMG_WIDTH = 400
+
 private const val STATION_CARDS_FILE = "/cardStation.png"
-private const val IMG_HEIGHT = 270
-private const val IMG_WIDTH = 270
+private const val STATION_CARDS_FILE_IMG_HEIGHT = 1080
+private const val STATION_CARDS_FILE_IMG_WIDTH = 1080
 
 /**
  * Provides access to the src/main/resources/card_deck.png file that contains all card images
@@ -22,7 +25,7 @@ class CardImageLoader {
      * the order in which the suits are declared in [CardSuit], mappings via [row] and [column]
      * are required.
      */
-    private val image : BufferedImage = ImageIO.read(CardImageLoader::class.java.getResource(CARDS_FILE))
+    private val tilesImage : BufferedImage = ImageIO.read(CardImageLoader::class.java.getResource(TILES_FILE))
 
     private val stationsImage : BufferedImage = ImageIO.read(CardImageLoader::class.java.getResource(STATION_CARDS_FILE))
 
@@ -44,17 +47,12 @@ class CardImageLoader {
 
      */
 
-    fun frontImage(tilePos: Int) = getImageByCoordinates(image, (tilePos - 1) % 10, (tilePos - 1) / 10)
+    fun frontImage(tilePos: Int) = getImageByCoordinates(tilesImage, (tilePos - 1) % 10, (tilePos - 1) / 10)
 
     /**
      * Provides a blank (white) card
      */
 //    val blankImage : BufferedImage get() = getImageByCoordinates(8, 4)
-    /**
-     * Provides the back side image of the card deck
-     */
-    val backImage: BufferedImage get() = getImageByCoordinates(image, 9, 6)
-
     /**
      * retrieves from the full raster image [image] the corresponding sub-image
      * for the given column [x] and row [y]
@@ -63,12 +61,12 @@ class CardImageLoader {
      * @param y row in the raster image, starting at 0
      *
      */
-    private fun getImageByCoordinates (image: BufferedImage, x: Int, y: Int) : BufferedImage =
-        image.getSubimage(
-            x * IMG_WIDTH,
-            y * IMG_HEIGHT,
-            IMG_WIDTH,
-            IMG_HEIGHT
-        )
+    private fun getImageByCoordinates (image: BufferedImage, x: Int, y: Int) : BufferedImage {
+        if (image == tilesImage) return image.getSubimage(
+            x * TILES_FILE_IMG_WIDTH,y * TILES_FILE_IMG_HEIGHT, TILES_FILE_IMG_WIDTH, TILES_FILE_IMG_HEIGHT)
+        else return image.getSubimage(
+            x * STATION_CARDS_FILE_IMG_WIDTH,y * STATION_CARDS_FILE_IMG_HEIGHT,
+            STATION_CARDS_FILE_IMG_WIDTH, STATION_CARDS_FILE_IMG_HEIGHT)
+    }
 
 }
