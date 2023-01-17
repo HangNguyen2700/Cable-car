@@ -66,7 +66,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
-    private val gameScene = GameScene().apply {
+    private val gameScene = GameScene(rootService).apply {
         quickMenuButton.onMouseClicked = {
             hideMenuScene(3000)
             showAndStoreMenuScene(quickMenuGameScene,3000)
@@ -208,6 +208,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         this.showGameScene(titleScene)
         //isFullScreen = true
         icon = ImageVisual("icon.png")
+//        this.showGameScene(gameScene)
     }
 
     /**

@@ -16,5 +16,14 @@ import service.AbstractRefreshingService
 
 interface Refreshable {
 
+    /**
+     * perform refreshes that are necessary after a new game started
+     */
+    fun refreshAfterStartGame() {}
 
+    /**
+     * Refresh after current player placed tile and next player is called
+     *
+     */
+    fun refreshAfterPlaceTile(){}
 }
