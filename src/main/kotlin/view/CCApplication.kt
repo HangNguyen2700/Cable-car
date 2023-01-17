@@ -84,6 +84,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             hideMenuScene(3000)
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
+        hostGameButton.onMouseClicked = {
+            if(secretTextField.text != "" && sessionIdTextField.text != "") {
+                hideMenuScene(3000)
+                //switch to gameScene from another host
+            } else { playNopeSound() }
+        }
     }
 
     private val lobbyScene = LobbyScene().apply {

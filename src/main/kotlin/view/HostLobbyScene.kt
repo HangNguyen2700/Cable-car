@@ -14,7 +14,7 @@ import java.awt.Color
 
 class HostLobbyScene: MenuScene(1920, 1080) {
 
-    val hostGameLabel = Label(width = 1920, height = 200, posY = 100,
+    val hostGameLabel = Label(width = 960, height = 200, posY = 40,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "HOST YOUR GAME"))
 
@@ -24,72 +24,68 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
     //Music / sound
-    val musicToggleButton = Button(
-        width = 140, height = 140, posX = 1520, posY = 60,
-        visual = ImageVisual("music_enabled.png")
-    )
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 60,
+        visual = ImageVisual("music_enabled.png"))
 
-    val soundToggleButton = Button(
-        width = 140, height = 140, posX = 1320, posY = 60,
-        visual = ImageVisual("sound_enabled.png")
-    )
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 60,
+        visual = ImageVisual("sound_enabled.png"))
 
    //KI Turnier
-    val allowKITurnier = Button(width = 600, height = 100, posX = 620, posY = 244,
+    val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 300,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
     ).apply { onMouseClicked = { allowKITurnierCheckbox.isChecked = !allowKITurnierCheckbox.isChecked } }
 
-    val allowKITurnierCheckbox = CheckBox(width = 115, height = 70, posX = 1300, posY =  242)
+    val allowKITurnierCheckbox = CheckBox(posX = 730, posY = 333)
 
     //Shuffle Player
-    val allowShufflePlayerOrder = Button(width = 600, height = 100, posX = 620, posY = 330,
+    val allowShufflePlayerOrder = Button(width = 600, height = 100, posX = 100, posY = 450,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Player Order"))
     ).apply { onMouseClicked = { allowShufflePlayerOrderCheckbox.isChecked = !allowShufflePlayerOrderCheckbox.isChecked } }
 
-    val allowShufflePlayerOrderCheckbox = CheckBox(width = 115, height = 70, posX = 1300, posY =  328)
+    val allowShufflePlayerOrderCheckbox = CheckBox(posX = 730, posY = 483)
 
     //Tile Rotation
 
-    val allowTileRotationButton = Button(width = 600, height = 100, posX = 620, posY = 419,
+    val allowTileRotationButton = Button(width = 600, height = 100, posX = 100, posY = 600,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Tile Rotation"))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
-    val allowTileRotationCheckbox = CheckBox(width = 115, height = 70,posX=1300,posY= 417)
-
-    // Secret
-    val secretLabel = Label(width = 300, height = 100, posX = 620, posY = 515,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.1 },
-            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Secret")
-        )
-    )
-    val secretTextField =
-        TextField(width = 611, height = 70, posX = 980, posY = 508, prompt = "",
-            font = Font(size = 40, family = "Calibri"))
-
+    val allowTileRotationCheckbox = CheckBox(posX = 730, posY = 633)
 
     //Session Id
-    val sessionIdLabel = Label(width = 300, height = 100, posX = 620, posY = 613,
+    val sessionIdLabel = Label(width = 300, height = 100, posX = 1130, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
-            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Session Id")
-        )
-    )
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "SessionID")))
 
-    val sessionIdTextField =
-        TextField(width = 544, height = 70, posX = 976, posY = 619, prompt = "",
-            font = Font(size = 40, family = "Calibri"))
+    val sessionIdTextField = TextField(width = 300, height = 80, posX = 1130, posY = 550,
+        prompt = "Choose SessionID", font = Font(size = 36, family = "Calibri")
+    ).apply { onKeyTyped = { parametersInput() } }
+
+    // Secret
+    val secretLabel = Label(width = 300, height = 100, posX = 1450, posY = 400,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.1 },
+            TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Secret")))
+
+    val secretTextField = TextField(width = 300, height = 80, posX = 1450, posY = 550,
+        prompt = "Choose Secret", font = Font(size = 40, family = "Calibri")
+    ).apply { onKeyTyped = { parametersInput() } }
 
     val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
 
-
+    val hostGameButton = Button(width = 400, height = 100, posX = 1240, posY = 800,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Host"))
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { isDisabled = true; opacity = 0.0 } }
 
     init{
         addComponents(
@@ -99,13 +95,17 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             allowShufflePlayerOrder,allowShufflePlayerOrderCheckbox,
             allowTileRotationButton,allowTileRotationCheckbox,
             secretLabel,secretTextField,sessionIdLabel,sessionIdTextField,
-            quitButton
+            quitButton,hostGameButton
         )
         background = ColorVisual(0,0,0)
         opacity = 0.3
     }
 
-
-
+    fun parametersInput() {
+        if (hostGameButton.isDisabled &&
+            sessionIdTextField.text != "" && secretTextField.text != "") {
+            hostGameButton.isDisabled = false; hostGameButton.opacity = 1.0
+        }
+    }
 
 }
