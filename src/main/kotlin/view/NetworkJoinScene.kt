@@ -37,7 +37,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
 
     val secretTextField = TextField(width = 300, height = 80, posX = 1290, posY = 500, prompt = "Enter Secret",
         font = Font(size = 40, family = "Calibri")
-    ).apply { onKeyTyped = { parametersInput() }  }
+    ).apply { onKeyTyped = { parametersInput() }   }
 
     val aiGameButton = Button(width = 370, height = 100, posX = 775, posY = 500,
         visual = CompoundVisual(
