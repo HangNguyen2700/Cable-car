@@ -59,6 +59,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val gameOverScene = GameOverScene().apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+
+       /* mainMenuButton.onMouseClicked={  //  recurrsive problem da das gameOverScene Button aufm mainMenuScene liegt
+            hideMenuScene(3000)
+            showMenuScene(mainMenuScene)
+        }*/
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
             showMenuScene(confirmQuitMenuScene)
@@ -205,6 +210,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             hideMenuScene()
             showAndStoreMenuScene(activeMenuScene!!,3000)
         }
+
     }
 
     private val quickMenuGameScene = QuickMenuGameScene().apply {
@@ -367,6 +373,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
      */
 
     private fun explicitlyShowCreditsScene() { showGameScene(creditsScene); creditsScene.trigger() }
+
 
     /**
      * when a MenuScene is called it needs to be saved for confirmQuit MenuScene

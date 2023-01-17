@@ -121,7 +121,7 @@ class GameOverScene : BoardGameScene(1920, 1080) {
 
     // ? Back to main Menu via quit Button or mainMenu Button ?
 
-    private val mainMenuButton = Button(
+    val mainMenuButton = Button(
         width = 400, height = 100, posX = 724, posY = 880,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
