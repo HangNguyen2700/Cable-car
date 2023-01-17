@@ -14,7 +14,7 @@ import java.awt.Color
 
 class NetworkJoinScene : MenuScene(1920, 1080){
 
-    val topLabel = Label(width = 1920, height = 200, posY = 100,
+    private val topLabel = Label(width = 1920, height = 200, posY = 100,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = ("JOIN A GAME")))
 
@@ -23,7 +23,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
-    val sessionIDLabel = Label(width = 600, height = 100, posX = 180, posY = 350,
+    private val sessionIDLabel = Label(width = 600, height = 100, posX = 180, posY = 350,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "SessionID"))
 
@@ -31,7 +31,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         font = Font(size = 40, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() } }
 
-    val secretLabel = Label(width = 600, height = 100, posX = 1140, posY = 350,
+    private val secretLabel = Label(width = 600, height = 100, posX = 1140, posY = 350,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "Secret"))
 
@@ -39,7 +39,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         font = Font(size = 40, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() }   }
 
-    val aiGameButton = Button(width = 370, height = 100, posX = 775, posY = 500,
+    private val aiGameButton = Button(width = 370, height = 100, posX = 775, posY = 500,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 40, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
@@ -74,7 +74,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         )
     }
 
-    fun parametersInput() {
+    private fun parametersInput() {
         if (joinGameButton.isDisabled &&
             sessionIDTextField.text != "" && secretTextField.text != "") {
             joinGameButton.isDisabled = false; joinGameButton.opacity = 1.0

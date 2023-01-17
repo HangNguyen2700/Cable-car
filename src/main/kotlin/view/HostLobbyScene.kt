@@ -14,7 +14,7 @@ import java.awt.Color
 
 class HostLobbyScene: MenuScene(1920, 1080) {
 
-    val hostGameLabel = Label(width = 960, height = 200, posY = 40,
+    private val hostGameLabel = Label(width = 960, height = 200, posY = 40,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "HOST YOUR GAME"))
 
@@ -31,7 +31,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
         visual = ImageVisual("sound_enabled.png"))
 
    //KI Turnier
-    val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 300,
+    private val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 300,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
@@ -40,7 +40,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     val allowKITurnierCheckbox = CheckBox(posX = 730, posY = 333)
 
     //Shuffle Player
-    val allowShufflePlayerOrder = Button(width = 600, height = 100, posX = 100, posY = 450,
+    private val allowShufflePlayerOrderButton = Button(width = 600, height = 100, posX = 100, posY = 450,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Player Order"))
@@ -50,7 +50,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
 
     //Tile Rotation
 
-    val allowTileRotationButton = Button(width = 600, height = 100, posX = 100, posY = 600,
+    private val allowTileRotationButton = Button(width = 600, height = 100, posX = 100, posY = 600,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Tile Rotation"))
@@ -58,8 +58,8 @@ class HostLobbyScene: MenuScene(1920, 1080) {
 
     val allowTileRotationCheckbox = CheckBox(posX = 730, posY = 633)
 
-    //Session Id
-    val sessionIdLabel = Label(width = 300, height = 100, posX = 1130, posY = 400,
+    //Session ID
+    private val sessionIdLabel = Label(width = 300, height = 100, posX = 1130, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "SessionID")))
@@ -69,7 +69,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     ).apply { onKeyTyped = { parametersInput() } }
 
     // Secret
-    val secretLabel = Label(width = 300, height = 100, posX = 1450, posY = 400,
+    private val secretLabel = Label(width = 300, height = 100, posX = 1450, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Secret")))
@@ -92,7 +92,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             backToMainMenuSceneButton,
             soundToggleButton, musicToggleButton,
             hostGameLabel,allowKITurnier,allowKITurnierCheckbox,
-            allowShufflePlayerOrder,allowShufflePlayerOrderCheckbox,
+            allowShufflePlayerOrderButton,allowShufflePlayerOrderCheckbox,
             allowTileRotationButton,allowTileRotationCheckbox,
             secretLabel,secretTextField,sessionIdLabel,sessionIdTextField,
             quitButton,hostGameButton
@@ -101,7 +101,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
         opacity = 0.3
     }
 
-    fun parametersInput() {
+    private fun parametersInput() {
         if (hostGameButton.isDisabled &&
             sessionIdTextField.text != "" && secretTextField.text != "") {
             hostGameButton.isDisabled = false; hostGameButton.opacity = 1.0

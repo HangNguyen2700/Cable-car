@@ -18,14 +18,11 @@ import java.awt.Color
  *
  * [playersJoined]: counter representing amount of players in Table
  * [realAISelection]: stores player input in addPlayer dialogue
- * [colorsPicked]: stores which color is claimed by which player (0 for unclaimed)
  * [backToMainMenuSceneButton]: button to return to the main Menu
- * [hintLabel]: hint player to pick a color
  * [shuffleTurnOrderButton], [shuffleTurnOrderCheckbox]: Checkbox for order shuffling option
  * [allowTileRotationButton], [allowTileRotationCheckbox]: Checkbox for tile rotation option
  * [playerLabel],[playerBoxLabel]: Table showing player Names on the left
  * [deletePlayerButtons]: deletes a player entry from the player table
- * [colorPicker]: Buttons to pick leftover color for players
  * [playerColorLabel]:  Color square appears in player Table to display picked color for player
  * [addPlayerButton]: Button for addPlayer dialogue to start. only appears if players < 6
  * [nameFields]: appears in corresponding line in player table for input in addPlayer dialogue
@@ -42,22 +39,14 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     var playersJoined = 0
 
-    var realAISelection: Int? = null
-
-    /*var colorsPicked = mutableListOf(0,0,0,0,0,0)*/
+    private var realAISelection: Int? = null
 
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
-    /*val hintLabel = Label(width = 400, height = 100, posX = 100, posY = 900,
-        visual = CompoundVisual(
-            ColorVisual.WHITE.apply { transparency = 0.5 },
-            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
-                text = "pick a color!")))*/
-
-    val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1120, posY = 250,
+    private val shuffleTurnOrderButton = Button(width = 600, height = 100, posX = 1120, posY = 250,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Turn Order"))
@@ -65,7 +54,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     val shuffleTurnOrderCheckbox = CheckBox(1750, 283)
 
-    val allowTileRotationButton = Button(width = 600, height = 100, posX = 1120, posY = 380,
+    private val allowTileRotationButton = Button(width = 600, height = 100, posX = 1120, posY = 380,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Allow Tile Rotation"))
@@ -73,7 +62,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     val allowTileRotationCheckbox = CheckBox(1750, 413)
 
-    val playerLabel = Label(width = 300, height = 100, posX = 100, posY = 100,
+    private val playerLabel = Label(width = 300, height = 100, posX = 100, posY = 100,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Players")))
@@ -121,21 +110,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             visual = TextVisual(text = "-", font = Font(size = 50, family = "Calibri"))
         ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { deletePlayer(5) } })
 
-    /*val colorPicker = listOf(
-        Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.YELLOW.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, posX = 700.0, visual = entity.Color.BLUE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.ORANGE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, posX = 740.0, visual = entity.Color.GREEN.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.PURPLE.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 },
-        Button(width = 40, height = 40, posX = 780.0, visual = entity.Color.BLACK.toRGB()).apply {
-            onMouseClicked = { colorPicked(this) }; isDisabled = true; opacity = 0.0 })*/
-
-    val playerColorLabel = mutableListOf(
+    private val playerColorLabel = mutableListOf(
         Label(width = 80, height = 80, posX = 700.0, posY = 250, visual = ColorVisual.YELLOW),
         Label(width = 80, height = 80, posX = 700.0, posY = 350, visual = ColorVisual.BLUE),
         Label(width = 80, height = 80, posX = 700.0, posY = 450, visual = ColorVisual.ORANGE),
@@ -143,7 +118,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         Label(width = 80, height = 80, posX = 700.0, posY = 650, visual = ColorVisual(100,0,100)),
         Label(width = 80, height = 80, posX = 700.0, posY = 750, visual = ColorVisual.BLACK))
 
-    val addPlayerButton = Button(width = 80, height = 80, posX = 120.0,
+    private val addPlayerButton = Button(width = 80, height = 80, posX = 120.0,
         visual = TextVisual(font = Font(size = 50, family = "Calibri"), text = "+")
     ).apply { onMouseClicked = { addPlayer() } }
 
@@ -164,12 +139,12 @@ class LobbyScene : MenuScene(1920, 1080) {
             font = Font(size = 40, family = "Calibri"),
         ).apply { onKeyTyped = { playerConfigured() }})
 
-    val aiPlayerButton = Button(width = 270, height = 100, posX = 1120, posY = 550,
+    private val aiPlayerButton = Button(width = 270, height = 100, posX = 1120, posY = 550,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI")))
 
-    val aiPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1120, posY = 550,
+    private val aiPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1120, posY = 550,
         visual = ColorVisual(63, 255, 63)
     ).apply {
         opacity = 0.0
@@ -177,12 +152,12 @@ class LobbyScene : MenuScene(1920, 1080) {
         onMouseExited = { if (realAISelection == null) opacity = 0.0 }
         onMouseClicked = { realAISelection = 0; realAISelected() }}
 
-    val hotseatPlayerButton = Button(width = 270, height = 100, posX = 1470, posY = 550,
+    private val hotseatPlayerButton = Button(width = 270, height = 100, posX = 1470, posY = 550,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "real")))
 
-    val hotseatPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1470, posY = 550,
+    private val hotseatPlayerButtonTrigger = Label(width = 270, height = 100, posX = 1470, posY = 550,
         visual = ColorVisual(63, 255, 63)
     ).apply {
         opacity = 0.0
@@ -190,7 +165,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         onMouseExited = { if (realAISelection == null) opacity = 0.0 }
         onMouseClicked = { realAISelection = 1; realAISelected() }}
 
-    val smartAI = Button(width = 270, height = 100, posX = 1120, posY = 680,
+    private val smartAI = Button(width = 270, height = 100, posX = 1120, posY = 680,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "big smart"))
@@ -198,9 +173,9 @@ class LobbyScene : MenuScene(1920, 1080) {
         isDisabled = true; opacity = 0.0
         onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked }}
 
-    val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
+    private val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
 
-    val confirmButton = Button(width = 400, height = 100, posX = 1120, posY = 850,
+    private val confirmButton = Button(width = 400, height = 100, posX = 1120, posY = 850,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Confirm"))
@@ -228,10 +203,9 @@ class LobbyScene : MenuScene(1920, 1080) {
             playerBoxLabel[0], playerBoxLabel[1], playerBoxLabel[2],
             playerBoxLabel[3], playerBoxLabel[4], playerBoxLabel[5],
             shuffleTurnOrderButton, shuffleTurnOrderCheckbox, allowTileRotationButton, allowTileRotationCheckbox,
-            /*colorPicker[0], colorPicker[1], colorPicker[2], colorPicker[3], colorPicker[4], colorPicker[5],*/
             deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
             deletePlayerButtons[3],deletePlayerButtons[4],
-            startGameButton, /*hintLabel*/
+            startGameButton,
         )
 
         background = ColorVisual(0,0,0)
@@ -240,45 +214,15 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     }
 
-    /*/**
-     * displays leftover player color selection in corresponding line in player table
-     */
-
-    fun showColorPicker(pos: Int) {
-
-        for (i in 0..5) {
-            if (colorsPicked[i] == 0) {
-                colorPicker[i].isDisabled = false
-                colorPicker[i].opacity = 1.0
-            } }
-
-        colorPicker[0].apply { posY = 250.0 + pos * 100.0 }; colorPicker[1].apply { posY = 290.0 + pos * 100.0 }
-        colorPicker[2].apply { posY = 250.0 + pos * 100.0 }; colorPicker[3].apply { posY = 290.0 + pos * 100.0 }
-        colorPicker[4].apply { posY = 250.0 + pos * 100.0 }; colorPicker[5].apply { posY = 290.0 + pos * 100.0 }
-    }*/
-
     /**
      * stores color selection after removing selection buttons and displays it in player table
      */
 
-    fun ready() {
-
-        /*for (i in 0..5) {
-            if (colorsPicked[i] == 0) {
-                colorPicker[i].isDisabled = true; colorPicker[i].opacity = 0.0
-            } }
-
-        colorPicker[colorPicker.indexOf(button)].isDisabled = true
-        colorPicker[colorPicker.indexOf(button)].opacity = 0.0
-        hintLabel.isDisabled = true; hintLabel.opacity = 0.0*/
+    private fun ready() {
 
         addComponents(playerColorLabel[playersJoined])
 
         playersJoined++
-
-        /*colorsPicked[colorPicker.indexOf(button)] = playersJoined*/
-
-        /*println("color at index " + colorPicker.indexOf(button) + " picked by player at index " + playersJoined)*/
         println("now there are $playersJoined Players in the lobby")
 
         if (playersJoined > 1) {
@@ -298,7 +242,7 @@ class LobbyScene : MenuScene(1920, 1080) {
      * addPlayer dialogue start
      */
 
-    fun addPlayer() {
+    private fun addPlayer() {
         addComponents(
             aiPlayerButton, aiPlayerButtonTrigger, hotseatPlayerButton, hotseatPlayerButtonTrigger,
             smartAI, smartAICheckbox,
@@ -318,7 +262,7 @@ class LobbyScene : MenuScene(1920, 1080) {
      * method for highlighting real/AI Buttons and (dis)appearing smartAI Checkbox
      */
 
-    fun realAISelected() {
+    private fun realAISelected() {
         playerConfigured()
         if (realAISelection == 0) {
             hotseatPlayerButtonTrigger.opacity = 0.0
@@ -341,7 +285,7 @@ class LobbyScene : MenuScene(1920, 1080) {
      * necessary conditions check for confirmButton to appear
      */
 
-    fun playerConfigured() {
+    private fun playerConfigured() {
         if (confirmButton.isDisabled &&
             nameFields[playersJoined - 1].text != "" && realAISelection != null) {
             confirmButton.isDisabled = false; confirmButton.opacity = 1.0
@@ -354,7 +298,7 @@ class LobbyScene : MenuScene(1920, 1080) {
      * call of colorPicker to finish add/configure Player dialogue loop
      */
 
-    fun playerAddFinished() {
+    private fun playerAddFinished() {
         if (nameFields[playersJoined - 1].text != "") {
             playerBoxLabel[playersJoined].visual = CompoundVisual(
                 ColorVisual(63, 255, 63).apply { transparency = 0.3 },
@@ -388,13 +332,7 @@ class LobbyScene : MenuScene(1920, 1080) {
      * clears playerName from the Table containing players Name
      */
 
-    fun deletePlayer(delPos : Int) {
-
-        /*colorsPicked[colorsPicked.indexOf(delPos+1)] = 0
-        println("delete player at " +  delPos + ". color at index " + colorsPicked.indexOf(delPos+1) + " is now free")*/
-
-        //colorPicker[colorPos].isDisabled = false
-        //colorPicker[colorPos].opacity = 1.0
+    private fun deletePlayer(delPos : Int) {
 
         if (playersJoined > 1) {
 

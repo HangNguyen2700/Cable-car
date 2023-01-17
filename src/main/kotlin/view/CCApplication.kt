@@ -8,7 +8,6 @@ import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import kotlinx.coroutines.GlobalScope
 import service.RootService
-import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.MenuScene
@@ -86,10 +85,29 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
         hostGameButton.onMouseClicked = {
             if(secretTextField.text != "" && sessionIdTextField.text != "") {
-                hideMenuScene(3000)
                 this@CCApplication.rootService.networkService.hostGame(
                     secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text)
-                //switch to gameScene from another host
+                if (allowShufflePlayerOrderCheckbox.isChecked) {
+                    this@CCApplication.rootService.gameService.startNewGame(
+                        listOfNotNull(
+                            mainMenuScene.nameField.text,
+                            /* ??? */
+                        ).shuffled(),
+                        isLocalOnlyGame = false, isHostedGame = true,
+                        rotationAllowed = this.allowTileRotationCheckbox.isChecked
+                    )
+                } else {
+                    this@CCApplication.rootService.gameService.startNewGame(
+                        listOfNotNull(
+                            mainMenuScene.nameField.text,
+                            /* ??? */
+                        ),
+                        isLocalOnlyGame = false, isHostedGame = true,
+                        rotationAllowed = this.allowTileRotationCheckbox.isChecked
+                    )
+                }
+                hideMenuScene(3000)
+                showGameScene(gameScene)
             } else { playNopeSound() }
         }
     }
@@ -199,7 +217,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
     }
 
-    private val titleScene = TitleScene(this).apply {
+    private val titleScene = TitleScene().apply {
         toMenuButton.onKeyPressed = { showAndStoreMenuScene(mainMenuScene, 3000) }
         toMenuButton.onMouseClicked = { showAndStoreMenuScene(mainMenuScene, 3000) }
         trigger.onMouseEntered = { playTitleMusic(); fadeIn() }
@@ -239,20 +257,24 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private fun nameEmptyCheck(case : Int) {
         if (mainMenuScene.nameField.text != "") {
-            if (case == 1) { //join network
-                hideMenuScene(3000)
-                showAndStoreMenuScene(networkJoinScene,3000)
-            } else if(case == 2) {  //host network
-                hideMenuScene(3000)
-                showAndStoreMenuScene(hostLobbyScene, 3000)
-            } else {    //hotseat
-                hideMenuScene(3000)
-                lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
-                    ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-                    TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
-                        text = mainMenuScene.nameField.text,
-                        alignment = Alignment.CENTER_LEFT, offsetX = 20))
-                showAndStoreMenuScene(lobbyScene, 3000)
+            when (case) {
+                1 -> {  //join network
+                    hideMenuScene(3000)
+                    showAndStoreMenuScene(networkJoinScene,3000)
+                }
+                2 -> {  //host network
+                    hideMenuScene(3000)
+                    showAndStoreMenuScene(hostLobbyScene, 3000)
+                }
+                else -> {
+                    hideMenuScene(3000)
+                    lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
+                        ColorVisual(63, 255, 63).apply { transparency = 0.3 },
+                        TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                            text = mainMenuScene.nameField.text,
+                            alignment = Alignment.CENTER_LEFT, offsetX = 20))
+                    showAndStoreMenuScene(lobbyScene, 3000)
+                }
             }
         } else {
             mainMenuScene.nameErrorDisplay()

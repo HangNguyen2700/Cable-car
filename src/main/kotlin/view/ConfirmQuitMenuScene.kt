@@ -24,10 +24,10 @@ class ConfirmQuitMenuScene: MenuScene(1920,1080)  {
         font = Font(size = 60, color = Color.GREEN, family = "Calibri"),
         text = "No")
 
-    val backgroundLabel = Label(width = 1600, height = 900, posX = 160, posY = 90,
+    private val backgroundLabel = Label(width = 1600, height = 900, posX = 160, posY = 90,
         visual = ColorVisual.WHITE).apply { opacity = 0.3 }
 
-    val theRockLabel = Label(width = 469, height = 469, posX = 725, posY = 450,
+    private val theRockLabel = Label(width = 469, height = 469, posX = 725, posY = 450,
         visual = ImageVisual("quit_confirm.png"))
 
    init {
