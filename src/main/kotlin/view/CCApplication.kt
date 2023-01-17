@@ -87,6 +87,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         hostGameButton.onMouseClicked = {
             if(secretTextField.text != "" && sessionIdTextField.text != "") {
                 hideMenuScene(3000)
+                this@CCApplication.rootService.networkService.hostGame(
+                    secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text)
                 //switch to gameScene from another host
             } else { playNopeSound() }
         }
@@ -170,6 +172,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         joinGameButton.onMouseClicked = {
             if(secretTextField.text != "" && sessionIDTextField.text != "") {
                 hideMenuScene(3000)
+                this@CCApplication.rootService.networkService.hostGame(
+                    secretTextField.text,mainMenuScene.nameField.text,sessionIDTextField.text)
                 //switch to gameScene from another host
             } else { playNopeSound() }
         }
