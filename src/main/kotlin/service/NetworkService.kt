@@ -61,9 +61,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
     fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean, drawStack: List<Tile>) {
         val playerInfoList = mutableListOf<PlayerInfo>()
-        playerInfoList.add(PlayerInfo(hostPlayerName, PlayerType.HUMAN))
+        playerInfoList.add(PlayerInfo(hostPlayerName))
         for (player in joinedPlayers) {
-            playerInfoList.add(PlayerInfo(player, PlayerType.HUMAN))
+            playerInfoList.add(PlayerInfo(player))
         }
 
         // player list for local game
