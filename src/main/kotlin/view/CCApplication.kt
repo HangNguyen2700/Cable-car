@@ -59,11 +59,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val gameOverScene = GameOverScene().apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
-
-       /* mainMenuButton.onMouseClicked={  //  recurrsive problem da das gameOverScene Button aufm mainMenuScene liegt
-            hideMenuScene(3000)
-            showMenuScene(mainMenuScene)
-        }*/
+        mainMenuButton.onMouseClicked={
+            explicitlyShowTitleScene()
+        }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
             showMenuScene(confirmQuitMenuScene)
@@ -94,19 +92,13 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text)
                 if (allowShufflePlayerOrderCheckbox.isChecked) {
                     this@CCApplication.rootService.gameService.startNewGame(
-                        listOfNotNull(
-                            mainMenuScene.nameField.text,
-                            /* ??? */
-                        ).shuffled(),
+                        rootService.networkService.joinedPlayers,
                         isLocalOnlyGame = false, isHostedGame = true,
                         rotationAllowed = this.allowTileRotationCheckbox.isChecked
                     )
                 } else {
                     this@CCApplication.rootService.gameService.startNewGame(
-                        listOfNotNull(
-                            mainMenuScene.nameField.text,
-                            /* ??? */
-                        ),
+                        rootService.networkService.joinedPlayers,
                         isLocalOnlyGame = false, isHostedGame = true,
                         rotationAllowed = this.allowTileRotationCheckbox.isChecked
                     )
@@ -178,7 +170,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             if (musicEnabled) playCreditsMusic()
         }
         debugGameSceneButton.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
-        debugGameEndSceneButton.onMouseClicked={hideMenuScene(3000); showGameScene(gameOverScene)}
+        debugGameEndSceneButton.onMouseClicked= { explicitlyShowGameOverScene() }
     }
 
     private val networkJoinScene = NetworkJoinScene().apply {
@@ -374,6 +366,22 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private fun explicitlyShowCreditsScene() { showGameScene(creditsScene); creditsScene.trigger() }
 
+    /**
+     * workaround for kotlin compiler warning
+     */
+
+    private fun explicitlyShowGameOverScene() { hideMenuScene(3000); showGameScene(gameOverScene) }
+
+    /**
+     * workaround for kotlin compiler warning
+     */
+
+    private fun explicitlyShowTitleScene() {
+        showGameScene(titleScene)
+        titleScene.gameLabel.opacity = 1.0
+        titleScene.trigger.opacity = 0.0
+        repaint()
+    }
 
     /**
      * when a MenuScene is called it needs to be saved for confirmQuit MenuScene

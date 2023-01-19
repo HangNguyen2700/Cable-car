@@ -26,4 +26,10 @@ interface Refreshable {
      *
      */
     fun refreshAfterPlaceTile(){}
+
+    fun refreshAfterUndo(){}
+
+    fun refreshAfterRedo(){}
+
+    fun refreshAfterGameFinished(){}
 }

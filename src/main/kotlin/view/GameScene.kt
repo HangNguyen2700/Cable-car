@@ -27,13 +27,14 @@ import java.awt.Color
  * [rotateButton]: rotates chosen tile by 90 degrees before placing on game field
  */
 
-class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080) {
+class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080), Refreshable {
 
     var gameService: GameService? = null
     var playerActionService : PlayerActionService? = null
     private val cardImageLoader = CardImageLoader()
 
-    var playerList: List<Player> = mutableListOf<Player>(Player("p1"), Player("p2"), Player("p3"))
+    var playerList = listOf(Player("Player1____________"), Player("Player2___________"), Player("Player3__________"), Player("Player4_________"),
+        Player("Player5________"), Player("Player6______"))
     var currentTurn: Turn? = null
     private var isDrawnTilePlaced = false
     private var currentTile: Tile? = null
@@ -41,47 +42,37 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
     private val labelFont = Font(50, Color.WHITE)
     private val buttonTextFont = Font(30, color = Color.WHITE)
 
-    private var currentTileCardView: CardView? = null
-
-    /*var gameService = rootService.gameService
-    var playerActionService = rootService.playerActionService
-    var playerList = rootService.currentGame!!.currentTurn.players
-    var currentTurn = rootService.currentGame!!.currentTurn
-    private var isDrawnTilePlaced = false
-    private var currentTile: Tile? = null*/
-
-    private val mainGrid =
-        GridPane<GridPane<GridPane<GridPane<ComponentView>>>>(
-            posX = 60, posY = 40, columns = 3, rows = 1, layoutFromCenter = false)
-    private val outerPlayersGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
-    private val boardGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 3)
-    private val outerMyGrid: GridPane<GridPane<GridPane<ComponentView>>> = GridPane(columns = 1, rows = 1)
-
-    private val handTilesGrid = GridPane<ComponentView>(columns = 1, rows = 2)
-    private val drawnStackGrid = GridPane<ComponentView>(columns = 1, rows = 2)
-    private val buttonsGrid = GridPane<ComponentView>(columns = 2, rows = 2)
-    private val myGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 3)
+    private val mainGrid = GridPane<GridPane<GridPane<GridPane<ComponentView>>>>(
+        posX = 60, posY = 40, columns = 3, rows = 1, layoutFromCenter = false)
+        private val outerPlayersGrid = GridPane<GridPane<GridPane<ComponentView>>>(columns = 1, rows = 1)
+            private val playersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6)
+        private val boardGrid = GridPane<GridPane<GridPane<ComponentView>>>(columns = 1, rows = 3)
+            private val topStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
+            private val leftStationGrid = GridPane<ComponentView>(columns = 1, rows = 8)
+            private val rightStationGrid = GridPane<ComponentView>(columns = 1, rows = 8)
+            private val bottomStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
+            private val mainBoardGrid = GridPane<ComponentView>(columns = 8, rows = 8)
+        private val outerMyGrid = GridPane<GridPane<GridPane<ComponentView>>>(columns = 1, rows = 1)
+            private val handTilesGrid = GridPane<ComponentView>(columns = 1, rows = 2)
+            private val drawnStackGrid = GridPane<ComponentView>(columns = 1, rows = 2)
+            private val buttonsGrid = GridPane<ComponentView>(columns = 2, rows = 2)
+            private val myGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 3)
 
     private val topBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
     private val middleBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
     private val bottomBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
 
-    private val topStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
-    private val leftStationGrid = GridPane<ComponentView>(columns = 1, rows = 8)
-    private val rightStationGrid = GridPane<ComponentView>(columns = 1, rows = 8)
-    private val bottomStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
-    private val mainBoardGrid = GridPane<ComponentView>(columns = 8, rows = 8)
 
-    private val playersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6)
+    private var currentTileCardView: CardView? = null
 
     private val tileBackImage = ImageVisual("tile_back.png")
 
     private val handTileLabel = Label(height = 100, width = 300, font = labelFont, text = "Hand Tile")
 
-    private val handTileCardView = CardView(height = 100, width = 100,
+    private val handTileCardView = CardView(height = 180, width = 180,
         front = tileBackImage, back = tileBackImage,
     ).apply {
-        isVisible = isMyTurn()
+        isVisible = true
         onMouseClicked = {
             flip()
             currentTileCardView = this
@@ -89,7 +80,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
 
     private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Drawn Tiles")
 
-    private val drawnTilesCardView0 = CardView(height = 100, width = 100,
+    private val drawnTilesCardView0 = CardView(height = 180, width = 180,
         front = tileBackImage, back = tileBackImage
     ).apply {
         onMouseClicked = {
@@ -304,7 +295,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
 
     /**
      * initializes all stations in 2d-array to positions around the game board
-     * position 16 & 17 that have no car, have light gray color
+     * TODO: the amount of stations per players varies based on the amount of players
      */
 
     private fun initStationPosition() {
@@ -315,7 +306,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
             for (j in 0..7) {
 
                 var stationCardView = CardView(height = 100, width = 100,
-                    front = ColorVisual.LIGHT_GRAY,
+                    front = ColorVisual(0,0,0,0),
                     back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
                 ).apply{
                     if ( ( i == 1 || i == 2 ) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false) ){
@@ -354,7 +345,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
                 var boardCellLabel: CardView? = null
                 if (i in mainStationPos && j in mainStationPos) {
                     boardCellLabel = CardView(height = 100, width = 100,
-                        front = ColorVisual.GREEN, back = ColorVisual.LIGHT_GRAY)
+                        front = ColorVisual.GREEN, back = ColorVisual(0,0,0,0))
                 } else {
                     boardCellLabel = CardView(height = 100, width = 100,
                         front = ColorVisual.GREEN, back = ColorVisual.WHITE
@@ -382,7 +373,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         }
     }
 
-    fun refreshAfterStartGame(){
+    override fun refreshAfterStartGame(){
         gameService = rootService.gameService
         playerActionService = rootService.playerActionService
         playerList = rootService.currentGame!!.currentTurn.players
@@ -392,7 +383,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         handTileCardView.isVisible = isMyTurn()
     }
 
-    fun refreshAfterPlaceTile(){
+    override fun refreshAfterPlaceTile(){
         gameService = rootService.gameService
         playerActionService = rootService.playerActionService
         playerList = rootService.currentGame!!.currentTurn.players
@@ -401,6 +392,20 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         showPlayers()
         setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)
         handTileCardView.isVisible = isMyTurn()
+    }
+
+    override fun refreshAfterUndo() {
+        playerList = rootService.currentGame!!.currentTurn.players
+        currentTurn = rootService.currentGame!!.currentTurn
+    }
+
+    override fun refreshAfterRedo() {
+        playerList = rootService.currentGame!!.currentTurn.players
+        currentTurn = rootService.currentGame!!.currentTurn
+    }
+
+    override fun refreshAfterGameFinished() {
+
     }
 
     fun setTileFront(tileCardView: CardView, tilePos: Int){
@@ -429,7 +434,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         }
     }
 
-    fun isMyTurn() = (gameService?.isLocalOnlyGame == true ||
-            currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.name == rootService.networkService.playerName)
+    fun isMyTurn() = gameService?.isLocalOnlyGame == true ||
+            currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.name == rootService.networkService.playerName
 
 }
