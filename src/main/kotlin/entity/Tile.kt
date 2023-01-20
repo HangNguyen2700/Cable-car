@@ -9,16 +9,32 @@ package entity
  * @property posY an integer representing the tile's y position on the game board
  * @param tilePos: to locate card deck in CardImageLoader
  */
-data class Tile(val ports: MutableList<Pair<Int, Int>>/*, val tilePos: Int*/) {
+data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
+
+    var id: Int = -1
+    var originalPorts = mutableListOf<Pair<Int, Int>>()
     var rotationDegree = 0
     var posX = 0
     var posY = 0
+    init {
+        for (pair in ports) {
+            originalPorts.add(Pair(pair.first, pair.second))
+        }
+    }
+
+
+
 
     fun copy(): Tile {
-        val nTile = Tile(ports.toMutableList()/*, tilePos*/)
+        val nTile = Tile(mutableListOf())
+        for (pair in ports) {
+            nTile.ports.add(Pair(pair.first, pair.second))
+        }
+        nTile.originalPorts = originalPorts
         nTile.rotationDegree = rotationDegree
         nTile.posX = posX
         nTile.posY = posY
+        nTile.id = id
         return nTile
     }
 }

@@ -27,13 +27,14 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                     ), mutableListOf()
                 )
             )
+
             // add given players
             for (player in players) {
                 rootService.currentGame!!.currentTurn.players.add(Player(player))
             }
 
             readTileCSV()
-            // TODO maybe remove if else
+
             if (isLocalOnlyGame) {
                 distributeTiles()
                 playersToPositions()
@@ -132,7 +133,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     }
 
-    private fun distributeTiles() {
+    fun distributeTiles() {
         if(isLocalOnlyGame) {
             // we have to generate the drawStack and give each player a tile
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileLookUp.toMutableList() // create copy
@@ -235,7 +236,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     }
 
-    private fun readTileCSV() {
+    fun readTileCSV() {
         // read file lines into lines array
         val file = File("./tiles.csv").inputStream()
         val reader = file.bufferedReader()
@@ -268,6 +269,10 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             tileList.add(Tile(tilePairList[i])) // i+1: Position der Tile in CardDeck in Zusammenhang mit tiles.csv
         }
 
+        // add index to Tile
+        for (i in 0 until tileList.size) {
+            tileList[i].id = i
+        }
         // create tileMap
         this.tileLookUp = tileList
     }

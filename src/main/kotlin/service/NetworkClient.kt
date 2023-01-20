@@ -127,7 +127,11 @@ class NetworkClient(playerName: String,
     @GameActionReceiver
     fun onTurnMessageReceived(message: TurnMessage, sender: String) {
         BoardGameApplication.runOnGUIThread {
-            //execute turn
+            if (sender == networkService.rootService.currentGame!!.currentTurn.players[networkService.rootService.currentGame!!.currentTurn.currentPlayerIndex].name) {
+                networkService.rootService.playerActionService.placeTile(!message.fromSupply, message.posX, message.posY)
+            } else {
+                println("Received TurnMessage from $sender, even though it is not their turn.")
+            }
             //next player gets called by playerActionService
         }
     }
