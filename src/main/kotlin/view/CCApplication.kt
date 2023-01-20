@@ -28,7 +28,7 @@ import java.awt.Color
  * [nameEmptyCheck] writes the Host name in the Lobby Scene when not empty
  * */
 
-class CCApplication : BoardGameApplication("Carbel Car Game") {
+class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
 
     val rootService = RootService()
 
@@ -226,8 +226,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var musicChannel : SoundChannel? = null
     private var soundChannel : SoundChannel? = null
 
-    private var musicEnabled = true
-    private var soundEnabled = true
+    private var musicEnabled = false
+    private var soundEnabled = false
 
     private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
         quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton,
@@ -242,6 +242,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private val soundButtonDisableImage = ImageVisual("sound_disabled.png")
 
     init {
+        rootService.addRefreshables(
+            this,
+            gameScene
+        )
         this.showGameScene(titleScene)
         //isFullScreen = true
         icon = ImageVisual("icon.png")

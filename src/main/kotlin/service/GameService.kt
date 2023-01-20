@@ -47,10 +47,11 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                     playersToPositions()
                 }
             }
-
         } else {
             println("a game is currently in progress")
         }
+
+        onAllRefreshables { this.refreshAfterStartGame() }
     }
 
 
@@ -69,6 +70,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             currentGame.currentTurn = currentGame.currentTurn.previousTurn!!
 
         }
+
+        onAllRefreshables { this.refreshAfterUndo() }
     }
     /**
      * @author Ikhlawi
@@ -84,6 +87,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             currentGame.currentTurn = currentGame.currentTurn.nextTurn!!
 
         }
+
+        onAllRefreshables { this.refreshAfterRedo() }
     }
 
     fun nextPlayer() {
