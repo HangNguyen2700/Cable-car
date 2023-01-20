@@ -56,7 +56,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
         mainGrid[0,0] = creditsGrid
 
         membersGrid.setColumnWidth(0,1080)
-        for(i in 0..13){
+        for(i in 0..14){
             val memberLabel = Label(width = 1920, height = 1080,
                 text = memberNames[i],
                 font = labelFont

@@ -27,16 +27,21 @@ import java.awt.Color
 class MainMenuScene : MenuScene(1920,1080) {
 
     private val menuLabel = Label(width = 600, height = 200, posX = 650, posY = 10,
-        visual = CompoundVisual(
-            TextVisual(
-                font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
-                text = "MENU")))
+        visual = TextVisual(font = Font(size = 200, color = Color.WHITE, family = "Calibri"),
+            text = "MENU"))
 
     val debugGameSceneButton = Button(width = 400, height = 100, posX = 760, posY = 440,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "gameScene")))
+
+    val debugGameEndSceneButton = Button(width = 400, height = 100, posX = 760, posY = 550,
+        visual = CompoundVisual(
+            ColorVisual.WHITE.apply { transparency = 0.3 },
+            TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
+                text = "End GameScene")))
+
 
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 460, posY = 900,
         visual = CompoundVisual(
@@ -114,6 +119,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton,
             debugGameSceneButton,
+            debugGameEndSceneButton,
             nameErrorLabel, closeNameErrorButton,
         )
         background = ColorVisual(0,0,0)

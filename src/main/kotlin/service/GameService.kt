@@ -48,10 +48,11 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                     playersToPositions()
                 }
             }
-
         } else {
             println("a game is currently in progress")
         }
+
+        onAllRefreshables { this.refreshAfterStartGame() }
     }
 
 
@@ -70,6 +71,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             currentGame.currentTurn = currentGame.currentTurn.previousTurn!!
 
         }
+
+        onAllRefreshables { this.refreshAfterUndo() }
     }
     /**
      * @author Ikhlawi
@@ -85,6 +88,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             currentGame.currentTurn = currentGame.currentTurn.nextTurn!!
 
         }
+
+        onAllRefreshables { this.refreshAfterRedo() }
     }
 
     fun nextPlayer() {
@@ -260,8 +265,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
         // create 1D tileList from 2D PairList
         val tileList = mutableListOf<Tile>()
-        for (tilePairs in tilePairList) {
-            tileList.add(Tile(tilePairs))
+        for (i in 0 until tilePairList.size) {
+            tileList.add(Tile(tilePairList[i])) // i+1: Position der Tile in CardDeck in Zusammenhang mit tiles.csv
         }
 
         // add index to Tile

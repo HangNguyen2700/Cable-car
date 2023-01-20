@@ -58,6 +58,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             }
         }
         rootService.gameService.nextPlayer()
+
+        onAllRefreshables { this.refreshAfterPlaceTile() }
     }
 
     /**

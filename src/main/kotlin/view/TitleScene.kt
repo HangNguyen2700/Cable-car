@@ -5,7 +5,6 @@ import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.core.BoardGameApplication
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -23,7 +22,7 @@ import java.awt.Color
  * [toMenuButton]: click anywhere or press any key to get to main menu
  */
 
-class TitleScene(val cc : CCApplication) : BoardGameScene(1920, 1080) {
+class TitleScene : BoardGameScene(1920, 1080) {
 
     val trigger = Button(width = 1920, height = 1080, posX = 0, posY = 0,
         visual = ColorVisual(0,0,0))
