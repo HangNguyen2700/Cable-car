@@ -456,9 +456,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         handTileCardView.isDisabled = false
     }
 
-    override fun refreshAfterGameFinished() {
+   // override fun refreshAfterGameFinished() {
 
-    }
+   // }
 
     fun setTileFront(tileCardView: CardView, tile: Tile){
         if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))

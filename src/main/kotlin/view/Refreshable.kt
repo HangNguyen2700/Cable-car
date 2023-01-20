@@ -35,4 +35,9 @@ interface Refreshable {
     fun refreshAfterRedo(){}
 
     fun refreshAfterGameFinished(){}
+
+    /**
+     * Refresh game config except  player name and numbers
+     */
+    fun refreshAfterRestartGame(playerNames:MutableList<String>){}
 }
