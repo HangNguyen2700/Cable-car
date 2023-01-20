@@ -1,5 +1,6 @@
 package view
 
+import entity.Tile
 import service.AbstractRefreshingService
 
 /**
@@ -20,6 +21,8 @@ interface Refreshable {
      * perform refreshes that are necessary after a new game started
      */
     fun refreshAfterStartGame() {}
+
+    fun refreshAfterTileRotation(tile: Tile)
 
     /**
      * Refresh after current player placed tile and next player is called
