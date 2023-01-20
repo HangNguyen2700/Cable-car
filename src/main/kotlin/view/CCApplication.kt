@@ -150,6 +150,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             }
             hideMenuScene(3000)
             showGameScene(gameScene)
+            //println(rootService.gameService.tileLookUp)
         }
     }
 

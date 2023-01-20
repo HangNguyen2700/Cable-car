@@ -353,7 +353,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
                         if (playerActionService?.isPositionLegal(i, j) == true) {
                             onMouseClicked = {
                                 if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                    this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos))
+                                    /*this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos))*/
                                     this.rotation = currentTile!!.rotationDegree.toDouble()
                                     showFront()
                                     handTileCardView.showBack()
@@ -379,7 +379,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
-        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!.tilePos)
+        /*setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!.tilePos)*/
         handTileCardView.isVisible = isMyTurn()
     }
 
@@ -392,7 +392,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers()
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)
+        /*setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)*/
         handTileCardView.isVisible = isMyTurn()
     }
 
@@ -410,8 +410,64 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920,1080
 
     }
 
-    fun setTileFront(tileCardView: CardView, tilePos: Int){
-        tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(tilePos))
+    fun setTileFront(tileCardView: CardView, tile: Tile){
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,0))
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,0))
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,0))
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,0))
+
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,1))
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,1))
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,1))
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,1))
+
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,2))
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,2))
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,2))
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,2))
+
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,3))
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,3))
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,3))
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,3))
+
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,4))
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,4))
+
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,4))
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,4))
+
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,5))
+
+        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,5))
+
+        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,5))
+
+        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
     }
 
     fun showPlayers() {

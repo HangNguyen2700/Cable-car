@@ -47,7 +47,7 @@ class CardImageLoader {
 
      */
 
-    fun frontImage(tilePos: Int) = getImageByCoordinates(tilesImage, (tilePos - 1) % 10, (tilePos - 1) / 10)
+    fun frontImage(x: Int,y: Int) = getImageByCoordinates(tilesImage, x, y)
 
     /**
      * Provides a blank (white) card
