@@ -418,6 +418,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         handTileCardView.isVisible = isMyTurn()
     }
 
+    override fun refreshAfterTileRotation(tile: Tile) {
+        TODO("Not yet implemented")
+    }
+
     override fun refreshAfterPlaceTile() {
         gameService = rootService.gameService
         playerActionService = rootService.playerActionService
