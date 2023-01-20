@@ -129,7 +129,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     fun endGame() {
 
-        findWinner()
+        onAllRefreshables { refreshAfterGameFinished() }
 
     }
 
