@@ -370,21 +370,18 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
             var boardCellLabel: CardView?
             if (i in mainStationPos && j in mainStationPos) {
-                boardCellLabel = CardView(
-                    height = 100, width = 100,
-                    front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0)
-                )
+                boardCellLabel = CardView(height = 100, width = 100,
+                    front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0))
             } else {
-                boardCellLabel = CardView(
-                    height = 100, width = 100,
+                boardCellLabel = CardView(height = 100, width = 100,
                     front = ColorVisual.GREEN, back = ColorVisual.WHITE
                 ).apply {
                     val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
-                    if (boardCellTile != null) ImageVisual(cardImageLoader.frontImage(boardCellTile.tilePos)) else ColorVisual.GREEN
+                    /*TODO: ??? if (boardCellTile != null) ImageVisual(cardImageLoader.frontImage(boardCellTile)) else ColorVisual.GREEN*/
                     if (playerActionService?.isPositionLegal(i, j) == true) {
                         onMouseClicked = {
                             if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos))
+                                /*TODO: ??? this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos)) ???*/
                                 this.rotation = currentTile!!.rotationDegree.toDouble()
                                 showFront()
                                 handTileCardView.showBack()
@@ -413,8 +410,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         initGameBoard()
         initStationPosition()
 
-        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!.tilePos)
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first()!!.tilePos)
+        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first()!!)
         handTileCardView.isVisible = isMyTurn()
     }
 
@@ -429,8 +426,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first().tilePos)
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -441,8 +438,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first().tilePos)
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -453,8 +450,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first().tilePos)
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!.tilePos)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
