@@ -56,7 +56,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         musicToggleButton.onMouseClicked = { toggleMusic() }
     }
 
-    private val gameOverScene = GameOverScene().apply {
+    private val gameOverScene = GameOverScene(rootService).apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
         mainMenuButton.onMouseClicked={
