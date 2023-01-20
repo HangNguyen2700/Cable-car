@@ -1,6 +1,7 @@
 package service
 
 import entity.Game
+import view.Refreshable
 
 /**
  * The RootService class is the root of all services in the application.
@@ -18,4 +19,22 @@ class RootService {
     var gameService: GameService = GameService(this)
     var networkService = NetworkService(this)
     var playerActionService: PlayerActionService = PlayerActionService(this)
+
+    /**
+     * Adds the provided [newRefreshable] to all services connected
+     * to this root service
+     */
+    fun addRefreshable(newRefreshable: Refreshable) {
+        gameService.addRefreshable(newRefreshable)
+        networkService.addRefreshable(newRefreshable)
+        playerActionService.addRefreshable(newRefreshable)
+    }
+
+    /**
+     * Adds each of the provided [newRefreshables] to all services
+     * connected to this root service
+     */
+    fun addRefreshables(vararg newRefreshables: Refreshable) {
+        newRefreshables.forEach { addRefreshable(it) }
+    }
 }
