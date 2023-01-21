@@ -1,6 +1,7 @@
 package view
 
 import tools.aqua.bgw.animation.DelayAnimation
+import tools.aqua.bgw.animation.FadeAnimation
 import tools.aqua.bgw.animation.MovementAnimation
 import tools.aqua.bgw.animation.SequentialAnimation
 import tools.aqua.bgw.components.ComponentView
@@ -297,6 +298,9 @@ class CreditsScene() : BoardGameScene(1920,1080) {
             i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }}
     )
 
+    val copyrightLabel = Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"),
+        width = 1920, height = 200, posY = 9250)
+
     init {
 
         movePane.add(creditsLabel)
@@ -324,7 +328,7 @@ class CreditsScene() : BoardGameScene(1920,1080) {
 
 
         movePane.add(Label(text = "Music by Kevin MacLeod, bensound", font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 8600))
-        movePane.add(Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 9250))
+        movePane.add(copyrightLabel)
 
         addComponents(tk)
 
@@ -342,10 +346,12 @@ class CreditsScene() : BoardGameScene(1920,1080) {
 
     fun trigger() {
         println("trigger credits roll animation")
+        copyrightLabel.opacity = 1.0
         tk.opacity = 0.0
         i = 0
         creditsLabel.opacity = 1.0; memberImageTokenViews[0].opacity = 1.0; memberImageTokenViews[1].opacity = 1.0
         playAnimation(moveAnimation)
+        playAnimation(FadeAnimation(creditsLabel, 0.0, 1.0, duration = 1000))
 
         playAnimation(DelayAnimation(duration = 18000).apply { onFinished = { creditsLabel.opacity = 0.0;
             memberImageTokenViews[2].opacity = 1.0; memberImageTokenViews[3].opacity = 1.0 }})
@@ -358,6 +364,7 @@ class CreditsScene() : BoardGameScene(1920,1080) {
     }
 
     fun explosion(){
+        playAnimation(FadeAnimation(copyrightLabel, 1.0, 0.0, duration = 500))
         memberImageTokenViews.forEach { it.opacity = 0.0 }
         tk.opacity = 1.0
         playAnimation(explosionAnimation)

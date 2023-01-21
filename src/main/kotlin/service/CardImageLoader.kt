@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 
 private const val TILES_FILE = "/tiles_assembled.png"
-private const val TILES_FILE_IMG_HEIGHT = 400
-private const val TILES_FILE_IMG_WIDTH = 400
+private const val TILES_FILE_IMG_HEIGHT = 800
+private const val TILES_FILE_IMG_WIDTH = 800
 
 private const val STATION_CARDS_FILE = "/cardStation.png"
 private const val STATION_CARDS_FILE_IMG_HEIGHT = 1080

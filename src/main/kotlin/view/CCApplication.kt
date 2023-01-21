@@ -6,6 +6,7 @@ import com.soywiz.korau.sound.infinitePlaybackTimes
 import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
+import entity.Player
 import kotlinx.coroutines.GlobalScope
 import service.RootService
 import tools.aqua.bgw.core.Alignment
@@ -172,7 +173,21 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             explicitlyShowCreditsScene()
             if (musicEnabled) playCreditsMusic()
         }
-        debugGameSceneButton.onMouseClicked = { hideMenuScene(3000); showGameScene(gameScene) }
+        debugGameSceneButton.onMouseClicked = {
+            this@CCApplication.rootService.gameService.startNewGame(listOf(
+                "Player1____________",
+                "Player2___________",
+                "Player3__________",
+                "Player4_________",
+                "Player5________",
+                "Player6______"
+            ),
+                isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
+            )
+            hideMenuScene(3000);
+            showGameScene(gameScene)
+
+        }
         debugGameEndSceneButton.onMouseClicked= { explicitlyShowGameOverScene() }
     }
 

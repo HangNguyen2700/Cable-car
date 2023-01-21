@@ -18,6 +18,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
+import java.awt.Image
 
 /**
  * main scene
@@ -29,21 +30,16 @@ import java.awt.Color
 
 class GameScene(private val rootService: RootService) : BoardGameScene(1920, 1080), Refreshable {
 
-    private var gameService: GameService? = null
-    private var playerActionService: PlayerActionService? = null
     private val cardImageLoader = CardImageLoader()
 
-    private var playerList = listOf(
-        Player("Player1____________"),
-        Player("Player2___________"),
-        Player("Player3__________"),
-        Player("Player4_________"),
-        Player("Player5________"),
-        Player("Player6______")
-    )
-    private var currentTurn: Turn? = null
-    private var isDrawnTilePlaced = false
+    private lateinit var gameService: GameService
+    private lateinit var playerActionService: PlayerActionService
+    private lateinit var currentTurn: Turn
+    private var playerList = listOf<Player>()
     private var currentTile: Tile? = null
+
+
+    private var isDrawnTilePlaced = false
 
     private val labelFont = Font(50, Color.WHITE)
     private val buttonTextFont = Font(30, color = Color.WHITE)
@@ -76,71 +72,51 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val handTileLabel = Label(height = 100, width = 300, font = labelFont, text = "Hand Tile")
 
-    private val handTileCardView = CardView(
-        height = 180, width = 180,
-        front = tileBackImage, back = tileBackImage,
+    private val handTileCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
-        isVisible = true
+        //isVisible = true
         onMouseClicked = {
             flip()
             currentTileCardView = this
-            currentTile = currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile
+            currentTile = currentTurn.players[currentTurn.currentPlayerIndex].handTile
         }
     }
 
     private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Drawn Tiles")
 
-    private val drawnTilesCardView = CardView(
-        height = 180, width = 180,
-        front = tileBackImage, back = tileBackImage
+    private val drawnTilesCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         onMouseClicked = {
             flip()
             currentTileCardView = this
             handTileCardView.isDisabled = true
-            currentTile = currentTurn?.gameField?.tileStack?.tiles?.first()
+            currentTile = currentTurn.gameField.tileStack.tiles.first()
             isDrawnTilePlaced = true
         }
     }
 
-    private val undoButton = Button(
-        width = 150, height = 50, font = buttonTextFont, text = "Undo"
-    ).apply { visual = ColorVisual(186, 136, 133)
-        onMouseClicked = {
-            gameService?.undo()
-        }
-    }
+    private val undoButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Undo"
+    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
 
-    private val redoButton: Button = Button(
-        width = 150, height = 50, font = buttonTextFont, text = "Redo",
-    ).apply { visual = ColorVisual(186, 136, 133)
-        onMouseClicked = {
-            gameService?.undo()
-        }
-    }
+    private val redoButton: Button = Button(width = 150, height = 50, font = buttonTextFont, text = "Redo"
+    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
 
-    private val rotateButton: Button = Button(
-        width = 150, height = 50, font = buttonTextFont, text = "Rotate",
+    private val rotateButton: Button = Button(width = 150, height = 50, font = buttonTextFont, text = "Rotate",
     ).apply {
-        this.isVisible = gameService?.rotationAllowed == true
+        isVisible = false
         visual = ColorVisual(186, 136, 133, 255)
         onMouseClicked = {
             if (currentTile != null && currentTileCardView != null) {
                 currentTile!!.rotationDegree += 90
-                currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble()
-            }
-        }
-    }
+                currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble() } } }
 
-    val quickMenuButton: Button = Button(
-        width = 140, height = 140, posX = 40, posY = 40,
-        visual = ImageVisual("quick_menu_button.png")
-    )
+    val quickMenuButton: Button = Button(width = 140, height = 140, posX = 40, posY = 40,
+        visual = ImageVisual("quick_menu_button.png"))
 
     init {
 
         // displays all players' information
-//        showPlayers()
+
         outerPlayersGrid[0, 0] = playersGrid
         playersGrid.setColumnWidths(400)
         mainGrid[0, 0] = outerPlayersGrid
@@ -184,6 +160,49 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         background = ImageVisual("game_scene.png")
         addComponents(mainGrid, quickMenuButton)
+    }
+
+    override fun refreshAfterStartGame() {
+        gameService = rootService.gameService
+        playerActionService = rootService.playerActionService
+        playerList = rootService.currentGame!!.currentTurn.players
+        currentTurn = rootService.currentGame!!.currentTurn
+
+        showPlayers()
+        initGameBoard()
+        initStationPosition()
+
+        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
+        rotateButton.isVisible = gameService.rotationAllowed
+        handTileCardView.isVisible = isMyTurn()
+    }
+
+    private fun showPlayers() {
+
+        for (i in playerList.indices) {
+
+            val playerGrid = GridPane<ComponentView>(columns = 3, rows = 1)
+
+            // highlight current player
+            val playerNameLabel = Label(font = labelFont, text = playerList[i].name,
+            ).apply { if (i == currentTurn.currentPlayerIndex) this.font = Font(50, Color.GREEN) }
+
+            playerGrid[1, 0] = playerNameLabel
+
+            // highlight current player
+            val playerScoreLabel = Label(font = labelFont, text = playerList[i].score.toString(),
+            ).apply { if (i == currentTurn.currentPlayerIndex) this.font = Font(50, Color.GREEN) }
+
+            playerGrid[2, 0] = playerScoreLabel
+            val playerColorLabel = Label(height = 50, width = 50,
+                visual = when(i) {
+                    0 -> ColorVisual.YELLOW; 1 -> ColorVisual.BLUE; 2 -> ColorVisual.ORANGE; 3 -> ColorVisual.GREEN
+                    4 -> ColorVisual(183,0,255); else -> ColorVisual.BLACK })
+
+            playerGrid[0, 0] = playerColorLabel
+            playersGrid[0, i] = playerGrid
+        }
     }
 
     /**
@@ -400,20 +419,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    override fun refreshAfterStartGame() {
-        gameService = rootService.gameService
-        playerActionService = rootService.playerActionService
-        playerList = rootService.currentGame!!.currentTurn.players
-        currentTurn = rootService.currentGame!!.currentTurn
 
-        showPlayers()
-        initGameBoard()
-        initStationPosition()
-
-        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first()!!)
-        handTileCardView.isVisible = isMyTurn()
-    }
 
     override fun refreshAfterTileRotation(tile: Tile) {
         TODO("Not yet implemented")
@@ -426,8 +432,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -438,8 +444,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -450,8 +456,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -520,36 +526,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
     }
 
-    private fun showPlayers() {
-        for (i in playerList.indices) {
-            val playerGrid = GridPane<ComponentView>(columns = 3, rows = 1)
-            val playerNameLabel = Label(
-                font = labelFont, text = playerList[i].name,
-            ).apply {
-                if (i == currentTurn?.currentPlayerIndex) this.font = Font(50, Color.GREEN)
-            } // highlight current player
 
-            playerGrid[1, 0] = playerNameLabel
-            val playerScoreLabel = Label(
-                font = labelFont, text = playerList[i].score.toString(),
-            ).apply {
-                if (i == currentTurn?.currentPlayerIndex) this.font = Font(50, Color.GREEN)
-            } // highlight current player
 
-            playerGrid[2, 0] = playerScoreLabel
-            val playerColorLabel = Label(
-                height = 50, width = 50,
-                visual = CompoundVisual(
-                    ColorVisual.GREEN  //TODO: change player color: != null
-                )
-                //visual = playerList[i].color!!.toRGB()
-            )
-            playerGrid[0, 0] = playerColorLabel
-            playersGrid[0, i] = playerGrid
-        }
-    }
-
-    private fun isMyTurn() = gameService?.isLocalOnlyGame == true ||
-            currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.name == rootService.networkService.playerName
+    private fun isMyTurn() = gameService.isLocalOnlyGame ||
+            currentTurn.players[currentTurn.currentPlayerIndex].name == rootService.networkService.playerName
 
 }
