@@ -54,6 +54,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+        moveAnimation.apply { onFinished = { explosion(); playExplosionSound() } }
+        explosionAnimation.apply { onFinished = { explicitlyShowTitleScene(); tk.opacity = 0.0;  } }
     }
 
     private val gameOverScene = GameOverScene(rootService).apply {
@@ -227,8 +229,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
     private var musicChannel : SoundChannel? = null
     private var soundChannel : SoundChannel? = null
 
-    private var musicEnabled = false        //TODO: set to true for final build
-    private var soundEnabled = false
+    private var musicEnabled = true
+    private var soundEnabled = true
 
     private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
         quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton,
@@ -364,6 +366,21 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
     }
 
     /**
+     * playback of sound via KorAU audio library
+     */
+
+    private fun playExplosionSound() {
+        if (soundChannel != null) { soundChannel!!.stop() }
+        if(soundEnabled) {
+            GlobalScope.async {
+                val sound = resourcesVfs["explosion_sound_effect.wav"].readMusic()
+                soundChannel = sound.play()
+                soundChannel!!.await()
+            }
+        }
+    }
+
+    /**
      * workaround for kotlin compiler warning
      */
 
@@ -381,6 +398,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
 
     private fun explicitlyShowTitleScene() {
         showGameScene(titleScene)
+        playTitleMusic()
         titleScene.gameLabel.opacity = 1.0
         titleScene.trigger.opacity = 0.0
         repaint()

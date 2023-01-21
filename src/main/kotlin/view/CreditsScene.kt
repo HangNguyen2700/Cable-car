@@ -1,16 +1,17 @@
 package view
 
+import tools.aqua.bgw.animation.DelayAnimation
 import tools.aqua.bgw.animation.MovementAnimation
-import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.animation.SequentialAnimation
+import tools.aqua.bgw.components.ComponentView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
-import tools.aqua.bgw.components.uicomponents.UIComponent
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
-import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.CompoundVisual
-import tools.aqua.bgw.visual.ImageVisual
-import tools.aqua.bgw.visual.TextVisual
+import tools.aqua.bgw.visual.*
 import java.awt.Color
 
 /**
@@ -18,25 +19,34 @@ import java.awt.Color
  *[membersGrid]:frame for the members
  */
 
-class CreditsScene : BoardGameScene(1920,1080) {
+class CreditsScene() : BoardGameScene(1920,1080) {
 
-    private val mainGrid: GridPane<GridPane<UIComponent>> = GridPane( 950, 1700, columns = 1, rows = 4)
-    private val creditsGrid = GridPane<UIComponent>(columns = 1, rows = 1)
-    private val membersGrid = GridPane<UIComponent>(columns = 1, rows = 15)
-    private val thanksGrid = GridPane<UIComponent>(columns = 1, rows = 1)
-
-    private val labelFont = Font(50, Color.WHITE)
-
-    private val creditsLabel = Label(height = 200, width = 1000, font = labelFont, text = "CREDITS")
+    private val creditsLabel = Label( visual = ImageVisual("game_banner.png"), width = 1920, height = 455, posY = 312)
 
     private val memberNames = listOf(
-        "Leonard Sander", "", "Mohamed Aziz Feriani", "", "Jonah Hadt", "",
-        "Tobias Grabert", "", "Altayebabdalsalam I. M. Ikhlawi",  "",
-        "Anastasiia Korzhylova", "", "Ashma Poudyal", "", "Hang Nguyen Nguyen")
+        "Anastasiia Korzhylova", "Mohamed Aziz Feriani", "Leonard Sander", "Ashma Poudyal", "Hang Nguyen Nguyen",
+        "Jonah Hadt", "Tobias Grabert", "Altayebabdalsalam I. M. Ikhlawi", "Till Schallau")
 
-    private val membersLabel = mutableListOf<Label>()
+    private val memberJobs = listOf(
+        "KI, Projektleitung", "KI, Dokumentation", "GUI, Code-Qualität", "GUI, Code-Qualität", "GUI, Dokumentation",
+        "Service, Issues", "Service, unser Mann in der Task Force", "Service, Tests", "Gruppenleiter"
+    )
 
-    private val thanksLabel = Label(height = 200, width = 1000, font = labelFont, text = "SPECIAL THANKS")
+    private val memberQuotes = listOf(
+        "\"\"","\"\"","\"Alles hat ein Ende. Nur die Wurst hat 2.\"","\"\"","\"\"","\"\"","\"\"","\"\"","\"\""
+    )
+
+    private val memberImages = listOf(
+        ImageVisual("_DSC0521_.jpg"), ImageVisual("_DSC0624_.jpg"), ImageVisual("_DSC0587_.jpg"),
+        ImageVisual("_DSC0579-gigapixel-standard-scale-2_00x__.jpg"), ImageVisual("_DSC0540_.jpg"),
+        ImageVisual("_DSC0504_.jpg"), ImageVisual("_DSC0603_.jpg"),
+        ImageVisual("_DSC0527-gigapixel-standard-scale-2_00x_.jpg"), ImageVisual("_DSC0616_.jpg"))
+
+    val memberImageTokenViews = mutableListOf<TokenView>()
+
+    private val movePane = Pane<ComponentView>(width = 1920, height = 1080)
+
+    private val memberPane = Pane<ComponentView>(width = 1920, height = 1080, posY = 1080)
 
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 100, posY = 930,
         visual = CompoundVisual(
@@ -51,41 +61,309 @@ class CreditsScene : BoardGameScene(1920,1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
 
+    val nameFont = Font(size = 60, color = Color.WHITE, family = "Calibri")
+    val jobFont = Font(size = 40, color = Color.WHITE, family = "Calibri")
+    val quoteFont = Font(size = 40, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
+
+    val moveAnimation = MovementAnimation(componentView = movePane, byY = -8800, duration = 80000)
+
+    private val explosionImageVisualList = pathToImageVisuals("explosion_png/",112)
+    var i = 0
+    val tk = TokenView(visual = explosionImageVisualList[i],width = 1158, height = 1080, posX = 381, posY = 0)
+    val explosionAnimation = SequentialAnimation(
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }},
+        DelayAnimation(duration = 17).apply { onFinished = {
+            i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }}
+    )
+
     init {
-        creditsGrid[0,0] = creditsLabel
-        mainGrid[0,0] = creditsGrid
 
-        membersGrid.setColumnWidth(0,1080)
-        for(i in 0..14){
-            val memberLabel = Label(width = 1920, height = 1080,
-                text = memberNames[i],
-                font = labelFont
-            )
-            membersLabel.add(memberLabel)
-            membersGrid[0,i] = membersLabel[i]
-            membersGrid.setRowHeight(i,70)
+        movePane.add(creditsLabel)
+
+        for(i in 0..8) {
+            if (i%2 == 0) {
+                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750, posX = 40, posY = 1120+800*i).apply { opacity = 0.0 }
+                movePane.addAll(
+                    memberImageTokenViews[i],
+                    Label(text = memberNames[i], width = 800, height = 200, posX = 1080, posY = 1100+800*i, font = nameFont, alignment = Alignment.CENTER_LEFT),
+                    Label(text = memberJobs[i], width = 800, height = 200, posX = 1080, posY = 1180+800*i, font = jobFont, alignment = Alignment.CENTER_RIGHT),
+                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 1080, posY = 1400+800*i, font = quoteFont),
+                )
+            } else {
+                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750, posX = 880, posY = 1120+800*i).apply { opacity = 0.0 }
+                movePane.addAll(
+                    memberImageTokenViews[i],
+                    Label(text = memberNames[i], width = 800, height = 200, posX = 40, posY = 1100+800*i, font = nameFont, alignment = Alignment.CENTER_RIGHT),
+                    Label(text = memberJobs[i], width = 800, height = 200, posX = 40, posY = 1180+800*i, font = jobFont, alignment = Alignment.CENTER_LEFT),
+                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 40, posY = 1400+800*i, font = quoteFont),
+                )
+            }
         }
-        mainGrid[0,1] = membersGrid
 
-        thanksGrid[0,0] = thanksLabel
-        mainGrid[0,2] = thanksGrid
+
+
+        movePane.add(Label(text = "Music by Kevin MacLeod, bensound", font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 8600))
+        movePane.add(Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 9250))
+
+        addComponents(tk)
 
         background = ColorVisual(0,0,0)
-        addComponents(mainGrid,backToTitleSceneButton, soundToggleButton, musicToggleButton)
+        addComponents(movePane, backToTitleSceneButton, soundToggleButton, musicToggleButton)
+    }
+
+    private fun pathToImageVisuals(path: String, length : Int) :List<Visual>{
+        val output = mutableListOf<ImageVisual>()
+
+        for (i in 1..length+1) output.add(ImageVisual(path + i + ".png"))
+
+        return output.toList()
     }
 
     fun trigger() {
         println("trigger credits roll animation")
-        playAnimation(MovementAnimation(
-            componentView = creditsGrid,
-            byY = -2000,
-            duration = 20000
-        ))
+        tk.opacity = 0.0
+        i = 0
+        creditsLabel.opacity = 1.0; memberImageTokenViews[0].opacity = 1.0; memberImageTokenViews[1].opacity = 1.0
+        playAnimation(moveAnimation)
 
-        playAnimation(MovementAnimation(
-            componentView = membersGrid,
-            byY = -2000,
-            duration = 20000
-        ))
+        playAnimation(DelayAnimation(duration = 18000).apply { onFinished = { creditsLabel.opacity = 0.0;
+            memberImageTokenViews[2].opacity = 1.0; memberImageTokenViews[3].opacity = 1.0 }})
+        playAnimation(DelayAnimation(duration = 31000).apply { onFinished = { memberImageTokenViews[0].opacity = 0.0;
+            memberImageTokenViews[1].opacity = 0.0; memberImageTokenViews[4].opacity = 1.0;
+            memberImageTokenViews[5].opacity = 1.0 }})
+        playAnimation(DelayAnimation(duration = 40000).apply { onFinished = { memberImageTokenViews[2].opacity = 0.0;
+            memberImageTokenViews[3].opacity = 0.0; memberImageTokenViews[6].opacity = 1.0;
+            memberImageTokenViews[7].opacity = 1.0; memberImageTokenViews[8].opacity = 1.0 }})
     }
+
+    fun explosion(){
+        memberImageTokenViews.forEach { it.opacity = 0.0 }
+        tk.opacity = 1.0
+        playAnimation(explosionAnimation)
+    }
+
+
 }
+
+
