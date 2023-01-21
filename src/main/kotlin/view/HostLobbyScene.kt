@@ -12,6 +12,10 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * menu scene to let player configure their hosted network game before starting
+ */
+
 class HostLobbyScene: MenuScene(1920, 1080) {
 
     private val hostGameLabel = Label(width = 960, height = 200, posY = 40,

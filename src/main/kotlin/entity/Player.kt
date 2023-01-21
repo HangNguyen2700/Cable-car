@@ -1,6 +1,7 @@
 package entity
 /**
- * The Player class represents a player in the game, including information about the player's name, cars, color, paths, hand tile, and score.
+ * The Player class represents a player in the game, including information about the player's name, cars, color,
+ * paths, hand tile, and score.
  *
  * @property name a string representing the player's name
  * @property cars a mutable list of integers representing the cars the player has
@@ -16,6 +17,10 @@ data class Player(val name: String) {
     var paths = mutableListOf<Path>()
     var handTile: Tile? = null
     var score = 0
+
+    /**
+     * copies the object
+     */
 
     fun copy(): Player {
         val nPlayer = Player(name)

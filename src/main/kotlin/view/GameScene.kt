@@ -407,11 +407,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                     front = ColorVisual.GREEN, back = ColorVisual.WHITE
                 ).apply {
                     val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
-                    /*TODO: ??? if (boardCellTile != null) ImageVisual(cardImageLoader.frontImage(boardCellTile)) else ColorVisual.GREEN*/
+                    /*TODO: ??? if (boardCellTile != null)
+                       ImageVisual(cardImageLoader.frontImage(boardCellTile)) else ColorVisual.GREEN*/
                     if (playerActionService.isPositionLegal(i, j)) {
                         onMouseClicked = {
                             if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                /*TODO: ??? this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos)) ???*/
+                                /*TODO: ??? this.frontVisual =
+                                   ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos)) ???*/
                                 this.rotation = currentTile!!.rotationDegree.toDouble()
                                 showFront()
                                 handTileCardView.showBack()

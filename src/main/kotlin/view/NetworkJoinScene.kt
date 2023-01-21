@@ -12,6 +12,10 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * menu scene to let player input config to join another hosted game via secret and sessionID
+ */
+
 class NetworkJoinScene : MenuScene(1920, 1080){
 
     private val topLabel = Label(width = 1920, height = 200, posY = 100,

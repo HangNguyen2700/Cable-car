@@ -4,6 +4,10 @@ import edu.udo.cs.sopra.ntf.*
 import entity.*
 import entity.Tile
 
+/**
+ * class to handle network connections for online play
+ */
+
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
     var connectionState: ConnectionState = ConnectionState.DISCONNECTED
     private val SERVER_ADDRESS = "sopra.cs.tu-dortmund.de:80/bgw-net/connect"
@@ -104,7 +108,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
             )
         )
 
-        val tileStack = mutableListOf<entity.Tile>()
+        val tileStack = mutableListOf<Tile>()
         // create tileStack from supplied list
         for (tileIndex in message.tileSupply) {
             tileStack.add(rootService.gameService.tileLookUp[tileIndex.id])

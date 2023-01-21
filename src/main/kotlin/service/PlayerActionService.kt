@@ -5,6 +5,10 @@ import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.Player
 import entity.Tile
 
+/**
+ * class to handle player ingame actions
+ */
+
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0) {
@@ -22,7 +26,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         if (isPositionLegal(posX, posY)) {
             if (fromHand) {
                 // tile from hand
-                tile = rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                tile = rootService.currentGame!!.currentTurn.
+                    players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
                 // rotate tile if needed
                 if (rotationDegree != 0) {
                     while (rotationDegree > tile!!.rotationDegree) {
@@ -32,8 +37,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // put tile onto Field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
                 // give player new tile from tileStack
-                rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
-                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                rootService.currentGame!!.currentTurn.
+                    players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                        rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
             } else {
                 // tile from tileStack
                 tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
@@ -101,12 +107,15 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         if (isFree) {
             if (tileEdge) {
-                /*for (path in player!!.paths) {
+                for (path in player!!.paths) {
                     rootService.gameService.nextPlayer()
-                    if ((path.tiles.size > 1 && path.complete) || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null) {
+                    if ((path.tiles.size > 1 && path.complete) ||
+                        rootService.currentGame!!.currentTurn.
+                            players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null) {
+
                         return true
                     }
-                }*/
+                }
             return true
             }
         }
@@ -155,9 +164,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * Then, it iterates through the player's existing paths. For each path, it checks if the path is complete. If not,
      * the function sets the variable "checkAgain" to true and starts a loop that runs until "checkAgain" is set to false.
      * Within the loop, the function checks various conditions to determine if the placed tile can be added to the path by
-     * comparing the ports of the last tile in the path to the ports of the placed tile. If the tile can be added, it is added
-     * and the "lastPort" variable is updated. If the path is completed, either by the last tile matching the start tile or
-     * by the last tile being in a specific position --powerstation-- (x=4, y=4 or x=4, y=5 or x=5, y=4 or x=5, y=5)
+     * comparing the ports of the last tile in the path to the ports of the placed tile. If the tile can be added, it is
+     * added and the "lastPort" variable is updated. If the path is completed, either by the last tile matching
+     * the start tile or by the last tile being in a specific position --powerstation--
+     * (x=4, y=4 or x=4, y=5 or x=5, y=4 or x=5, y=5)
      * the player's score is incremented by the number of
      * tiles in the path, and the "complete" variable of the path is set to true.
      */

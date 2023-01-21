@@ -303,27 +303,36 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
         for(i in 0..8) {
             if (i%2 == 0) {
-                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750, posX = 40, posY = 1120+800*i).apply { opacity = 0.0 }
+                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750,
+                    posX = 40, posY = 1120+800*i).apply { opacity = 0.0 }
                 movePane.addAll(
                     memberImageTokenViews[i],
-                    Label(text = memberNames[i], width = 800, height = 200, posX = 1080, posY = 1100+800*i, font = nameFont, alignment = Alignment.CENTER_LEFT),
-                    Label(text = memberJobs[i], width = 800, height = 200, posX = 1080, posY = 1180+800*i, font = jobFont, alignment = Alignment.CENTER_RIGHT),
-                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 1080, posY = 1400+800*i, font = quoteFont),
+                    Label(text = memberNames[i], width = 800, height = 200, posX = 1080, posY = 1100+800*i,
+                        font = nameFont, alignment = Alignment.CENTER_LEFT),
+                    Label(text = memberJobs[i], width = 800, height = 200, posX = 1080, posY = 1180+800*i,
+                        font = jobFont, alignment = Alignment.CENTER_RIGHT),
+                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 1080, posY = 1400+800*i,
+                        font = quoteFont),
                 )
             } else {
-                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750, posX = 880, posY = 1120+800*i).apply { opacity = 0.0 }
+                memberImageTokenViews += TokenView(visual = memberImages[i], width = 1000, height = 750,
+                    posX = 880, posY = 1120+800*i).apply { opacity = 0.0 }
                 movePane.addAll(
                     memberImageTokenViews[i],
-                    Label(text = memberNames[i], width = 800, height = 200, posX = 40, posY = 1100+800*i, font = nameFont, alignment = Alignment.CENTER_RIGHT),
-                    Label(text = memberJobs[i], width = 800, height = 200, posX = 40, posY = 1180+800*i, font = jobFont, alignment = Alignment.CENTER_LEFT),
-                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 40, posY = 1400+800*i, font = quoteFont),
+                    Label(text = memberNames[i], width = 800, height = 200, posX = 40, posY = 1100+800*i,
+                        font = nameFont, alignment = Alignment.CENTER_RIGHT),
+                    Label(text = memberJobs[i], width = 800, height = 200, posX = 40, posY = 1180+800*i,
+                        font = jobFont, alignment = Alignment.CENTER_LEFT),
+                    Label(text = memberQuotes[i], width = 800, height = 200, posX = 40, posY = 1400+800*i,
+                        font = quoteFont),
                 )
             }
         }
 
 
 
-        movePane.add(Label(text = "Music by Kevin MacLeod, bensound", font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 8600))
+        movePane.add(Label(text = "Music by Kevin MacLeod, bensound",
+            font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 8600))
         movePane.add(copyrightLabel)
 
         addComponents(tk)
@@ -339,6 +348,10 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
         return output.toList()
     }
+
+    /**
+     * called when scene is shown
+     */
 
     fun trigger() {
         println("trigger credits roll animation")
@@ -358,6 +371,10 @@ class CreditsScene : BoardGameScene(1920,1080) {
             memberImageTokenViews[3].opacity = 0.0; memberImageTokenViews[6].opacity = 1.0
             memberImageTokenViews[7].opacity = 1.0; memberImageTokenViews[8].opacity = 1.0 }})
     }
+
+    /**
+     * plays Explosion Animation
+     */
 
     fun explosion(){
         playAnimation(FadeAnimation(copyrightLabel, 1.0, 0.0, duration = 500))

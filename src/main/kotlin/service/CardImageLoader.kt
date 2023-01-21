@@ -14,20 +14,22 @@ private const val STATION_CARDS_FILE_IMG_WIDTH = 1080
 
 /**
  * Provides access to the src/main/resources/card_deck.png file that contains all card images
- * in a raster. The returned [BufferedImage] objects of [frontImageFor], [blankImage],
- * and [backImage] are 130x200 pixels.
+ * in a raster.
  */
 class CardImageLoader {
 
     /**
      * The full raster image containing the suits as rows (plus one special row for blank/back)
-     * and values as columns (starting with the ace). As the ordering does not correctly reflect
-     * the order in which the suits are declared in [CardSuit], mappings via [row] and [column]
-     * are required.
+     * and values as columns (starting with the ace).
      */
+
     private val tilesImage : BufferedImage = ImageIO.read(CardImageLoader::class.java.getResource(TILES_FILE))
 
     private val stationsImage : BufferedImage = ImageIO.read(CardImageLoader::class.java.getResource(STATION_CARDS_FILE))
+
+    /**
+     * returns rotated colored car image
+     */
 
     fun stationImage(color: Color, isConnect: Boolean): BufferedImage {
         return if (isConnect) {
@@ -36,23 +38,14 @@ class CardImageLoader {
             getImageByCoordinates(stationsImage, color.ordinal, 0)
         }
     }
-    /*
 
     /**
-     * Provides the card image for the given [CardSuit] and [CardValue]
-     */
-    fun frontImageFor(suit: CardSuit, value: CardValue) =
-        getImageByCoordinates(value.column, suit.row)
-
-
+     * provides indexed texture for tile
      */
 
     fun frontImage(x: Int,y: Int) = getImageByCoordinates(tilesImage, x, y)
 
-    /**
-     * Provides a blank (white) card
-     */
-//    val blankImage : BufferedImage get() = getImageByCoordinates(8, 4)
+
     /**
      * retrieves from the full raster image [image] the corresponding sub-image
      * for the given column [x] and row [y]
@@ -61,6 +54,7 @@ class CardImageLoader {
      * @param y row in the raster image, starting at 0
      *
      */
+
     private fun getImageByCoordinates (image: BufferedImage, x: Int, y: Int) : BufferedImage {
         if (image == tilesImage) return image.getSubimage(
             x * TILES_FILE_IMG_WIDTH,y * TILES_FILE_IMG_HEIGHT, TILES_FILE_IMG_WIDTH, TILES_FILE_IMG_HEIGHT)

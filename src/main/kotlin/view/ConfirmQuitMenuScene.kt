@@ -8,6 +8,11 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
+/**
+ * menu scene that pops up when quit button is pressed to confirm player input. if no is pressed last menuscene is
+ * showed and if yes is pressed the application terminates
+ */
+
 class ConfirmQuitMenuScene: MenuScene(1920,1080)  {
 
     private val popUpText = Label(width = 1920, height = 400,  posY = 100,

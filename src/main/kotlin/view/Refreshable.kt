@@ -25,14 +25,25 @@ interface Refreshable {
     fun refreshAfterTileRotation(tile: Tile)
 
     /**
-     * Refresh after current player placed tile and next player is called
-     *
+     * Refresh after current player placed tile and next player is called     *
      */
     fun refreshAfterPlaceTile(){}
 
+    /**
+     * refreshes Turn after undo is engaged
+     */
+
     fun refreshAfterUndo(){}
 
+    /**
+     * refreshes Turn after redo is engaged
+     */
+
     fun refreshAfterRedo(){}
+
+    /**
+     * refreshes after game is finished
+     */
 
     fun refreshAfterGameFinished(){}
 

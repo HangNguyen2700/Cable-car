@@ -1,5 +1,9 @@
 package service
 
+/**
+ * enum to differentiate Connection statuses
+ */
+
 enum class ConnectionState {
     DISCONNECTED,
     CONNECTED,

@@ -22,7 +22,7 @@ import java.awt.Color
  * Main BoardGameApplication. contains all scenes and manages scene traversing and audio playback & toggle
  *
  * [creditsScene], [gameOverScene], [gameScene], [lobbyScene], [mainMenuScene],
- * [notificationGameScene], [quickMenuGameScene], [titleScene]: Menu & GameScenes
+ * [quickMenuGameScene], [titleScene]: Menu & GameScenes
  * [musicEnabled], [soundEnabled]: global flag for music/sound
  * [musicButtons], [soundButtons]: all Buttons distributed in all Scenes for updating
  * [nameEmptyCheck] writes the Host name in the Lobby Scene when not empty
@@ -30,7 +30,7 @@ import java.awt.Color
 
 class CCApplication : BoardGameApplication("Carbel Car Game"){
 
-    val rootService = RootService()
+    private val rootService = RootService()
 
     private val creditsScene = CreditsScene().apply {
         backToTitleSceneButton.onMouseClicked = {

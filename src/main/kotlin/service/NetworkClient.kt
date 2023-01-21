@@ -13,6 +13,10 @@ import tools.aqua.bgw.net.common.response.CreateGameResponseStatus
 import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
 
+/**
+ * class to handle player actions in network game
+ */
+
 class NetworkClient(playerName: String,
                     host: String,
                     secret: String,
@@ -87,7 +91,8 @@ class NetworkClient(playerName: String,
 
             if (networkService.joinedPlayers.size > 6) {
                 networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)
-                println("Too many players are connected to the game. Currently Connected Players: ${networkService.joinedPlayers.size}")
+                println("Too many players are connected to the game. Currently Connected Players: " +
+                        "${networkService.joinedPlayers.size}")
                 return
             }
 
@@ -104,7 +109,8 @@ class NetworkClient(playerName: String,
                 if (networkService.joinedPlayers.size < 2) {
                     networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)
                 }
-                println("Player: ${notification.sender} has left the game. Current Players: ${networkService.joinedPlayers.size}")
+                println("Player: ${notification.sender} has left the game. Current Players: " +
+                        "${networkService.joinedPlayers.size}")
             }
 
             if(networkService.connectionState == ConnectionState.GAME_INITIALIZED || networkService.connectionState ==
@@ -127,8 +133,10 @@ class NetworkClient(playerName: String,
     @GameActionReceiver
     fun onTurnMessageReceived(message: TurnMessage, sender: String) {
         BoardGameApplication.runOnGUIThread {
-            if (sender == networkService.rootService.currentGame!!.currentTurn.players[networkService.rootService.currentGame!!.currentTurn.currentPlayerIndex].name) {
-                networkService.rootService.playerActionService.placeTile(!message.fromSupply, message.posX, message.posY)
+            if (sender == networkService.rootService.currentGame!!.currentTurn.
+                players[networkService.rootService.currentGame!!.currentTurn.currentPlayerIndex].name) {
+                    networkService.rootService.playerActionService.
+                        placeTile(!message.fromSupply, message.posX, message.posY)
             } else {
                 println("Received TurnMessage from $sender, even though it is not their turn.")
             }

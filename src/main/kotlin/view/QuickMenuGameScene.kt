@@ -10,6 +10,10 @@ import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
+/**
+ * menu scene accessible from game scene for quick settings and quitting
+ */
+
 class QuickMenuGameScene : MenuScene(600, 1080) {
 
     private val menuLabel = Label(width = 600, height = 100, posX = 0, posY = 140,

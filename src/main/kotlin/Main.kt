@@ -1,6 +1,10 @@
 import service.RootService
 import view.CCApplication
 
+/**
+ * root of application
+ */
+
 fun main() {
 
     println("Das Sopra ist voll cool")

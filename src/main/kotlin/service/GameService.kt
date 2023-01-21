@@ -6,6 +6,9 @@ import entity.Color
 import entity.Player
 import entity.Turn
 
+/**
+ * broad game logic
+ */
 
 class GameService(private val rootService: RootService) : AbstractRefreshingService() {
     var isLocalOnlyGame = false
@@ -13,7 +16,15 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     var rotationAllowed = false
     var tileLookUp = mutableListOf<Tile>()
 
-    fun startNewGame(players: List<String>, isLocalOnlyGame: Boolean = true, isHostedGame: Boolean = false, rotationAllowed: Boolean = false) {
+    /**
+     * initializes game with given values
+     */
+
+    fun startNewGame(players: List<String>,
+                     isLocalOnlyGame: Boolean = true,
+                     isHostedGame: Boolean = false,
+                     rotationAllowed: Boolean = false)
+    {
         this.isLocalOnlyGame = isLocalOnlyGame
         this.isHostedGame = isHostedGame
         this.rotationAllowed = rotationAllowed
@@ -92,6 +103,10 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         onAllRefreshables { this.refreshAfterRedo() }
     }
 
+    /**
+     * iterates currentPlayerIndex over players.size in a loop
+     */
+
     fun nextPlayer() {
         if(rootService.currentGame!!.currentTurn.currentPlayerIndex ==
             rootService.currentGame!!.currentTurn.players.size-1) {
@@ -125,13 +140,19 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         return winners
     }
 
-
+    /**
+     * called if all tiles are laid out
+     */
 
     fun endGame() {
 
         onAllRefreshables { refreshAfterGameFinished() }
 
     }
+
+    /**
+     * distributes shuffled card stack to players
+     */
 
     fun distributeTiles() {
         if(isLocalOnlyGame) {
@@ -235,6 +256,10 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         }
 
     }
+
+    /**
+     * parses tile path connections to draw stack
+     */
 
     fun readTileCSV() {
         // read file lines into lines array
