@@ -10,8 +10,10 @@ import service.RootService
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.layoutviews.GridPane
+import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
+import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
@@ -38,17 +40,18 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var playerList = listOf<Player>()
     private var currentTile: Tile? = null
 
-
     private var isDrawnTilePlaced = false
 
-    private val labelFont = Font(50, Color.WHITE)
-    private val buttonTextFont = Font(30, color = Color.WHITE)
+    private val labelFont = Font(50, Color.BLACK, family = "Calibri")
+    private val playerScoreFont = Font(40, Color.BLACK, family = "Calibri")
+    private val playerScoreHighlightedFont = Font(40, Color.GREEN, family = "Calibri")
+    private val buttonTextFont = Font(30, color = Color.WHITE, family = "Calibri")
 
     private val mainGrid = GridPane<GridPane<GridPane<GridPane<ComponentView>>>>(
         posX = 60, posY = 40, columns = 3, rows = 1, layoutFromCenter = false
     )
     private val outerPlayersGrid = GridPane<GridPane<GridPane<ComponentView>>>(columns = 1, rows = 1)
-    private val playersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6)
+    private val playersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6, spacing = 50.0)
     private val boardGrid = GridPane<GridPane<GridPane<ComponentView>>>(columns = 1, rows = 3)
     private val topStationGrid = GridPane<ComponentView>(columns = 8, rows = 1)
     private val leftStationGrid = GridPane<ComponentView>(columns = 1, rows = 8)
@@ -64,7 +67,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val topBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
     private val middleBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
     private val bottomBoardGrid = GridPane<GridPane<ComponentView>>(columns = 3, rows = 1)
-
 
     private var currentTileCardView: CardView? = null
 
@@ -113,6 +115,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     val quickMenuButton: Button = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
 
+    val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
+        ).apply { opacity = 0.8 }
+
     init {
 
         // displays all players' information
@@ -159,7 +164,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         mainGrid[1, 0] = boardGrid
 
         background = ImageVisual("game_scene.png")
-        addComponents(mainGrid, quickMenuButton)
+        addComponents(playerScoreBGLabel, mainGrid, quickMenuButton)
     }
 
     override fun refreshAfterStartGame() {
@@ -182,26 +187,35 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         for (i in playerList.indices) {
 
-            val playerGrid = GridPane<ComponentView>(columns = 3, rows = 1)
+            val playerGrid = GridPane<ComponentView>(columns = 5, rows = 1)
 
-            // highlight current player
-            val playerNameLabel = Label(font = labelFont, text = playerList[i].name,
-            ).apply { if (i == currentTurn.currentPlayerIndex) this.font = Font(50, Color.GREEN) }
-
-            playerGrid[1, 0] = playerNameLabel
-
-            // highlight current player
-            val playerScoreLabel = Label(font = labelFont, text = playerList[i].score.toString(),
-            ).apply { if (i == currentTurn.currentPlayerIndex) this.font = Font(50, Color.GREEN) }
-
-            playerGrid[2, 0] = playerScoreLabel
             val playerColorLabel = Label(height = 50, width = 50,
                 visual = when(i) {
                     0 -> ColorVisual.YELLOW; 1 -> ColorVisual.BLUE; 2 -> ColorVisual.ORANGE; 3 -> ColorVisual.GREEN
-                    4 -> ColorVisual(183,0,255); else -> ColorVisual.BLACK })
+                    4 -> ColorVisual(183,0,255); else -> ColorVisual.BLACK }
+            ).apply {  }
 
-            playerGrid[0, 0] = playerColorLabel
-            playersGrid[0, i] = playerGrid
+            playerGrid[0,0] = playerColorLabel
+
+            playerGrid[1,0] = Label(width = 10, visual = ColorVisual(0,0,0,0))
+
+            // highlight current player
+            val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
+                alignment = Alignment.CENTER_LEFT
+            ).apply { if (i == currentTurn.currentPlayerIndex) font = playerScoreHighlightedFont }
+
+            playerGrid[2, 0] = playerNameLabel
+
+            // highlight current player
+            val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
+                text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
+            ).apply { if (i == currentTurn.currentPlayerIndex) font = playerScoreHighlightedFont }
+
+            playerGrid[3,0] = playerScoreLabel
+
+            playerGrid[4,0] = Label(width = 100, visual = ColorVisual(0,0,0,0))
+
+            playersGrid[0,i] = playerGrid
         }
     }
 
@@ -397,7 +411,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 ).apply {
                     val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
                     /*TODO: ??? if (boardCellTile != null) ImageVisual(cardImageLoader.frontImage(boardCellTile)) else ColorVisual.GREEN*/
-                    if (playerActionService?.isPositionLegal(i, j) == true) {
+                    if (playerActionService.isPositionLegal(i, j)) {
                         onMouseClicked = {
                             if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
                                 /*TODO: ??? this.frontVisual = ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos)) ???*/
@@ -410,7 +424,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                             /*if (!isDrawnTilePlaced) {
                                 TODO: set myTile = drawnTiles[0]
                             }*/
-                            playerActionService?.placeTile(!isDrawnTilePlaced, i, j)
+                            playerActionService.placeTile(!isDrawnTilePlaced, i, j)
                         }
                     }
                 }
