@@ -10,7 +10,7 @@ package entity
  * @property handTile a Tile object representing the tile the player holds in their hand
  * @property score an integer representing the player's score
  */
-data class Player(val name: String) {
+data class Player(var name: String) {
 
     var cars = mutableListOf<Int>()
     var color: Color? = null

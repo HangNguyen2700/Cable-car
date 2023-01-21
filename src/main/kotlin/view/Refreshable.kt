@@ -1,5 +1,6 @@
 package view
 
+import entity.Player
 import entity.Tile
 import service.AbstractRefreshingService
 
@@ -48,7 +49,7 @@ interface Refreshable {
     fun refreshAfterGameFinished(){}
 
     /**
-     * Refresh game config except  player name and numbers
+     * Refresh game config except player name and numbers
      */
-    fun refreshAfterRestartGame(playerNames:MutableList<String>){}
+    fun refreshAfterRestartGame(playerNames: MutableList<Player>){}
 }
