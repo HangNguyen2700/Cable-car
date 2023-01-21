@@ -10,17 +10,14 @@ import service.RootService
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
 import tools.aqua.bgw.components.layoutviews.GridPane
-import tools.aqua.bgw.components.layoutviews.Pane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
 import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
-import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
-import java.awt.Image
 
 /**
  * main scene
@@ -100,10 +97,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val undoButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Undo"
     ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
 
-    private val redoButton: Button = Button(width = 150, height = 50, font = buttonTextFont, text = "Redo"
+    private val redoButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Redo"
     ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
 
-    private val rotateButton: Button = Button(width = 150, height = 50, font = buttonTextFont, text = "Rotate",
+    private val rotateButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Rotate",
     ).apply {
         isVisible = false
         visual = ColorVisual(186, 136, 133, 255)
@@ -112,10 +109,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 currentTile!!.rotationDegree += 90
                 currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble() } } }
 
-    val quickMenuButton: Button = Button(width = 140, height = 140, posX = 40, posY = 40,
+    val quickMenuButton = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
 
-    val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
+    private val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
         ).apply { opacity = 0.8 }
 
     init {
@@ -480,7 +477,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
    // }
 
-    fun setTileFront(tileCardView: CardView, tile: Tile){
+    private fun setTileFront(tileCardView: CardView, tile: Tile){
         if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,0))
         if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))

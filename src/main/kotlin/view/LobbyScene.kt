@@ -37,7 +37,7 @@ import java.awt.Color
 
 class LobbyScene : MenuScene(1920, 1080) {
 
-    var playersJoined = 0
+    private var playersJoined = 0
 
     private var realAISelection: Int? = null
 

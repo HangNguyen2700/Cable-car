@@ -6,7 +6,6 @@ import com.soywiz.korau.sound.infinitePlaybackTimes
 import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
-import entity.Player
 import kotlinx.coroutines.GlobalScope
 import service.RootService
 import tools.aqua.bgw.core.Alignment
@@ -184,7 +183,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             ),
                 isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
             )
-            hideMenuScene(3000);
+            hideMenuScene(3000)
             showGameScene(gameScene)
 
         }
@@ -211,8 +210,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             } else { playNopeSound() }
         }
     }
-
-    private val notificationGameScene = NotificationGameScene()
 
     private val confirmQuitMenuScene = ConfirmQuitMenuScene().apply {
         yesButton.onMouseClicked = { exit() }

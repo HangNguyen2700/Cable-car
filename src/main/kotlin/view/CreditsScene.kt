@@ -16,11 +16,9 @@ import tools.aqua.bgw.visual.*
 import java.awt.Color
 
 /**
- *[mainGrid]:frame for the contents
- *[membersGrid]:frame for the members
  */
 
-class CreditsScene() : BoardGameScene(1920,1080) {
+class CreditsScene : BoardGameScene(1920,1080) {
 
     private val creditsLabel = Label( visual = ImageVisual("game_banner.png"), width = 1920, height = 455, posY = 312)
 
@@ -43,11 +41,9 @@ class CreditsScene() : BoardGameScene(1920,1080) {
         ImageVisual("_DSC0504_.jpg"), ImageVisual("_DSC0603_.jpg"),
         ImageVisual("_DSC0527-gigapixel-standard-scale-2_00x_.jpg"), ImageVisual("_DSC0616_.jpg"))
 
-    val memberImageTokenViews = mutableListOf<TokenView>()
+    private val memberImageTokenViews = mutableListOf<TokenView>()
 
     private val movePane = Pane<ComponentView>(width = 1920, height = 1080)
-
-    private val memberPane = Pane<ComponentView>(width = 1920, height = 1080, posY = 1080)
 
     val backToTitleSceneButton = Button(width = 400, height = 100, posX = 100, posY = 930,
         visual = CompoundVisual(
@@ -62,14 +58,14 @@ class CreditsScene() : BoardGameScene(1920,1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
 
-    val nameFont = Font(size = 60, color = Color.WHITE, family = "Calibri")
-    val jobFont = Font(size = 40, color = Color.WHITE, family = "Calibri")
-    val quoteFont = Font(size = 40, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
+    private val nameFont = Font(size = 60, color = Color.WHITE, family = "Calibri")
+    private val jobFont = Font(size = 40, color = Color.WHITE, family = "Calibri")
+    private val quoteFont = Font(size = 40, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
 
     val moveAnimation = MovementAnimation(componentView = movePane, byY = -8800, duration = 80000)
 
     private val explosionImageVisualList = pathToImageVisuals("explosion_png/",112)
-    var i = 0
+    private var i = 0
     val tk = TokenView(visual = explosionImageVisualList[i],width = 1158, height = 1080, posX = 381, posY = 0)
     val explosionAnimation = SequentialAnimation(
         DelayAnimation(duration = 17).apply { onFinished = {
@@ -298,7 +294,7 @@ class CreditsScene() : BoardGameScene(1920,1080) {
             i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }}
     )
 
-    val copyrightLabel = Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"),
+    private val copyrightLabel = Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"),
         width = 1920, height = 200, posY = 9250)
 
     init {
@@ -339,7 +335,7 @@ class CreditsScene() : BoardGameScene(1920,1080) {
     private fun pathToImageVisuals(path: String, length : Int) :List<Visual>{
         val output = mutableListOf<ImageVisual>()
 
-        for (i in 1..length+1) output.add(ImageVisual(path + i + ".png"))
+        for (i in 1..length+1) output.add(ImageVisual("$path$i.png"))
 
         return output.toList()
     }
@@ -353,13 +349,13 @@ class CreditsScene() : BoardGameScene(1920,1080) {
         playAnimation(moveAnimation)
         playAnimation(FadeAnimation(creditsLabel, 0.0, 1.0, duration = 1000))
 
-        playAnimation(DelayAnimation(duration = 18000).apply { onFinished = { creditsLabel.opacity = 0.0;
+        playAnimation(DelayAnimation(duration = 18000).apply { onFinished = { creditsLabel.opacity = 0.0
             memberImageTokenViews[2].opacity = 1.0; memberImageTokenViews[3].opacity = 1.0 }})
-        playAnimation(DelayAnimation(duration = 31000).apply { onFinished = { memberImageTokenViews[0].opacity = 0.0;
-            memberImageTokenViews[1].opacity = 0.0; memberImageTokenViews[4].opacity = 1.0;
+        playAnimation(DelayAnimation(duration = 31000).apply { onFinished = { memberImageTokenViews[0].opacity = 0.0
+            memberImageTokenViews[1].opacity = 0.0; memberImageTokenViews[4].opacity = 1.0
             memberImageTokenViews[5].opacity = 1.0 }})
-        playAnimation(DelayAnimation(duration = 40000).apply { onFinished = { memberImageTokenViews[2].opacity = 0.0;
-            memberImageTokenViews[3].opacity = 0.0; memberImageTokenViews[6].opacity = 1.0;
+        playAnimation(DelayAnimation(duration = 40000).apply { onFinished = { memberImageTokenViews[2].opacity = 0.0
+            memberImageTokenViews[3].opacity = 0.0; memberImageTokenViews[6].opacity = 1.0
             memberImageTokenViews[7].opacity = 1.0; memberImageTokenViews[8].opacity = 1.0 }})
     }
 
