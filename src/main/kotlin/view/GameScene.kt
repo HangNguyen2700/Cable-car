@@ -37,7 +37,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var playerList = listOf<Player>()
     private var currentTile: Tile? = null
 
-    private var isDrawnTilePlaced = false
+    private var isDrawStackTileChosen : Boolean? = null
 
     private val labelFont = Font(50, Color.BLACK, family = "Calibri")
     private val playerScoreFont = Font(40, Color.BLACK, family = "Calibri")
@@ -73,24 +73,30 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val handTileCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
+        flip()
         //isVisible = true
-        onMouseClicked = {
-            flip()
-            currentTileCardView = this
-            currentTile = currentTurn.players[currentTurn.currentPlayerIndex].handTile
+        if (isDrawStackTileChosen == null) {
+            onMouseClicked = {
+                currentTileCardView = this
+                currentTile = currentTurn.players[currentTurn.currentPlayerIndex].handTile
+                isDrawStackTileChosen = false
+            }
         }
     }
 
-    private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Drawn Tiles")
+    private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Draw Stack")
 
     private val drawnTilesCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
-        onMouseClicked = {
-            flip()
-            currentTileCardView = this
-            handTileCardView.isDisabled = true
-            currentTile = currentTurn.gameField.tileStack.tiles.first()
-            isDrawnTilePlaced = true
+        if (isDrawStackTileChosen == null) {
+            onMouseClicked = {
+                flip()
+                handTileCardView.flip()
+                currentTileCardView = this
+                handTileCardView.isDisabled = true
+                currentTile = currentTurn.gameField.tileStack.tiles.first()
+                isDrawStackTileChosen = true
+            }
         }
     }
 
@@ -213,6 +219,44 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             playerGrid[4,0] = Label(width = 100, visual = ColorVisual(0,0,0,0))
 
             playersGrid[0,i] = playerGrid
+        }
+    }
+
+    /**
+     * initializes all stations in 2d-array to positions around the game board
+     * TODO: the amount of stations per players varies based on the amount of players
+     */
+
+    private fun initStationPosition() {
+        val stations = initStationArray()
+
+        for (i in 0..3) {
+
+            for (j in 0..7) {
+
+                val stationCardView = CardView(
+                    height = 100, width = 100,
+                    front = ColorVisual(0, 0, 0, 0),
+                    back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
+                ).apply {
+                    if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
+                        this.showFront()
+                    }
+                    when (i) {
+                        0 -> this.rotation = 90.0
+                        1 -> this.rotation = 180.0
+                        2 -> this.rotation = 270.0
+                        3 -> this.rotation = 0.0
+                    }
+                }
+
+                when (i) {
+                    0 -> topStationGrid[j, 0] = stationCardView
+                    1 -> rightStationGrid[0, j] = stationCardView
+                    2 -> bottomStationGrid[j, 0] = stationCardView
+                    3 -> leftStationGrid[0, j] = stationCardView
+                }
+            }
         }
     }
 
@@ -351,44 +395,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     /**
-     * initializes all stations in 2d-array to positions around the game board
-     * TODO: the amount of stations per players varies based on the amount of players
-     */
-
-    private fun initStationPosition() {
-        val stations = initStationArray()
-
-        for (i in 0..3) {
-
-            for (j in 0..7) {
-
-                val stationCardView = CardView(
-                    height = 100, width = 100,
-                    front = ColorVisual(0, 0, 0, 0),
-                    back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
-                ).apply {
-                    if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
-                        this.showFront()
-                    }
-                    when (i) {
-                        0 -> this.rotation = 90.0
-                        1 -> this.rotation = 180.0
-                        2 -> this.rotation = 270.0
-                        3 -> this.rotation = 0.0
-                    }
-                }
-
-                when (i) {
-                    0 -> topStationGrid[j, 0] = stationCardView
-                    1 -> rightStationGrid[0, j] = stationCardView
-                    2 -> bottomStationGrid[j, 0] = stationCardView
-                    3 -> leftStationGrid[0, j] = stationCardView
-                }
-            }
-        }
-    }
-
-    /**
      * initializes game board,
      * each board cell is a card view, click on board cell to place tile
      */
@@ -398,32 +404,33 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         for (i in 0..7) for (j in 0..7) {
 
-            var boardCellLabel: CardView?
+            lateinit var boardCellLabel: CardView
+
             if (i in mainStationPos && j in mainStationPos) {
                 boardCellLabel = CardView(height = 100, width = 100,
                     front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0))
+
             } else {
                 boardCellLabel = CardView(height = 100, width = 100,
                     front = ColorVisual.GREEN, back = ColorVisual.WHITE
                 ).apply {
+
                     val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
-                    /*TODO: ??? if (boardCellTile != null)
-                       ImageVisual(cardImageLoader.frontImage(boardCellTile)) else ColorVisual.GREEN*/
+                    if (boardCellTile != null)
+                       setTileFront(boardCellLabel, boardCellTile)
+
                     if (playerActionService.isPositionLegal(i, j)) {
                         onMouseClicked = {
-                            if (currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                /*TODO: ??? this.frontVisual =
-                                   ImageVisual(cardImageLoader.frontImage(currentTile!!.tilePos)) ???*/
+                            if (isDrawStackTileChosen != null && currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
+                                setTileFront(boardCellLabel,currentTile!!)
                                 this.rotation = currentTile!!.rotationDegree.toDouble()
                                 showFront()
-                                handTileCardView.showBack()
-                                drawnTilesCardView.showBack()
-                                drawnTilesCardView.isDisabled
+                                playerActionService.placeTile(!isDrawStackTileChosen!!, i, j)
                             }
                             /*if (!isDrawnTilePlaced) {
                                 TODO: set myTile = drawnTiles[0]
                             }*/
-                            playerActionService.placeTile(!isDrawnTilePlaced, i, j)
+
                         }
                     }
                 }
@@ -449,6 +456,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
+        handTileCardView.showFront()
+        isDrawStackTileChosen = null
+        //handTileCardView.flip()
+        drawnTilesCardView.isDisabled = false
+        drawnTilesCardView.showBack()
     }
 
     override fun refreshAfterUndo() {
@@ -482,61 +494,63 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private fun setTileFront(tileCardView: CardView, tile: Tile){
         if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,0))
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,0))
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,0))
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,0))
 
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,1))
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,1))
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,1))
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,1))
 
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,2))
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,2))
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,2))
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,2))
 
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,3))
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,3))
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,3))
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,3))
 
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,4))
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,4))
 
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,4))
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,4))
 
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,5))
 
-        if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,5))
 
-        if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,5))
 
-        if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
+
+        else println(tile.ports + " TIME TO SCREAM!!")
     }
 
 
