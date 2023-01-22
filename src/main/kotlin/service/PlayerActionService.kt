@@ -1,11 +1,10 @@
 package service
 
+import ai.MCTS
 import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
 import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.Player
 import entity.Tile
-import tools.aqua.bgw.components.gamecomponentviews.CardView
-import tools.aqua.bgw.visual.ImageVisual
 
 /**
  * class to handle player ingame actions
@@ -81,7 +80,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     TurnMessage(
                         posX, posY,
                         !fromHand,
-                        tile!!.rotationDegree*90,
+                        tile.rotationDegree*90,
                         GameStateVerificationInfo(listOf(), listOf(), listOf())
                     )
                 )
@@ -90,6 +89,16 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         rootService.gameService.nextPlayer()
 
         onAllRefreshables { this.refreshAfterPlaceTile() }
+    }
+
+    /**
+     *  @author Aziz, Anastasiia
+     * playAiTurn a function to play : the turn of the AI player.
+     */
+    fun playAiTurn() {
+        val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
+        val move = MCTS(rootService, aiIndex).findNextMove()
+        placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
     /**

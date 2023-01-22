@@ -2,7 +2,10 @@ package ai
 
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
-    fun findNextMove(root: Node) : Move {
+    fun findNextMove() : Move {
+        val defaultMove = Move(false, -1, -1, -1)
+        val root = Node(rs, null, defaultMove, aiIndex)
+
         while (true) {
             val node = selectPromisingNode(root)
             if (AiActionService.isGameOver(node.state)) {
