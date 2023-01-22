@@ -6,12 +6,12 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     fun findNextMove(root: Node) : Move {
         while (true) {
             val node = selectPromisingNode(root)
-            if (node.state.isGameOver()) {
+            if (AiActionService.isGameOver(node.state)) {
                 backpropagation(node)
                 return node.move
             }
             expandNode(node)
-            val nodeToExplore = node.children.shuffled().first()
+            val nodeToExplore = node.children.first()
             simulateRandomPlayout(nodeToExplore)
             backpropagation(nodeToExplore)
         }
@@ -33,13 +33,20 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
             child.setScore(node.state)
             node.children.add(child)
         }
+        node.children.shuffle()
     }
 
     private fun simulateRandomPlayout(node: Node) {
-        var state = node.state
-        while (!state.isGameOver()) {
+        var state = node.state.copy()
+        var shouldContinue = !AiActionService.isGameOver(state)
+
+        while (shouldContinue) {
             val moves = node.getPossibleMoves()
-            state = state.doMove(moves.shuffled().first())
+
+            for (i in 0 until state.players.size) {
+                TODO()
+            }
+            state = AiActionService.doMove(state, moves.shuffled().first())
         }
     }
 

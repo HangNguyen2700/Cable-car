@@ -1,11 +1,10 @@
 package ai
-
 import entity.Turn
 
 data class Node(val rs: service.RootService, val parent: Node?, val move: Move, val aiIndex: Int) {
     val children: MutableList<Node> = mutableListOf()
     val state: Turn =
-        if (parent != null) parent.state.doMove(move)
+        if (parent != null) AiActionService.doMove(parent.state, move, aiIndex)
         else Turn (rs.currentGame!!.currentTurn.gameField.copy(),
             rs.currentGame!!.currentTurn.players.toMutableList())
 
@@ -18,9 +17,7 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
 
         for (x in 0 until state.gameField.field.size) {
             for (y in 0 until state.gameField.field[x].size) {
-                if (state.gameField.field[x][y] != null
-                    || !rs.playerActionService.isPositionLegal(x, y)) continue
-
+                if (!AiActionService.isPositionLegal(state, x, y)) continue
                 for (i in 0..3) {
                     moves.add(Move(false, i, x, y))
                     moves.add(Move(true, i, x, y))
