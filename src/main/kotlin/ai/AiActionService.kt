@@ -1,7 +1,4 @@
 package ai
-import service.PlayerActionService.*
-import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
-import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.Tile
 import entity.Turn
 import service.PlayerActionService
@@ -93,7 +90,7 @@ class AiActionService {
                 tile = newTurn.gameField.tileStack.tiles.removeFirst()
                 // rotate tile if needed
                 if (move.rotationsNo != 0) {
-                    val tempId = tile!!.id
+                    val tempId = tile.id
                     val tempOriginalPorts = tile.originalPorts
 
                     while (move.rotationsNo > tile!!.rotationDegree) {
@@ -104,15 +101,14 @@ class AiActionService {
                     tile.id = tempId
                     tile.originalPorts = tempOriginalPorts
                 }
-                tile!!.posX = move.posX
+                tile.posX = move.posX
                 tile.posY = move.posY
 
                 // remove tile from tileStack and put it onto the field
                 newTurn.gameField.field[move.posX][move.posY] = tile
             }
+            PlayerActionService.buildPaths(newTurn.players[playerIndex], tile)
             return newTurn
         }
     }
-
-
 }

@@ -6,55 +6,53 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         while (true) {
             val node = selectPromisingNode(root)
             if (AiActionService.isGameOver(node.state)) {
-                backpropagation(node)
+                backpropagation(node, true)
                 return node.move
             }
-            expandNode(node)
-            val nodeToExplore = node.children.first()
-            simulateRandomPlayout(nodeToExplore)
-            backpropagation(nodeToExplore)
+            expandNode(node, aiIndex)
+            val nodeToExplore = selectPromisingNode(node)
+            val aiWon = simulateRandomPlayout(nodeToExplore)
+            backpropagation(nodeToExplore, aiWon)
         }
     }
 
     private fun selectPromisingNode(node: Node): Node {
         var current = node
         while (current.children.isNotEmpty()) {
-            current.children.shuffle()
-            current.children.sortBy { if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount else it.score }
-            current = current.children.first()
+            current = current.children.maxByOrNull {
+                if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount
+                else it.score
+            }!!
         }
         return current
     }
 
-    private fun expandNode(node: Node) {
+    private fun expandNode(node: Node, playerIndex: Int) {
         node.getPossibleMoves().forEach {
-            val child = Node(rs, node, it, aiIndex)
+            val child = Node(rs, node, it, playerIndex)
             child.setScore(node.state)
             node.children.add(child)
         }
-        node.children.shuffle()
     }
 
-    private fun simulateRandomPlayout(node: Node) {
-        var state = node.state.copy()
-        var shouldContinue = !AiActionService.isGameOver(state)
+    private fun simulateRandomPlayout(node: Node): Boolean {
+        var tempNode = node.copy()
+        var playerIndex = aiIndex
 
-        while (shouldContinue) {
-            val moves = node.getPossibleMoves()
-
-            for (i in 0 until state.players.size) {
-                TODO()
-            }
-            state = AiActionService.doMove(state, moves.shuffled().first())
+        while (!AiActionService.isGameOver(tempNode.state)) {
+            playerIndex = (playerIndex + 1) % node.state.players.size
+            expandNode(tempNode, playerIndex)
+            tempNode = selectPromisingNode(tempNode)
         }
+
+        return tempNode.state.players[aiIndex].score >= tempNode.state.players.maxOf { it.score }
     }
 
-    private fun backpropagation(last: Node) {
+    private fun backpropagation(last: Node, aiWon: Boolean) {
         var node: Node? = last
         while (node != null) {
             node.visitCount += 1
-            if (aiIndex == 0 /*AI won*/)
-                node.winCount += 1
+            if (aiWon) node.winCount += 1
             node = node.parent
         }
     }

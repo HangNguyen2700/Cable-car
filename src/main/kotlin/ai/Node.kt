@@ -1,10 +1,11 @@
 package ai
+import entity.Path
 import entity.Turn
 
-data class Node(val rs: service.RootService, val parent: Node?, val move: Move, val aiIndex: Int) {
+data class Node(val rs: service.RootService, val parent: Node?, val move: Move, val playerIndex: Int) {
     val children: MutableList<Node> = mutableListOf()
     val state: Turn =
-        if (parent != null) AiActionService.doMove(parent.state, move, aiIndex)
+        if (parent != null) AiActionService.doMove(parent.state, move, playerIndex)
         else Turn (rs.currentGame!!.currentTurn.gameField.copy(),
             rs.currentGame!!.currentTurn.players.toMutableList())
 
@@ -28,15 +29,22 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
     }
 
     fun setScore (prev: Turn) {
+        fun isConnectedToPowerStation(path: Path): Boolean {
+            return (path.tiles.last().posX == 4 && path.tiles.last().posY == 4)
+                    || (path.tiles.last().posX == 4 && path.tiles.last().posY == 5)
+                    || (path.tiles.last().posX == 5 && path.tiles.last().posY == 4)
+                    || (path.tiles.last().posX == 5 && path.tiles.last().posY == 5)
+        }
+
         score = 0.0
         var actComparator = 0
         var prevComparator = 0
 
         // -1 if another path was completed
-        for (path in state.players[aiIndex].paths) {
+        for (path in state.players[playerIndex].paths) {
             if (path.complete) actComparator++
         }
-        for (path in prev.players[aiIndex].paths) {
+        for (path in prev.players[playerIndex].paths) {
             if (path.complete) prevComparator++
         }
         if (actComparator > prevComparator) score -= (actComparator - prevComparator)
@@ -45,13 +53,13 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
 
         // +1 if another rival's path was completed
         for (i in 0 until state.players.size) {
-            if (i == aiIndex) continue
+            if (i == playerIndex) continue
             for (path in state.players[i].paths) {
                 if (path.complete) actComparator++
             }
         }
         for (i in 0 until prev.players.size) {
-            if (i == aiIndex) continue
+            if (i == playerIndex) continue
             for (path in prev.players[i].paths) {
                 if (path.complete) prevComparator++
             }
@@ -61,21 +69,21 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
         prevComparator = 0
 
         // +1 if another train connected to power station
-        for (path in state.players[aiIndex].paths) {
-            if (true /*path connected to power station*/) actComparator++
+        for (path in state.players[playerIndex].paths) {
+            if (isConnectedToPowerStation(path)) actComparator++
         }
-        for (path in prev.players[aiIndex].paths) {
-            if (true /*path connected to power station*/) prevComparator++
+        for (path in prev.players[playerIndex].paths) {
+            if (isConnectedToPowerStation(path)) prevComparator++
         }
         if (actComparator > prevComparator) score += (actComparator - prevComparator)
         actComparator = 0
         prevComparator = 0
 
         // +1 if another path extended
-        for (path in state.players[aiIndex].paths) {
+        for (path in state.players[playerIndex].paths) {
             actComparator += path.tiles.size
         }
-        for (path in prev.players[aiIndex].paths) {
+        for (path in prev.players[playerIndex].paths) {
             prevComparator += path.tiles.size
         }
         if (actComparator > prevComparator) score += (actComparator - prevComparator)
