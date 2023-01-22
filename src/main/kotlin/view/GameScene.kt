@@ -419,13 +419,15 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                     if (boardCellTile != null)
                        setTileFront(boardCellLabel, boardCellTile)
 
-                    if (playerActionService.isPositionLegal(i, j)) {
+                    if (playerActionService.isPositionLegal(i+1, j+1)) {
                         onMouseClicked = {
                             if (isDrawStackTileChosen != null && currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
                                 setTileFront(boardCellLabel,currentTile!!)
                                 this.rotation = currentTile!!.rotationDegree.toDouble()
                                 showFront()
-                                playerActionService.placeTile(!isDrawStackTileChosen!!, i, j)
+                                playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
+                            } else {
+                                //TODO: playNopeSound()
                             }
                             /*if (!isDrawnTilePlaced) {
                                 TODO: set myTile = drawnTiles[0]

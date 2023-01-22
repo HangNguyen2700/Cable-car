@@ -153,27 +153,30 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * @return True if the position is legal to place a tile on, false otherwise.
      */
      fun isPositionLegal(posX: Int, posY: Int): Boolean {
-        /*
-        val player: Player? = null
+
+        val player = rootService.currentGame?.currentTurn?.players?.
+            get(rootService.currentGame?.currentTurn!!.currentPlayerIndex)
         val isFree = isSpotFree(posX, posY)
         val tileEdge = isConnectedToTile(posX, posY)
 
         if (isFree) {
             if (tileEdge) {
-                for (path in player!!.paths) {
-                    rootService.gameService.nextPlayer()
-                    if ((path.tiles.size > 1 && path.complete) ||
-                        rootService.currentGame!!.currentTurn.
-                            players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null) {
+                /*if (player != null) {
+                    for (path in player.paths) {
 
-                        return true
+                        rootService.gameService.nextPlayer()
+                        if ((path.tiles.size > 1 && path.complete) ||
+                            rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null
+                        ) {
+
+                            return true
+                        }
                     }
-                }
-            return true
+                }*/
+                return true
             }
         }
-        */
-        return true
+        return false
     }
 
     /**
@@ -184,10 +187,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * @param posY The y-coordinate of the spot to check.
      * @return True if the spot is free, false if it is already occupied.
      */
-    private fun isSpotFree(posX: Int, posY: Int): Boolean {
-
-       return rootService.currentGame!!.currentTurn.gameField.field[posX][posY] == null
-    }
+    private fun isSpotFree(posX: Int, posY: Int) =
+        rootService.currentGame!!.currentTurn.gameField.field[posX][posY] == null
 
     /**
      * @author Ikhlawi
@@ -198,6 +199,15 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      * @return True if there is an adjacent tile at the spot, false otherwise.
      */
     private fun isConnectedToTile(posX: Int, posY: Int): Boolean {
+
+        if (posX in 1..8 && posY == 1 ||
+            posX in 1..8 && posY == 8 ||
+            posY in 1..8 && posX == 1 ||
+            posY in 1..8 && posX == 8 ||
+            posX in 3..6 && posY == 3 ||
+            posX in 3..6 && posY == 6 ||
+            posY in 3..6 && posX == 3 ||
+            posY in 3..6 && posX == 6) return true
 
         var currentField = rootService.currentGame!!.currentTurn.gameField.field
 
