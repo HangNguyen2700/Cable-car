@@ -47,8 +47,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                 // rotate tile if needed
                 if (rotationDegree != 0) {
-                    while (rotationDegree > tile.rotationDegree) {
-                        rotate(tile)
+                    while (rotationDegree > tile!!.rotationDegree) {
+                        tile = rotate(tile)
                     }
                 }
                 // remove tile from tileStack and put it onto the field
