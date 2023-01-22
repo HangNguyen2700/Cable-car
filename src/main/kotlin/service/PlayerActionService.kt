@@ -34,8 +34,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 if (rotationDegree != 0) {
                     val tempId = tile!!.id
                     val tempOriginalPorts = tile.originalPorts
-                    val tempPosX = tile.posX
-                    val tempPosY = tile.posY
 
                     while (rotationDegree > tile!!.rotationDegree) {
                         val rotDeg = tile.rotationDegree
@@ -45,9 +43,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                     tile.id = tempId
                     tile.originalPorts = tempOriginalPorts
-                    tile.posX = tempPosX
-                    tile.posY = tempPosY
                 }
+                tile!!.posX = posX
+                tile.posY = posY
                 // put tile onto Field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
                 // give player new tile from tileStack
@@ -61,8 +59,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 if (rotationDegree != 0) {
                     val tempId = tile.id
                     val tempOriginalPorts = tile.originalPorts
-                    val tempPosX = tile.posX
-                    val tempPosY = tile.posY
 
                     while (rotationDegree > tile!!.rotationDegree) {
                         val rotDeg = tile.rotationDegree
@@ -72,9 +68,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                     tile.id = tempId
                     tile.originalPorts = tempOriginalPorts
-                    tile.posX = tempPosX
-                    tile.posY = tempPosY
+
                 }
+                tile.posX = posX
+                tile.posY = posY
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
             }
