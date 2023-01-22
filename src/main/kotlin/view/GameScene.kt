@@ -74,9 +74,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val handTileCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         flip()
-        //isVisible = true
-        if (isDrawStackTileChosen == null) {
-            onMouseClicked = {
+        onMouseClicked = {
+            if (isDrawStackTileChosen == null) {
                 currentTileCardView = this
                 currentTile = currentTurn.players[currentTurn.currentPlayerIndex].handTile
                 isDrawStackTileChosen = false
@@ -88,8 +87,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val drawnTilesCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
-        if (isDrawStackTileChosen == null) {
-            onMouseClicked = {
+        onMouseClicked = {
+            if (isDrawStackTileChosen == null) {
                 flip()
                 handTileCardView.flip()
                 currentTileCardView = this
@@ -417,24 +416,23 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
                     val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
                     if (boardCellTile != null)
-                       setTileFront(boardCellLabel, boardCellTile)
+                        setTileFront(boardCellLabel, boardCellTile)
 
-                    if (playerActionService.isPositionLegal(i+1, j+1)) {
-                        onMouseClicked = {
-                            if (isDrawStackTileChosen != null && currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
-                                setTileFront(boardCellLabel,currentTile!!)
-                                this.rotation = currentTile!!.rotationDegree.toDouble()
-                                showFront()
-                                playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
-                            } else {
-                                //TODO: playNopeSound()
-                            }
-                            /*if (!isDrawnTilePlaced) {
-                                TODO: set myTile = drawnTiles[0]
-                            }*/
-
+                    onMouseClicked = {
+                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null && currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
+                            setTileFront(boardCellLabel,currentTile!!)
+                            this.rotation = currentTile!!.rotationDegree.toDouble()
+                            showFront()
+                            playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
+                        } else {
+                            //TODO: playNopeSound()
                         }
+                        /*if (!isDrawnTilePlaced) {
+                            TODO: set myTile = drawnTiles[0]
+                        }*/
+
                     }
+
                 }
             }
             mainBoardGrid[i, j] = boardCellLabel

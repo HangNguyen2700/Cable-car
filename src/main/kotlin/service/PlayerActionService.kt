@@ -160,7 +160,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         val tileEdge = isConnectedToTile(posX, posY)
 
         if (isFree) {
+            println("tile is free")
             if (tileEdge) {
+                println("tile does not stand alone")
                 /*if (player != null) {
                     for (path in player.paths) {
 
@@ -209,7 +211,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             posY in 3..6 && posX == 3 ||
             posY in 3..6 && posX == 6) return true
 
-        var currentField = rootService.currentGame!!.currentTurn.gameField.field
+        val currentField = rootService.currentGame!!.currentTurn.gameField.field
 
         return (currentField[posX][posY + 1] != null ||
                 currentField[posX][posY - 1] != null ||
