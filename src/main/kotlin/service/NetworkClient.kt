@@ -136,7 +136,7 @@ class NetworkClient(playerName: String,
             if (sender == networkService.rootService.currentGame!!.currentTurn.
                 players[networkService.rootService.currentGame!!.currentTurn.currentPlayerIndex].name) {
                     networkService.rootService.playerActionService.
-                        placeTile(!message.fromSupply, message.posX, message.posY, 0, true)
+                        placeTile(!message.fromSupply, message.posX, message.posY, message.rotation, true)
             } else {
                 println("Received TurnMessage from $sender, even though it is not their turn.")
             }
