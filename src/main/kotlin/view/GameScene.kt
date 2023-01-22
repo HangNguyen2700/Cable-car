@@ -204,8 +204,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     fun hostGameWaitForPlayers(hostName :String) {
         playerList += Player(hostName)
         showPlayers()
-        playerList += Player("kill me")
-        showPlayers()
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
