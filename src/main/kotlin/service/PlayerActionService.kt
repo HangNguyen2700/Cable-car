@@ -33,7 +33,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // rotate tile if needed
                 if (rotationDegree != 0) {
                     while (rotationDegree > tile!!.rotationDegree) {
-                       tile = rotate(tile)
+                        var rotDeg = tile!!.rotationDegree
+                        tile = rotate(tile)
+                        tile.rotationDegree = (rotDeg + 1) % 4
                     }
                 }
                 // put tile onto Field
@@ -48,7 +50,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // rotate tile if needed
                 if (rotationDegree != 0) {
                     while (rotationDegree > tile!!.rotationDegree) {
+                        var rotDeg = tile!!.rotationDegree
                         tile = rotate(tile)
+                        tile.rotationDegree = (rotDeg + 1) % 4
                     }
                 }
                 // remove tile from tileStack and put it onto the field
