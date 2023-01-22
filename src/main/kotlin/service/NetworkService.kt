@@ -98,6 +98,8 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
+
+
         rootService.currentGame = Game(
             Turn(
                 GameField(
@@ -107,6 +109,8 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
                 ), mutableListOf()
             )
         )
+
+        rootService.gameService.readTileCSV()
 
         val tileStack = mutableListOf<Tile>()
         // create tileStack from supplied list

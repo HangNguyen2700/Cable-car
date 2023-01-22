@@ -13,7 +13,7 @@ import tools.aqua.bgw.visual.ImageVisual
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0) {
+    fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
         // add new Turn
         val newTurn = rootService.currentGame!!.currentTurn.copy()
         rootService.currentGame!!.currentTurn.nextTurn = newTurn
@@ -54,7 +54,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
             }
-            if (!rootService.gameService.isLocalOnlyGame) {
+            if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
+
                 rootService.networkService.sendTurnMessage(
                     TurnMessage(
                         posX, posY,
