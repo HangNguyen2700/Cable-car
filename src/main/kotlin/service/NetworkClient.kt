@@ -84,10 +84,13 @@ class NetworkClient(playerName: String,
                 return
             }
 
+
             println("${notification.sender} joined the game.")
             println("${notification.sender}: ${notification.message}")
 
             networkService.joinedPlayers.add(notification.sender)
+
+            BoardGameApplication.runOnGUIThread(Runnable {networkService.refreshJoin(notification.sender)  })
 
             if (networkService.joinedPlayers.size > 6) {
                 networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)
@@ -98,7 +101,7 @@ class NetworkClient(playerName: String,
 
             networkService.updateConnectionState(ConnectionState.READY_FOR_GAME)
 
-            networkService.onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(networkService.joinedPlayers.first()) }
+
 
         } else {
             println("A Player joined the remotely hosted game")

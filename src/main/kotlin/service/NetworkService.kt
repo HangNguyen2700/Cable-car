@@ -158,4 +158,8 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         println("disconnecting.")
         updateConnectionState(ConnectionState.DISCONNECTED)
     }
+
+    fun refreshJoin(string: String) {
+        onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(joinedPlayers.first()) }
+    }
 }
