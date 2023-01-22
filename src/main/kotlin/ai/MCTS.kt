@@ -1,5 +1,4 @@
 package ai
-import entity.*
 
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
