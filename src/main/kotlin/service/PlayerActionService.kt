@@ -5,12 +5,27 @@ import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
 import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.Player
 import entity.Tile
+import entity.Turn
 
 /**
  * class to handle player ingame actions
  */
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
+
+    fun isGameOver() : Boolean {
+        val turn = rootService.currentGame!!.currentTurn
+        var isFieldFull = true
+        for (row in turn.gameField.field) {
+            for (cell in row) {
+                if (cell == null) {
+                    isFieldFull = false
+                    break
+                }
+            }
+        }
+        return isFieldFull || turn.gameField.tileStack.tiles.isEmpty()
+    }
 
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
         // add new Turn
@@ -19,7 +34,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         newTurn.previousTurn = rootService.currentGame!!.currentTurn
 
         rootService.currentGame!!.currentTurn = newTurn
-
 
         var tile: Tile?
 
@@ -85,10 +99,14 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     )
                 )
             }
+            buildPaths(rootService.currentGame!!.currentTurn.
+            players[rootService.currentGame!!.currentTurn.currentPlayerIndex], tile)
         }
-        rootService.gameService.nextPlayer()
-
-        onAllRefreshables { this.refreshAfterPlaceTile() }
+        if (!isGameOver()) {
+            rootService.gameService.nextPlayer()
+            onAllRefreshables { this.refreshAfterPlaceTile() }
+        }
+        else rootService.gameService.endGame()
     }
 
     /**
