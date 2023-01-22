@@ -13,7 +13,7 @@ import tools.aqua.bgw.visual.ImageVisual
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0) {
+    fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
         // add new Turn
         val newTurn = rootService.currentGame!!.currentTurn.copy()
         rootService.currentGame!!.currentTurn.nextTurn = newTurn
@@ -32,10 +32,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
                 // rotate tile if needed
                 if (rotationDegree != 0) {
+                    val tempId = tile!!.id
+                    val tempOriginalPorts = tile.originalPorts
+
                     while (rotationDegree > tile!!.rotationDegree) {
-                        rotate(tile)
+                        val rotDeg = tile.rotationDegree
+                        tile = rotate(tile)
+                        tile.rotationDegree = (rotDeg + 1) % 4
                     }
+
+                    tile.id = tempId
+                    tile.originalPorts = tempOriginalPorts
                 }
+                tile!!.posX = posX
+                tile.posY = posY
                 // put tile onto Field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
                 // give player new tile from tileStack
@@ -47,19 +57,31 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                 // rotate tile if needed
                 if (rotationDegree != 0) {
-                    while (rotationDegree > tile.rotationDegree) {
-                        rotate(tile)
+                    val tempId = tile.id
+                    val tempOriginalPorts = tile.originalPorts
+
+                    while (rotationDegree > tile!!.rotationDegree) {
+                        val rotDeg = tile.rotationDegree
+                        tile = rotate(tile)
+                        tile.rotationDegree = (rotDeg + 1) % 4
                     }
+
+                    tile.id = tempId
+                    tile.originalPorts = tempOriginalPorts
+
                 }
+                tile.posX = posX
+                tile.posY = posY
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
             }
-            if (!rootService.gameService.isLocalOnlyGame) {
+            if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
+
                 rootService.networkService.sendTurnMessage(
                     TurnMessage(
                         posX, posY,
                         !fromHand,
-                        tile!!.rotationDegree,
+                        tile!!.rotationDegree*90,
                         GameStateVerificationInfo(listOf(), listOf(), listOf())
                     )
                 )
