@@ -95,6 +95,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         )
 
         sendGameInitMessage(gameInitMessage)
+        updateConnectionState(ConnectionState.READY_FOR_GAME)
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
@@ -159,7 +160,4 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         updateConnectionState(ConnectionState.DISCONNECTED)
     }
 
-    fun refreshJoin(string: String) {
-        onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(joinedPlayers.first()) }
-    }
 }
