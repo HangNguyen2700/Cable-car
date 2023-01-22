@@ -20,7 +20,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * initializes game with given values
      */
 
-    fun startNewGame(players: List<String>,
+    fun startNewGame(players: List<Player>,
                      isLocalOnlyGame: Boolean = true,
                      isHostedGame: Boolean = false,
                      rotationAllowed: Boolean = false)
@@ -40,9 +40,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             )
 
             // add given players
-            for (player in players) {
-                rootService.currentGame!!.currentTurn.players.add(Player(player))
-            }
+            rootService.currentGame!!.currentTurn.players = players.toMutableList()
 
             readTileCSV()
 
@@ -114,6 +112,9 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         } else {
             rootService.currentGame!!.currentTurn.currentPlayerIndex++
         }
+        val currTurn = rootService.currentGame!!.currentTurn
+        if (currTurn.players[currTurn.currentPlayerIndex].isAi)
+            rootService.playerActionService.playAiTurn()
     }
 
     /**
