@@ -69,10 +69,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val tileBackImage = ImageVisual("tile_back.png")
 
-    private val handTileLabel = Label(height = 100, width = 300, font = labelFont, text = "Hand Tile")
+    private val handTileLabel = Label(height = 100, width = 300, font = labelFont, text = "Hand Tile").apply { isDisabled = true; opacity = 0.0 }
 
     private val handTileCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
+        isDisabled = true; opacity = 0.0
         flip()
         onMouseClicked = {
             if (isDrawStackTileChosen == null) {
@@ -83,10 +84,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Draw Stack")
+    private val drawnTilesLabel = Label(height = 100, width = 300, font = labelFont, text = "Draw Stack").apply { isDisabled = true; opacity = 0.0 }
 
     private val drawnTilesCardView = CardView(height = 180, width = 180, front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
+        isDisabled = true; opacity = 0.0
         onMouseClicked = {
             if (isDrawStackTileChosen == null) {
                 flip()
@@ -100,13 +102,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     private val undoButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Undo"
-    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
+    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }.apply { isDisabled = true; opacity = 0.0 }
 
     private val redoButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Redo"
-    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }
+    ).apply { visual = ColorVisual(186, 136, 133); onMouseClicked = { gameService.undo() } }.apply { isDisabled = true; opacity = 0.0 }
 
     private val rotateButton = Button(width = 150, height = 50, font = buttonTextFont, text = "Rotate",
     ).apply {
+        isDisabled = true; opacity = 0.0
         isVisible = false
         visual = ColorVisual(186, 136, 133, 255)
         onMouseClicked = {
@@ -175,6 +178,19 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
+        handTileLabel.opacity = 1.0; handTileLabel.isDisabled = false
+        handTileCardView.opacity = 1.0; handTileCardView.isDisabled = false
+        drawnTilesLabel.opacity = 1.0;drawnTilesLabel.isDisabled = false
+        drawnTilesCardView.opacity = 1.0
+        undoButton.opacity = 1.0
+        redoButton.opacity = 1.0
+        rotateButton.opacity = 1.0
+        drawnTilesLabel.isDisabled = false
+        drawnTilesCardView.isDisabled = false
+        undoButton.isDisabled = false
+        redoButton.isDisabled = false
+        rotateButton.isDisabled = false
+
         showPlayers()
         initGameBoard()
         initStationPosition()
@@ -183,6 +199,21 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
         rotateButton.isVisible = gameService.rotationAllowed
         handTileCardView.isVisible = isMyTurn()
+    }
+
+    private fun hostGameWaitForPlayers(hostName :String) {
+        playerList += Player(hostName)
+        showPlayers()
+    }
+
+    override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
+        playerList += Player(playerName)
+        showPlayers()
+    }
+
+    override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
+        playerList -= playerList[playerList.indexOf(Player(playerName))]
+        showPlayers()
     }
 
     private fun showPlayers() {

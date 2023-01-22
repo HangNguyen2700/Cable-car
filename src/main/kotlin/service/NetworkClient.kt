@@ -95,6 +95,7 @@ class NetworkClient(playerName: String,
                         "${networkService.joinedPlayers.size}")
                 return
             }
+            networkService.onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(notification.sender) }
 
             networkService.updateConnectionState(ConnectionState.READY_FOR_GAME)
         } else {
@@ -106,6 +107,9 @@ class NetworkClient(playerName: String,
         if (networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {
             if (networkService.connectionState == ConnectionState.READY_FOR_GAME) {
                 networkService.joinedPlayers.remove(notification.sender)
+
+                networkService.onAllRefreshables { refreshAfterPlayerLeftInWaitSession(notification.sender) }
+
                 if (networkService.joinedPlayers.size < 2) {
                     networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)
                 }

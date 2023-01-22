@@ -23,6 +23,10 @@ interface Refreshable {
      */
     fun refreshAfterStartGame() {}
 
+    fun refreshAfterPlayerJoinedInWaitSession(playerName:String){}
+
+    fun refreshAfterPlayerLeftInWaitSession(playerName:String){}
+
     fun refreshAfterTileRotation(tile: Tile)
 
     /**

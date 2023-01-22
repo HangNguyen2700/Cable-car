@@ -105,54 +105,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
         hostGameButton.onMouseClicked = {
             if (secretTextField.text != "" && sessionIdTextField.text != "") {
-                this@CCApplication.rootService.networkService.hostGame(
-                    secretTextField.text, mainMenuScene.nameField.text, sessionIdTextField.text
-                )
-                println("1. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-                println(mainMenuScene.nameField.text)
-                println(secretTextField.text)
-                println(sessionIdTextField.text)
-                if (allowShufflePlayerOrderCheckbox.isChecked) {
-                    println("test1")
-                    println("joinedPlayers:" + rootService.networkService.joinedPlayers)
-                    this@CCApplication.rootService.gameService.startNewGame(
-                        rootService.networkService.joinedPlayers,
-                        isLocalOnlyGame = false,
-                        isHostedGame = true,
-                        rotationAllowed = this.allowTileRotationCheckbox.isChecked
-                    )
-                    println("2. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-                    println(mainMenuScene.nameField.text)
-                    println(secretTextField.text)
-                    println(sessionIdTextField.text)
-                } else {
-                    println("test2")
-                    println("joinedPlayers:" + rootService.networkService.joinedPlayers)
-                    println("joinedPlayers:" + rootService.networkService.joinedPlayers.size)
-
-                    this@CCApplication.rootService.networkService.startNewHostedGame(
-                        mainMenuScene.nameField.text,
-                        rotationAllowed = this.allowTileRotationCheckbox.isChecked,
-                        rootService.gameService.tileLookUp
-                    /*
-                    this@CCApplication.rootService.gameService.startNewGame(
-                        rootService.networkService.joinedPlayers,
-                        isLocalOnlyGame = false,
-                        isHostedGame = true,
-                        rotationAllowed = this.allowTileRotationCheckbox.isChecked
-                        */
-
-
-                    )
-                    println("3. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-                    println(mainMenuScene.nameField.text)
-                    println(secretTextField.text)
-                    println(sessionIdTextField.text)
-
-
-                }
-                hideMenuScene(3000)
-                showGameScene(gameScene)
+                startHostedGame()
             } else {
                 playNopeSound()
             }
@@ -254,8 +207,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         joinGameButton.onMouseClicked = {
             if (secretTextField.text != "" && sessionIDTextField.text != "") {
                 hideMenuScene(3000)
-                this@CCApplication.rootService.networkService.hostGame(
-                    secretTextField.text, mainMenuScene.nameField.text, sessionIDTextField.text
+                this@CCApplication.rootService.networkService.joinGame(
+                    "cable22", mainMenuScene.nameField.text, sessionIDTextField.text
                 )
                 //switch to gameScene from another host
             } else {
@@ -365,6 +318,56 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             mainMenuScene.nameErrorDisplay()
             playNopeSound()
         }
+
+    }
+
+    fun startHostedGame() {
+        this@CCApplication.rootService.networkService.hostGame(
+            "cable22", mainMenuScene.nameField.text, hostLobbyScene.sessionIdTextField.text)
+
+        hideMenuScene(3000)
+        showGameScene(gameScene)
+
+        println("1. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+        println(mainMenuScene.nameField.text)
+        println(hostLobbyScene.secretTextField.text)
+        println(hostLobbyScene.sessionIdTextField.text)
+        /*if (allowShufflePlayerOrderCheckbox.isChecked) {
+            println("test1")
+            println("joinedPlayers:" + rootService.networkService.joinedPlayers)
+
+            println("2. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+            println(mainMenuScene.nameField.text)
+            println(secretTextField.text)
+            println(sessionIdTextField.text)
+        } else {*/
+        println("test2")
+        println("joinedPlayers:" + rootService.networkService.joinedPlayers)
+        println("joinedPlayers:" + rootService.networkService.joinedPlayers.size)
+
+        /*
+
+        this@CCApplication.rootService.networkService.startNewHostedGame(
+            mainMenuScene.nameField.text,
+            rotationAllowed = this.hostLobbyScene.allowTileRotationCheckbox.isChecked,
+            rootService.gameService.tileLookUp)
+
+        this@CCApplication.rootService.gameService.startNewGame(
+            rootService.networkService.joinedPlayers,
+            isLocalOnlyGame = false,
+            isHostedGame = true,
+            rotationAllowed = this.hostLobbyScene.allowTileRotationCheckbox.isChecked
+        )
+
+        println("3. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+        println(mainMenuScene.nameField.text)
+        println(hostLobbyScene.secretTextField.text)
+        println(hostLobbyScene.sessionIdTextField.text)
+
+
+        //}
+
+         */
 
     }
 

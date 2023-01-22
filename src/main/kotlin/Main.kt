@@ -12,8 +12,10 @@ fun main() {
     println("Application ended. Goodbye")
 
 
-    //val rootService = RootService()
-    //rootService.gameService.startNewGame(listOf("Martin", "Werner"))
+    /*val rootService = RootService()
+    //rootService.networkService
+    rootService.networkService.joinGame("cable22", "dein leo", "Gruppe130")
+    //rootService.gameService.startNewGame(listOf("Martin", "Werner"))*/
 
 
 
