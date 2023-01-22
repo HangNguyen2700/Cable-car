@@ -2,7 +2,7 @@ package view
 
 import entity.Player
 import entity.Tile
-import entity.Turn
+import entity .Turn
 import service.CardImageLoader
 import service.GameService
 import service.PlayerActionService
@@ -33,7 +33,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private lateinit var gameService: GameService
     private lateinit var playerActionService: PlayerActionService
-    private lateinit var currentTurn: Turn
+    private var currentTurn: Turn? = null
     private var playerList = listOf<Player>()
     private var currentTile: Tile? = null
 
@@ -78,7 +78,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         onMouseClicked = {
             if (isDrawStackTileChosen == null) {
                 currentTileCardView = this
-                currentTile = currentTurn.players[currentTurn.currentPlayerIndex].handTile
+                currentTile = currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile
                 isDrawStackTileChosen = false
             }
         }
@@ -95,7 +95,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 handTileCardView.flip()
                 currentTileCardView = this
                 handTileCardView.isDisabled = true
-                currentTile = currentTurn.gameField.tileStack.tiles.first()
+                currentTile = currentTurn?.gameField?.tileStack?.tiles?.first()
                 isDrawStackTileChosen = true
             }
         }
@@ -195,19 +195,22 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         initGameBoard()
         initStationPosition()
 
-        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
-        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
         rotateButton.isVisible = gameService.rotationAllowed
         handTileCardView.isVisible = isMyTurn()
     }
 
-    private fun hostGameWaitForPlayers(hostName :String) {
+    fun hostGameWaitForPlayers(hostName :String) {
         playerList += Player(hostName)
+        showPlayers()
+        playerList += Player("kill me")
         showPlayers()
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
         playerList += Player(playerName)
+        playerList.forEach { println(it.name) }
         showPlayers()
     }
 
@@ -235,14 +238,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             // highlight current player
             val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
                 alignment = Alignment.CENTER_LEFT
-            ).apply { if (i == currentTurn.currentPlayerIndex) font = playerScoreHighlightedFont }
+            ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
 
             playerGrid[2, 0] = playerNameLabel
 
             // highlight current player
             val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
                 text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
-            ).apply { if (i == currentTurn.currentPlayerIndex) font = playerScoreHighlightedFont }
+            ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
 
             playerGrid[3,0] = playerScoreLabel
 
@@ -483,8 +486,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers()
-        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
         handTileCardView.showFront()
@@ -500,8 +503,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -512,8 +515,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
-        setTileFront(drawnTilesCardView, currentTurn.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn.players[currentTurn.currentPlayerIndex].handTile!!)
+        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
+        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
     }
@@ -587,6 +590,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
 
     private fun isMyTurn() = gameService.isLocalOnlyGame ||
-            currentTurn.players[currentTurn.currentPlayerIndex].name == rootService.networkService.playerName
+            currentTurn?.currentPlayerIndex?.let { currentTurn?.players?.get(it)?.name } == rootService.networkService.playerName
 
 }

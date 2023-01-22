@@ -247,7 +247,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private var musicChannel: SoundChannel? = null
     private var soundChannel: SoundChannel? = null
 
-    private var musicEnabled = true
+    private var musicEnabled = false
     private var soundEnabled = true
 
     private val musicButtons = listOf(
@@ -324,6 +324,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     fun startHostedGame() {
         this@CCApplication.rootService.networkService.hostGame(
             "cable22", mainMenuScene.nameField.text, hostLobbyScene.sessionIdTextField.text)
+        gameScene.hostGameWaitForPlayers(mainMenuScene.nameField.text)
 
         hideMenuScene(3000)
         showGameScene(gameScene)

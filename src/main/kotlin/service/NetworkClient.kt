@@ -95,9 +95,11 @@ class NetworkClient(playerName: String,
                         "${networkService.joinedPlayers.size}")
                 return
             }
-            networkService.onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(notification.sender) }
 
             networkService.updateConnectionState(ConnectionState.READY_FOR_GAME)
+
+            networkService.onAllRefreshables { refreshAfterPlayerJoinedInWaitSession(networkService.joinedPlayers.first()) }
+
         } else {
             println("A Player joined the remotely hosted game")
         }
