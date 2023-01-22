@@ -60,7 +60,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     TurnMessage(
                         posX, posY,
                         !fromHand,
-                        tile!!.rotationDegree,
+                        tile!!.rotationDegree*90,
                         GameStateVerificationInfo(listOf(), listOf(), listOf())
                     )
                 )
