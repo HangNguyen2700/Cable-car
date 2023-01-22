@@ -1,4 +1,5 @@
 package entity
+import ai.*
 
 /**
  * The Turn class represents a turn in the game, including information about the game field, players,
@@ -17,9 +18,28 @@ data class Turn(var gameField: GameField, var players: MutableList<Player>) {
     var currentPlayerIndex : Int = 0
 
     /**
+     * Checks if the game is over in the current turn.
+     */
+    fun isGameOver() : Boolean {
+        var isFieldFull = true
+        for (row in gameField.field) {
+            for (cell in row) {
+                if (cell == null) {
+                    isFieldFull = false
+                    break
+                }
+            }
+        }
+        return isFieldFull || gameField.tileStack.tiles.isEmpty()
+    }
+
+    fun doMove(move: Move) : Turn {
+
+    }
+
+    /**
      * copies the object
      */
-
     fun copy(): Turn{
         val nTurn = Turn(gameField.copy(), players.toMutableList())
         nTurn.currentPlayerIndex = currentPlayerIndex
