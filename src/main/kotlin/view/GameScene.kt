@@ -203,17 +203,19 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     fun hostGameWaitForPlayers(hostName :String) {
         playerList += Player(hostName)
+        playerList.forEach { println(""); print(it.name) }
         showPlayers()
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
         playerList += Player(playerName)
-        playerList.forEach { println(it.name) }
+        playerList.forEach { println(""); print(it.name) }
         showPlayers()
     }
 
     override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
         playerList -= playerList[playerList.indexOf(Player(playerName))]
+        playerList.forEach { println(""); print(it.name) }
         showPlayers()
     }
 

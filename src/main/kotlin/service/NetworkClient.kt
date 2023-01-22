@@ -90,7 +90,8 @@ class NetworkClient(playerName: String,
 
             networkService.joinedPlayers.add(notification.sender)
 
-            BoardGameApplication.runOnGUIThread(Runnable {networkService.refreshJoin(notification.sender)  })
+            BoardGameApplication.runOnGUIThread(Runnable { networkService.onAllRefreshables {
+                refreshAfterPlayerJoinedInWaitSession(networkService.joinedPlayers.last()) } })
 
             if (networkService.joinedPlayers.size > 6) {
                 networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)
@@ -99,7 +100,7 @@ class NetworkClient(playerName: String,
                 return
             }
 
-            networkService.updateConnectionState(ConnectionState.READY_FOR_GAME)
+
 
 
 
@@ -111,9 +112,11 @@ class NetworkClient(playerName: String,
     override fun onPlayerLeft(notification: PlayerLeftNotification) {
         if (networkService.connectionState != ConnectionState.WAITING_FOR_INIT) {
             if (networkService.connectionState == ConnectionState.READY_FOR_GAME) {
-                networkService.joinedPlayers.remove(notification.sender)
 
-                networkService.onAllRefreshables { refreshAfterPlayerLeftInWaitSession(notification.sender) }
+                BoardGameApplication.runOnGUIThread(Runnable { networkService.onAllRefreshables {
+                    refreshAfterPlayerLeftInWaitSession(networkService.joinedPlayers.last()) } })
+
+                networkService.joinedPlayers.remove(notification.sender)
 
                 if (networkService.joinedPlayers.size < 2) {
                     networkService.updateConnectionState(ConnectionState.WAITING_FOR_PLAYERS)

@@ -33,7 +33,7 @@ data class Turn(var gameField: GameField, var players: MutableList<Player>) {
         return isFieldFull || gameField.tileStack.tiles.isEmpty()
     }
 
-    fun doMove(move: Move) : Turn {
+    fun doMove(move: Move)/* : Turn */{
 
     }
 
