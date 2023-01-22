@@ -32,11 +32,21 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
                 // rotate tile if needed
                 if (rotationDegree != 0) {
+                    val tempId = tile!!.id
+                    val tempOriginalPorts = tile.originalPorts
+                    val tempPosX = tile.posX
+                    val tempPosY = tile.posY
+
                     while (rotationDegree > tile!!.rotationDegree) {
-                        var rotDeg = tile!!.rotationDegree
+                        val rotDeg = tile.rotationDegree
                         tile = rotate(tile)
                         tile.rotationDegree = (rotDeg + 1) % 4
                     }
+
+                    tile.id = tempId
+                    tile.originalPorts = tempOriginalPorts
+                    tile.posX = tempPosX
+                    tile.posY = tempPosY
                 }
                 // put tile onto Field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
@@ -49,11 +59,21 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                 // rotate tile if needed
                 if (rotationDegree != 0) {
+                    val tempId = tile.id
+                    val tempOriginalPorts = tile.originalPorts
+                    val tempPosX = tile.posX
+                    val tempPosY = tile.posY
+
                     while (rotationDegree > tile!!.rotationDegree) {
-                        var rotDeg = tile!!.rotationDegree
+                        val rotDeg = tile.rotationDegree
                         tile = rotate(tile)
                         tile.rotationDegree = (rotDeg + 1) % 4
                     }
+
+                    tile.id = tempId
+                    tile.originalPorts = tempOriginalPorts
+                    tile.posX = tempPosX
+                    tile.posY = tempPosY
                 }
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
