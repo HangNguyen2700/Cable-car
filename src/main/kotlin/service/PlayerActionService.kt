@@ -33,7 +33,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // rotate tile if needed
                 if (rotationDegree != 0) {
                     while (rotationDegree > tile!!.rotationDegree) {
-                        rotate(tile)
+                       tile = rotate(tile)
                     }
                 }
                 // put tile onto Field
