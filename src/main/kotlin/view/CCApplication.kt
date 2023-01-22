@@ -28,7 +28,7 @@ import java.awt.Color
  * [nameEmptyCheck] writes the Host name in the Lobby Scene when not empty
  * */
 
-class CCApplication : BoardGameApplication("Carbel Car Game"){
+class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private val rootService = RootService()
 
@@ -36,11 +36,26 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         backToTitleSceneButton.onMouseClicked = {
             timesClicked++
             when (timesClicked) {
-                1 -> { backToTitleSceneButton.apply { posX = 1400.0; posY = 300.0 }; playNopeSound() }
-                2 -> { backToTitleSceneButton.apply { posX = 700.0; posY = 200.0 }; playNopeSound() }
-                3 -> { backToTitleSceneButton.apply { posX = 1500.0; posY = 500.0 }; playNopeSound() }
-                4 -> { backToTitleSceneButton.apply { posX = 200.0; posY = 800.0 }; playNopeSound() }
-                5 -> { backToTitleSceneButton.apply { posX = 1400.0; posY = 200.0 }; playNopeSound() }
+                1 -> {
+                    backToTitleSceneButton.apply { posX = 1400.0; posY = 300.0 }; playNopeSound()
+                }
+
+                2 -> {
+                    backToTitleSceneButton.apply { posX = 700.0; posY = 200.0 }; playNopeSound()
+                }
+
+                3 -> {
+                    backToTitleSceneButton.apply { posX = 1500.0; posY = 500.0 }; playNopeSound()
+                }
+
+                4 -> {
+                    backToTitleSceneButton.apply { posX = 200.0; posY = 800.0 }; playNopeSound()
+                }
+
+                5 -> {
+                    backToTitleSceneButton.apply { posX = 1400.0; posY = 200.0 }; playNopeSound()
+                }
+
                 6 -> {
                     backToTitleSceneButton.apply { posX = 100.0; posY = 930.0 }
                     timesClicked = 0
@@ -55,13 +70,13 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
         moveAnimation.apply { onFinished = { explosion(); playExplosionSound() } }
-        explosionAnimation.apply { onFinished = { explicitlyShowTitleScene(); tk.opacity = 0.0;  } }
+        explosionAnimation.apply { onFinished = { explicitlyShowTitleScene(); tk.opacity = 0.0; } }
     }
 
     private val gameOverScene = GameOverScene(rootService).apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
-        mainMenuButton.onMouseClicked={
+        mainMenuButton.onMouseClicked = {
             explicitlyShowTitleScene()
         }
         quitButton.onMouseClicked = {
@@ -73,7 +88,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
     private val gameScene = GameScene(rootService).apply {
         quickMenuButton.onMouseClicked = {
             hideMenuScene(3000)
-            showAndStoreMenuScene(quickMenuGameScene,3000)
+            showAndStoreMenuScene(quickMenuGameScene, 3000)
         }
     }
 
@@ -89,25 +104,58 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
         hostGameButton.onMouseClicked = {
-            if(secretTextField.text != "" && sessionIdTextField.text != "") {
+            if (secretTextField.text != "" && sessionIdTextField.text != "") {
                 this@CCApplication.rootService.networkService.hostGame(
-                    secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text)
+                    secretTextField.text, mainMenuScene.nameField.text, sessionIdTextField.text
+                )
+                println("1. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+                println(mainMenuScene.nameField.text)
+                println(secretTextField.text)
+                println(sessionIdTextField.text)
                 if (allowShufflePlayerOrderCheckbox.isChecked) {
+                    println("test1")
+                    println("joinedPlayers:" + rootService.networkService.joinedPlayers)
                     this@CCApplication.rootService.gameService.startNewGame(
                         rootService.networkService.joinedPlayers,
-                        isLocalOnlyGame = false, isHostedGame = true,
+                        isLocalOnlyGame = false,
+                        isHostedGame = true,
                         rotationAllowed = this.allowTileRotationCheckbox.isChecked
                     )
+                    println("2. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+                    println(mainMenuScene.nameField.text)
+                    println(secretTextField.text)
+                    println(sessionIdTextField.text)
                 } else {
+                    println("test2")
+                    println("joinedPlayers:" + rootService.networkService.joinedPlayers)
+                    println("joinedPlayers:" + rootService.networkService.joinedPlayers.size)
+
+                    this@CCApplication.rootService.networkService.startNewHostedGame(
+                        mainMenuScene.nameField.text,
+                        rotationAllowed = this.allowTileRotationCheckbox.isChecked,
+                        rootService.gameService.tileLookUp
+                    /*
                     this@CCApplication.rootService.gameService.startNewGame(
                         rootService.networkService.joinedPlayers,
-                        isLocalOnlyGame = false, isHostedGame = true,
+                        isLocalOnlyGame = false,
+                        isHostedGame = true,
                         rotationAllowed = this.allowTileRotationCheckbox.isChecked
+                        */
+
+
                     )
+                    println("3. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
+                    println(mainMenuScene.nameField.text)
+                    println(secretTextField.text)
+                    println(sessionIdTextField.text)
+
+
                 }
                 hideMenuScene(3000)
                 showGameScene(gameScene)
-            } else { playNopeSound() }
+            } else {
+                playNopeSound()
+            }
         }
     }
 
@@ -133,7 +181,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
                         if (this.nameFields[3].text != "") this.nameFields[3].text else null,
                         if (this.nameFields[4].text != "") this.nameFields[4].text else null,
                     ).shuffled(),
-                    isLocalOnlyGame = true, isHostedGame = false,
+                    isLocalOnlyGame = true,
+                    isHostedGame = false,
                     rotationAllowed = this.allowTileRotationCheckbox.isChecked
                 )
             } else {
@@ -146,7 +195,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
                         if (this.nameFields[3].text != "") this.nameFields[3].text else null,
                         if (this.nameFields[4].text != "") this.nameFields[4].text else null,
                     ),
-                    isLocalOnlyGame = true, isHostedGame = false,
+                    isLocalOnlyGame = true,
+                    isHostedGame = false,
                     rotationAllowed = this.allowTileRotationCheckbox.isChecked
                 )
             }
@@ -173,21 +223,21 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             if (musicEnabled) playCreditsMusic()
         }
         debugGameSceneButton.onMouseClicked = {
-            this@CCApplication.rootService.gameService.startNewGame(listOf(
-                "Player1____________",
-                "Player2___________",
-                "Player3__________",
-                "Player4_________",
-                "Player5________",
-                "Player6______"
-            ),
-                isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
+            this@CCApplication.rootService.gameService.startNewGame(
+                listOf(
+                    "Player1____________",
+                    "Player2___________",
+                    "Player3__________",
+                    "Player4_________",
+                    "Player5________",
+                    "Player6______"
+                ), isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
             )
             hideMenuScene(3000)
             showGameScene(gameScene)
 
         }
-        debugGameEndSceneButton.onMouseClicked= { explicitlyShowGameOverScene() }
+        debugGameEndSceneButton.onMouseClicked = { explicitlyShowGameOverScene() }
     }
 
     private val networkJoinScene = NetworkJoinScene().apply {
@@ -202,12 +252,15 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
         joinGameButton.onMouseClicked = {
-            if(secretTextField.text != "" && sessionIDTextField.text != "") {
+            if (secretTextField.text != "" && sessionIDTextField.text != "") {
                 hideMenuScene(3000)
                 this@CCApplication.rootService.networkService.hostGame(
-                    secretTextField.text,mainMenuScene.nameField.text,sessionIDTextField.text)
+                    secretTextField.text, mainMenuScene.nameField.text, sessionIDTextField.text
+                )
                 //switch to gameScene from another host
-            } else { playNopeSound() }
+            } else {
+                playNopeSound()
+            }
         }
     }
 
@@ -215,7 +268,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         yesButton.onMouseClicked = { exit() }
         noButton.onMouseClicked = {
             hideMenuScene()
-            showAndStoreMenuScene(activeMenuScene!!,3000)
+            showAndStoreMenuScene(activeMenuScene!!, 3000)
         }
 
     }
@@ -223,7 +276,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
     private val quickMenuGameScene = QuickMenuGameScene().apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
-        exitQuitMenuSceneButton.onMouseClicked={ hideMenuScene(3000) }
+        exitQuitMenuSceneButton.onMouseClicked = { hideMenuScene(3000) }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
             showMenuScene(confirmQuitMenuScene)
@@ -236,20 +289,32 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
         trigger.onMouseEntered = { playTitleMusic(); fadeIn() }
     }
 
-    private var activeMenuScene : MenuScene? = null
+    private var activeMenuScene: MenuScene? = null
 
-    private var musicChannel : SoundChannel? = null
-    private var soundChannel : SoundChannel? = null
+    private var musicChannel: SoundChannel? = null
+    private var soundChannel: SoundChannel? = null
 
     private var musicEnabled = true
     private var soundEnabled = true
 
-    private val musicButtons = listOf(mainMenuScene.musicToggleButton, lobbyScene.musicToggleButton,
-        quickMenuGameScene.musicToggleButton,creditsScene.musicToggleButton,gameOverScene.musicToggleButton,
-        networkJoinScene.musicToggleButton,hostLobbyScene.musicToggleButton)
-    private val soundButtons = listOf(mainMenuScene.soundToggleButton, lobbyScene.soundToggleButton,
-        quickMenuGameScene.soundToggleButton,creditsScene.soundToggleButton,gameOverScene.soundToggleButton,
-        networkJoinScene.soundToggleButton,hostLobbyScene.soundToggleButton)
+    private val musicButtons = listOf(
+        mainMenuScene.musicToggleButton,
+        lobbyScene.musicToggleButton,
+        quickMenuGameScene.musicToggleButton,
+        creditsScene.musicToggleButton,
+        gameOverScene.musicToggleButton,
+        networkJoinScene.musicToggleButton,
+        hostLobbyScene.musicToggleButton
+    )
+    private val soundButtons = listOf(
+        mainMenuScene.soundToggleButton,
+        lobbyScene.soundToggleButton,
+        quickMenuGameScene.soundToggleButton,
+        creditsScene.soundToggleButton,
+        gameOverScene.soundToggleButton,
+        networkJoinScene.soundToggleButton,
+        hostLobbyScene.soundToggleButton
+    )
 
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
@@ -270,24 +335,29 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      * for scene transition
      */
 
-    private fun nameEmptyCheck(case : Int) {
+    private fun nameEmptyCheck(case: Int) {
         if (mainMenuScene.nameField.text != "") {
             when (case) {
                 1 -> {  //join network
                     hideMenuScene(3000)
-                    showAndStoreMenuScene(networkJoinScene,3000)
+                    showAndStoreMenuScene(networkJoinScene, 3000)
                 }
+
                 2 -> {  //host network
                     hideMenuScene(3000)
                     showAndStoreMenuScene(hostLobbyScene, 3000)
                 }
+
                 else -> {
                     hideMenuScene(3000)
                     lobbyScene.playerBoxLabel[0].visual = CompoundVisual(
-                        ColorVisual(63, 255, 63).apply { transparency = 0.3 },
-                        TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
+                        ColorVisual(63, 255, 63).apply { transparency = 0.3 }, TextVisual(
+                            font = Font(size = 60, color = Color.BLACK, family = "Calibri"),
                             text = mainMenuScene.nameField.text,
-                            alignment = Alignment.CENTER_LEFT, offsetX = 20))
+                            alignment = Alignment.CENTER_LEFT,
+                            offsetX = 20
+                        )
+                    )
                     showAndStoreMenuScene(lobbyScene, 3000)
                 }
             }
@@ -337,7 +407,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      */
 
     private fun playTitleMusic() {
-        if (musicChannel != null) { musicChannel!!.stop() }
+        if (musicChannel != null) {
+            musicChannel!!.stop()
+        }
         if (musicEnabled) {
             GlobalScope.async {
                 val music = resourcesVfs["title_music.wav"].readMusic()
@@ -352,7 +424,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      */
 
     private fun playCreditsMusic() {
-        if (musicChannel != null) { musicChannel!!.stop() }
+        if (musicChannel != null) {
+            musicChannel!!.stop()
+        }
         if (musicEnabled) {
             GlobalScope.async {
                 val music = resourcesVfs["credits_music.wav"].readMusic()
@@ -367,8 +441,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      */
 
     private fun playNopeSound() {
-        if (soundChannel != null) { soundChannel!!.stop() }
-        if(soundEnabled) {
+        if (soundChannel != null) {
+            soundChannel!!.stop()
+        }
+        if (soundEnabled) {
             GlobalScope.async {
                 val sound = resourcesVfs["nope_sound_effect.wav"].readMusic()
                 soundChannel = sound.play()
@@ -382,8 +458,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      */
 
     private fun playExplosionSound() {
-        if (soundChannel != null) { soundChannel!!.stop() }
-        if(soundEnabled) {
+        if (soundChannel != null) {
+            soundChannel!!.stop()
+        }
+        if (soundEnabled) {
             GlobalScope.async {
                 val sound = resourcesVfs["explosion_sound_effect.wav"].readMusic()
                 soundChannel = sound.play()
@@ -396,13 +474,17 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      * workaround for kotlin compiler warning
      */
 
-    private fun explicitlyShowCreditsScene() { showGameScene(creditsScene); creditsScene.trigger() }
+    private fun explicitlyShowCreditsScene() {
+        showGameScene(creditsScene); creditsScene.trigger()
+    }
 
     /**
      * workaround for kotlin compiler warning
      */
 
-    private fun explicitlyShowGameOverScene() { hideMenuScene(3000); showGameScene(gameOverScene) }
+    private fun explicitlyShowGameOverScene() {
+        hideMenuScene(3000); showGameScene(gameOverScene)
+    }
 
     /**
      * workaround for kotlin compiler warning
@@ -421,9 +503,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game"){
      * to revert to formerly displayed MenuScene
      */
 
-    private fun showAndStoreMenuScene(menuScene: MenuScene, fadeTime : Int) {
+    private fun showAndStoreMenuScene(menuScene: MenuScene, fadeTime: Int) {
         activeMenuScene = menuScene
-        showMenuScene(menuScene,fadeTime)
+        showMenuScene(menuScene, fadeTime)
     }
 
 }

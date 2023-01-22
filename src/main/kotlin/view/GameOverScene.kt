@@ -31,7 +31,6 @@ import java.awt.Color
 class GameOverScene(private val rootService: RootService) : BoardGameScene(1920, 1080), Refreshable {
 
 
-
     private val labelFont = Font(60, Color.WHITE, family = "Calibri")
     private val playerLabelFont = Font(60, Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE)
 
@@ -180,7 +179,6 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
     override fun refreshAfterGameFinished() {
 
         val playerList = rootService.currentGame!!.currentTurn!!.players
-
 
         val winner: List<Player> = rootService.gameService.findWinner()
 
