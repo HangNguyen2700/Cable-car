@@ -231,54 +231,60 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
         playerList += Player(hostName,if(isHostAi) true else null) //TODO: Join Netzwerk Differenzierung Spieler real/ai
-        playerList.forEach { println(it.name) }
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
         playerList += Player(playerName,null)
-        playerList.forEach { println(it.name) }
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
     }
 
     override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
         val toBeDeleted = playerList.find { it.name == playerName }
         playerList -= toBeDeleted!!
-        playerList.forEach { println(it.name) }
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
     }
 
     private fun showPlayers() {
 
-        for (i in playerList.indices) {
-
+        for (i in 0..5) {
             val playerGrid = GridPane<ComponentView>(columns = 5, rows = 1)
 
-            val playerColorLabel = Label(height = 50, width = 50,
-                visual = when(i) {
-                    0 -> ColorVisual.YELLOW; 1 -> ColorVisual.BLUE; 2 -> ColorVisual.ORANGE; 3 -> ColorVisual.GREEN
-                    4 -> ColorVisual(183,0,255); else -> ColorVisual.BLACK }
-            ).apply {  }
+            if (i in playerList.indices){
 
-            playerGrid[0,0] = playerColorLabel
 
-            playerGrid[1,0] = Label(width = 10, visual = ColorVisual(0,0,0,0))
+                val playerColorLabel = Label(height = 50, width = 50,
+                    visual = when(i) {
+                        0 -> ColorVisual.YELLOW; 1 -> ColorVisual.BLUE; 2 -> ColorVisual.ORANGE; 3 -> ColorVisual.GREEN
+                        4 -> ColorVisual(183,0,255); else -> ColorVisual.BLACK }
+                ).apply {  }
 
-            // highlight current player
-            val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
-                alignment = Alignment.CENTER_LEFT
-            ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                playerGrid[0,0] = playerColorLabel
 
-            playerGrid[2, 0] = playerNameLabel
+                playerGrid[1,0] = Label(width = 10, visual = ColorVisual(0,0,0,0))
 
-            // highlight current player
-            val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
-                text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
-            ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                // highlight current player
+                val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
+                    alignment = Alignment.CENTER_LEFT
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
 
-            playerGrid[3,0] = playerScoreLabel
+                playerGrid[2, 0] = playerNameLabel
 
-            playerGrid[4,0] = Label(width = 100, visual = ColorVisual(0,0,0,0))
+                // highlight current player
+                val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
+                    text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+
+                playerGrid[3,0] = playerScoreLabel
+
+                playerGrid[4,0] = Label(width = 100, visual = ColorVisual(0,0,0,0))
+            }
 
             playersGrid[0,i] = playerGrid
         }
@@ -468,15 +474,15 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
             if (i in mainStationPos && j in mainStationPos) {
                 boardCellLabel[i][j] = CardView(height = 100, width = 100,
-                    front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0))
+                    front = ColorVisual(0, 0, 0, 0), back = ColorVisual(0, 0, 0, 0))
             } else {
                 boardCellLabel[i][j] = CardView(height = 100, width = 100,
-                    front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0)
+                    front = ColorVisual(0, 0, 0, 0), back = ColorVisual(0, 0, 0, 0)
                 ).apply {
                     onMouseClicked = {
                         if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
-                            setTileFront(boardCellLabel[i][j],currentTile!!)
-                            showFront()
+                            //setTileFront(boardCellLabel[i][j],currentTile!!)
+                            //showFront()
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
                         } else {
                             //TODO: playNopeSound()
@@ -492,7 +498,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         for (i in 0..7) for (j in 0..7) {
             val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
             if (boardCellTile != null)
-                setTileFront(boardCellLabel[i][j], boardCellTile)
+                setTileFront(boardCellLabel[i][j], boardCellTile); boardCellLabel[i][j].showFront()
+
         }
     }
 
