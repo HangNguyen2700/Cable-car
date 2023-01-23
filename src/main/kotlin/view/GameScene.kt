@@ -16,7 +16,9 @@ import tools.aqua.bgw.core.Alignment
 import tools.aqua.bgw.core.BoardGameScene
 import tools.aqua.bgw.util.Font
 import tools.aqua.bgw.visual.ColorVisual
+import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
+import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
 
 /**
@@ -34,7 +36,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private lateinit var gameService: GameService
     private lateinit var playerActionService: PlayerActionService
     private var currentTurn: Turn? = null
-    private var playerList = listOf<Player>()
+    var playerList = listOf<Player>()
     private var currentTile: Tile? = null
 
     private var isDrawStackTileChosen : Boolean? = null
@@ -150,6 +152,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
                 CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))))
 
+    val startGameButton = Button(width = 350, height = 100, posX = 20, posY = 880, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.3 },
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
+    ).apply { isDisabled = true; opacity = 0.0 }
 
             init {
 
@@ -196,7 +202,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         mainGrid[1, 0] = boardGrid
 
         background = ImageVisual("game_scene.png")
-        addComponents(playerScoreBGLabel, mainGrid, quickMenuButton)
+        addComponents(playerScoreBGLabel, mainGrid, quickMenuButton, startGameButton)
     }
 
     override fun refreshAfterStartGame() {
@@ -230,10 +236,12 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
-        playerList += Player(hostName,if(isHostAi) true else null) //TODO: Join Netzwerk Differenzierung Spieler real/ai
+        playerList += Player(hostName,if(isHostAi) true else null)
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
@@ -241,6 +249,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
     }
 
     override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
@@ -249,6 +259,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
         showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
     }
 
     private fun showPlayers() {
@@ -292,7 +304,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     /**
      * initializes all stations in 2d-array to positions around the game board
-     * TODO: the amount of stations per players varies based on the amount of players
      */
 
     private fun initStationPosition() {
@@ -502,8 +513,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         }
     }
-
-
 
     override fun refreshAfterTileRotation(tile: Tile) {
         TODO("Not yet implemented")

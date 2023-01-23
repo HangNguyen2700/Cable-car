@@ -91,6 +91,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             hideMenuScene(3000)
             showAndStoreMenuScene(quickMenuGameScene, 3000)
         }
+        startGameButton.onMouseClicked = {
+            startGameButton.isDisabled = true; startGameButton.opacity = 0.0
+            rootService.gameService.startNewGame(playerList, isLocalOnlyGame = false, isHostedGame = true,
+                rotationAllowed = hostLobbyScene.allowTileRotationCheckbox.isChecked)
+        }
     }
 
     private val hostLobbyScene = HostLobbyScene().apply {
@@ -157,7 +162,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 ), isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
             )
             hideMenuScene(3000)
-            showGameScene(gameScene)
+            explicitlyShowGameScene()
 
         }
         debugGameEndSceneButton.onMouseClicked = { explicitlyShowGameOverScene() }
@@ -490,6 +495,14 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     private fun explicitlyShowCreditsScene() {
         showGameScene(creditsScene); creditsScene.trigger()
+    }
+
+    /**
+     * workaround for kotlin compiler warning
+     */
+
+    private fun explicitlyShowGameScene() {
+        showGameScene(gameScene)
     }
 
     /**
