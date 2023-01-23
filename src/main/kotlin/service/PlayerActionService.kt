@@ -169,10 +169,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      *
      * @param posX The x-coordinate of the spot to check.
      * @param posY The y-coordinate of the spot to check.
-     * @return True if the spot is free, false if it is already occupied.
+     * @return True if the spot is free, false if illegal or already occupied.
      */
     private fun isSpotFree(posX: Int, posY: Int) =
-        rootService.currentGame!!.currentTurn.gameField.field[posX][posY] == null
+        !((posX in 0..9 && (posY == 0 || posY == 10)) || (posY in 0..9 && (posX == 0 || posX == 10)) ||
+            posX in 4..5 || posY in 4..5 ||
+                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] != null)
+
 
 
     companion object {
