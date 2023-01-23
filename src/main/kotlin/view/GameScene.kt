@@ -2,7 +2,7 @@ package view
 
 import entity.Player
 import entity.Tile
-import entity .Turn
+import entity.Turn
 import service.CardImageLoader
 import service.GameService
 import service.PlayerActionService

@@ -26,25 +26,8 @@ class AiActionService {
          * Checks if position the AI chose for tile placement is legal.
          */
         fun isPositionLegal(turn: Turn, posX: Int, posY: Int): Boolean {
-            fun isConnectedToTile(turn: Turn, posX: Int, posY: Int): Boolean {
-                if (posX in 1..8 && posY == 1 ||
-                    posX in 1..8 && posY == 8 ||
-                    posY in 1..8 && posX == 1 ||
-                    posY in 1..8 && posX == 8 ||
-                    posX in 3..6 && posY == 3 ||
-                    posX in 3..6 && posY == 6 ||
-                    posY in 3..6 && posX == 3 ||
-                    posY in 3..6 && posX == 6) return true
-
-                val currentField = turn.gameField.field
-                return (currentField[posX][posY + 1] != null ||
-                        currentField[posX][posY - 1] != null ||
-                        currentField[posX + 1][posY] != null ||
-                        currentField[posX - 1][posY] != null)
-            }
-
             val isFree = (turn.gameField.field[posX][posY] == null)
-            return isFree && isConnectedToTile(turn, posX, posY)
+            return isFree && PlayerActionService.isConnectedToTile(turn.gameField.field, posX, posY)
         }
 
         /**

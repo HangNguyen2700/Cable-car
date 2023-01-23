@@ -111,12 +111,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
     /**
      *  @author Aziz, Anastasiia
-     * playAiTurn a function to play : the turn of the AI player.
+     * playAiTurn: a function to play the turn of the 'smart AI' player.
      */
     fun playAiTurn() {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
         val move = MCTS(rootService, aiIndex).findNextMove()
         placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
+    }
+
+    /**
+     *  @author Anastasiia
+     * playRandomTurn: a function to play the turn of the 'dumb AI' player.
+     */
+    fun playRandomTurn() {
+        TODO()
     }
 
     /**
@@ -129,10 +137,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      */
      fun isPositionLegal(posX: Int, posY: Int): Boolean {
 
-        val player = rootService.currentGame?.currentTurn?.players?.
-            get(rootService.currentGame?.currentTurn!!.currentPlayerIndex)
         val isFree = isSpotFree(posX, posY)
-        val tileEdge = isConnectedToTile(posX, posY)
+        val tileEdge = isConnectedToTile(rootService.currentGame!!.currentTurn.gameField.field, posX, posY)
 
         if (isFree) {
             println("tile is free")
@@ -167,34 +173,33 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     private fun isSpotFree(posX: Int, posY: Int) =
         rootService.currentGame!!.currentTurn.gameField.field[posX][posY] == null
 
-    /**
-     * @author Ikhlawi
-     * Check if there is an adjacent tile at the spot (posX, posY).
-     *
-     * @param posX The x-coordinate of the spot to check.
-     * @param posY The y-coordinate of the spot to check.
-     * @return True if there is an adjacent tile at the spot, false otherwise.
-     */
-    private fun isConnectedToTile(posX: Int, posY: Int): Boolean {
-
-        if (posX in 1..8 && posY == 1 ||
-            posX in 1..8 && posY == 8 ||
-            posY in 1..8 && posX == 1 ||
-            posY in 1..8 && posX == 8 ||
-            posX in 3..6 && posY == 3 ||
-            posX in 3..6 && posY == 6 ||
-            posY in 3..6 && posX == 3 ||
-            posY in 3..6 && posX == 6) return true
-
-        val currentField = rootService.currentGame!!.currentTurn.gameField.field
-
-        return (currentField[posX][posY + 1] != null ||
-                currentField[posX][posY - 1] != null ||
-                currentField[posX + 1][posY] != null ||
-                currentField[posX - 1][posY] != null)
-    }
 
     companion object {
+        /**
+         * @author Ikhlawi
+         * Check if there is an adjacent tile at the spot (posX, posY).
+         *
+         * @param posX The x-coordinate of the spot to check.
+         * @param posY The y-coordinate of the spot to check.
+         * @return True if there is an adjacent tile at the spot, false otherwise.
+         */
+        fun isConnectedToTile(currentField: Array<Array<Tile?>>, posX: Int, posY: Int): Boolean {
+
+            if (posX < 1 || posX > 8 || posY < 1 || posY > 8)
+                throw Exception("Tile coordinates must lie between 1 and 8.")
+
+            if (posY == 1 || posY == 8 || posX == 1 || posX == 8 ||
+                posX in 3..6 && posY == 3 ||
+                posX in 3..6 && posY == 6 ||
+                posY in 3..6 && posX == 3 ||
+                posY in 3..6 && posX == 6) return true
+
+            return (currentField[posX][posY + 1] != null ||
+                    currentField[posX][posY - 1] != null ||
+                    currentField[posX + 1][posY] != null ||
+                    currentField[posX - 1][posY] != null)
+        }
+
         /**
          * @author Ikhlawi
          */

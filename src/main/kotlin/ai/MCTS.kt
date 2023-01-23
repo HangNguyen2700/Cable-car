@@ -7,9 +7,11 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         val root = Node(rs, null, defaultMove, aiIndex)
 
         while (true) {
+            println("Still thinking")
             val node = selectPromisingNode(root)
             if (AiActionService.isGameOver(node.state)) {
                 backpropagation(node, true)
+                println("Decision made")
                 return node.move
             }
             expandNode(node, aiIndex)

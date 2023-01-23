@@ -16,8 +16,8 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
     fun getPossibleMoves(): MutableList<Move> {
         val moves: MutableList<Move> = mutableListOf()
 
-        for (x in 0 until state.gameField.field.size) {
-            for (y in 0 until state.gameField.field[x].size) {
+        for (x in 1 until state.gameField.field.size - 1) {
+            for (y in 1 until state.gameField.field[x].size - 1) {
                 if (!AiActionService.isPositionLegal(state, x, y)) continue
                 for (i in 0..3) {
                     moves.add(Move(false, i, x, y))
