@@ -453,7 +453,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                         setTileFront(boardCellLabel, boardCellTile)
 
                     onMouseClicked = {
-                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null && currentTileCardView!!.currentSide == CardView.CardSide.FRONT) {
+                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
                             setTileFront(boardCellLabel,currentTile!!)
                             this.rotation = currentTile!!.rotationDegree.toDouble()
                             showFront()
@@ -485,7 +485,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
+        setTileFront(handTileCardView, currentTurn!!.
+            players[ (currentTurn!!.currentPlayerIndex + 1) % currentTurn!!.players.size ].handTile!!)
+        //increment order workaround
         handTileCardView.isVisible = isMyTurn()
         handTileCardView.isDisabled = false
         handTileCardView.showFront()
