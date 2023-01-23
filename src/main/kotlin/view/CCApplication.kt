@@ -6,6 +6,7 @@ import com.soywiz.korau.sound.infinitePlaybackTimes
 import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
+import entity.Player
 import kotlinx.coroutines.GlobalScope
 import service.RootService
 import tools.aqua.bgw.core.Alignment
@@ -127,12 +128,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             if (shuffleTurnOrderCheckbox.isChecked) {
                 this@CCApplication.rootService.gameService.startNewGame(
                     listOfNotNull(
-                        mainMenuScene.nameField.text,
-                        this.nameFields[0].text,
-                        if (this.nameFields[1].text != "") this.nameFields[1].text else null,
-                        if (this.nameFields[2].text != "") this.nameFields[2].text else null,
-                        if (this.nameFields[3].text != "") this.nameFields[3].text else null,
-                        if (this.nameFields[4].text != "") this.nameFields[4].text else null,
+                        Player(mainMenuScene.nameField.text,null),
+                        Player(this.nameFields[0].text,null),
+                        if (this.nameFields[1].text != "") Player(this.nameFields[1].text,null) else null,
+                        if (this.nameFields[2].text != "") Player(this.nameFields[2].text,null) else null,
+                        if (this.nameFields[3].text != "") Player(this.nameFields[3].text,null) else null,
+                        if (this.nameFields[4].text != "") Player(this.nameFields[4].text,null) else null,
                     ).shuffled(),
                     isLocalOnlyGame = true,
                     isHostedGame = false,
@@ -141,12 +142,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             } else {
                 this@CCApplication.rootService.gameService.startNewGame(
                     listOfNotNull(
-                        mainMenuScene.nameField.text,
-                        this.nameFields[0].text,
-                        if (this.nameFields[1].text != "") this.nameFields[1].text else null,
-                        if (this.nameFields[2].text != "") this.nameFields[2].text else null,
-                        if (this.nameFields[3].text != "") this.nameFields[3].text else null,
-                        if (this.nameFields[4].text != "") this.nameFields[4].text else null,
+                        Player(mainMenuScene.nameField.text,null),
+                        Player(this.nameFields[0].text,null),
+                        if (this.nameFields[1].text != "") Player(this.nameFields[1].text,null) else null,
+                        if (this.nameFields[2].text != "") Player(this.nameFields[2].text,null) else null,
+                        if (this.nameFields[3].text != "") Player(this.nameFields[3].text,null) else null,
+                        if (this.nameFields[4].text != "") Player(this.nameFields[4].text,null) else null,
                     ),
                     isLocalOnlyGame = true,
                     isHostedGame = false,
@@ -178,12 +179,12 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         debugGameSceneButton.onMouseClicked = {
             this@CCApplication.rootService.gameService.startNewGame(
                 listOf(
-                    "Player1____________",
-                    "Player2___________",
-                    "Player3__________",
-                    "Player4_________",
-                    "Player5________",
-                    "Player6______"
+                    Player("Player1____________",null),
+                    Player("Player2___________",null),
+                    Player("Player3__________",null),
+                    Player("Player4_________",null),
+                    Player("Player5________",null),
+                    Player("Player6______",null)
                 ), isLocalOnlyGame = true, isHostedGame = false, rotationAllowed = true
             )
             hideMenuScene(3000)
@@ -324,7 +325,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     fun startHostedGame() {
         this@CCApplication.rootService.networkService.hostGame(
             "cable22", mainMenuScene.nameField.text, hostLobbyScene.sessionIdTextField.text)
-        gameScene.hostGameWaitForPlayers(mainMenuScene.nameField.text)
+        gameScene.hostGameWaitForPlayers(mainMenuScene.nameField.text,hostLobbyScene.allowKITurnierCheckbox.isChecked)
 
         hideMenuScene(3000)
         showGameScene(gameScene)

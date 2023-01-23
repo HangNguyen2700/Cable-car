@@ -124,7 +124,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         joinedPlayers = mutableListOf()
 
         for (player in message.players) {
-            rootService.currentGame!!.currentTurn.players.add(Player(player.name))
+            rootService.currentGame!!.currentTurn.players.add(Player(player.name,null))
             joinedPlayers.add(player.name)
         }
 

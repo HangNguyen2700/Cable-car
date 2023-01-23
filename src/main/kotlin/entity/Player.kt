@@ -10,7 +10,7 @@ package entity
  * @property handTile a Tile object representing the tile the player holds in their hand
  * @property score an integer representing the player's score
  */
-data class Player(var name: String, val isAi: Boolean) {
+data class Player(var name: String, val isSmartAi: Boolean?) {
 
     var cars = mutableListOf<Int>()
     var color: Color? = null
@@ -23,7 +23,7 @@ data class Player(var name: String, val isAi: Boolean) {
      */
 
     fun copy(): Player {
-        val nPlayer = Player(name, isAi)
+        val nPlayer = Player(name, isSmartAi)
         nPlayer.cars = cars.toMutableList()
         nPlayer.color = color
         nPlayer.paths = paths.toMutableList()

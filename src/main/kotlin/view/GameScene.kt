@@ -201,14 +201,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         handTileCardView.isVisible = isMyTurn()
     }
 
-    fun hostGameWaitForPlayers(hostName :String) {
-        playerList += Player(hostName)
+    fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
+        playerList += Player(hostName,if(isHostAi) true else null) //TODO: Join Netzwerk Differenzierung Spieler real/ai
         playerList.forEach { println(it.name) }
         showPlayers()
     }
 
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
-        playerList += Player(playerName)
+        playerList += Player(playerName,null)
         playerList.forEach { println(it.name) }
         showPlayers()
     }

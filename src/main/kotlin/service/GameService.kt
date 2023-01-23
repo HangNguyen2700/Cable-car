@@ -113,7 +113,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
             rootService.currentGame!!.currentTurn.currentPlayerIndex++
         }
         val currTurn = rootService.currentGame!!.currentTurn
-        if (currTurn.players[currTurn.currentPlayerIndex].isAi)
+        if (currTurn.players[currTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
     }
 
