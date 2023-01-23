@@ -41,7 +41,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     private var realAISelection: Int? = null
 
-    var playerType = mutableListOf<Int>()
+    var playerType = mutableListOf<Int>(0,0,0,0,0,0)
 
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
         visual = CompoundVisual(
@@ -190,6 +190,7 @@ class LobbyScene : MenuScene(1920, 1080) {
     ).apply {
         isDisabled = true; opacity = 0.0
         onMouseClicked = {
+            addComponents(isHostRealAIClickDisableLabel, isHostRealAIBG, hostRealButton, hostSmartButton, hostDumbButton)
             isHostRealAIClickDisableLabel.isDisabled = false; isHostRealAIClickDisableLabel.opacity = 1.0
             isHostRealAIBG.isDisabled = false; isHostRealAIBG.opacity = 1.0
             hostRealButton.isDisabled = false; hostRealButton.opacity = 1.0
@@ -207,20 +208,20 @@ class LobbyScene : MenuScene(1920, 1080) {
             offsetY = - 180))
     ).apply { isDisabled = true; opacity = 0.0 }
 
-    val hostRealButton = Button(width = 200, height = 100, posX = 560, posY = 600, visual = CompoundVisual(
+    val hostRealButton = Button(width = 300, height = 100, posX = 510, posY = 600, visual = CompoundVisual(
         ColorVisual.WHITE.apply { transparency = 0.3 },
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Real"))
-    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 0 } }
+    ).apply { isDisabled = true; opacity = 0.0 }
 
-    val hostDumbButton = Button(width = 200, height = 100, posX = 860, posY = 600, visual = CompoundVisual(
+    val hostDumbButton = Button(width = 300, height = 100, posX = 810, posY = 600, visual = CompoundVisual(
         ColorVisual.WHITE.apply { transparency = 0.3 },
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Dumb AI"))
-    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 1 } }
+    ).apply { isDisabled = true; opacity = 0.0 }
 
-    val hostSmartButton = Button(width = 200, height = 100, posX = 1160, posY = 600, visual = CompoundVisual(
+    val hostSmartButton = Button(width = 300, height = 100, posX = 1110, posY = 600, visual = CompoundVisual(
         ColorVisual.WHITE.apply { transparency = 0.3 },
-        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Dumb AI"))
-    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 2 } }
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Smart AI"))
+    ).apply { isDisabled = true; opacity = 0.0 }
 
     val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
@@ -241,7 +242,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
             deletePlayerButtons[3],deletePlayerButtons[4],
             startGameButton,
-            isHostRealAIClickDisableLabel, isHostRealAIBG, hostRealButton, hostSmartButton, hostDumbButton
+
         )
 
         background = ColorVisual(0,0,0)

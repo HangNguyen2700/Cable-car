@@ -124,9 +124,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             hideMenuScene(3000)
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
-        startGameButton.onMouseClicked = {
-            startLobbyGame()
-        }
+        hostRealButton.onMouseClicked = { playerType[0] = 0; startLobbyGame() }
+        hostDumbButton.onMouseClicked = { playerType[0] = 1; startLobbyGame() }
+        hostSmartButton.onMouseClicked = { playerType[0] = 2; startLobbyGame() }
     }
 
     private val mainMenuScene = MainMenuScene().apply {
@@ -292,6 +292,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     fun startLobbyGame() {
+        println(lobbyScene.playerType)
+        lobbyScene.removeComponents(lobbyScene.isHostRealAIClickDisableLabel, lobbyScene.isHostRealAIBG,
+            lobbyScene.hostRealButton, lobbyScene.hostSmartButton, lobbyScene.hostDumbButton)
         lobbyScene.isHostRealAIClickDisableLabel.isDisabled = true
         lobbyScene.isHostRealAIClickDisableLabel.opacity = 0.0
         lobbyScene.isHostRealAIBG.isDisabled = true; lobbyScene.isHostRealAIBG.opacity = 0.0
