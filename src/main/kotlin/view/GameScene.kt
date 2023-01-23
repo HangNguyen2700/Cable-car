@@ -123,7 +123,35 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
         ).apply { opacity = 0.8 }
 
-    init {
+    val boardCellLabel =
+        mutableListOf(
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
+            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
+                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))))
+
+
+            init {
 
         // displays all players' information
         outerPlayersGrid[0, 0] = playersGrid
@@ -192,6 +220,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         initGameBoard()
+        refreshGameBoard()
         initStationPosition()
 
         setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
@@ -437,39 +466,33 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         for (i in 0..7) for (j in 0..7) {
 
-            lateinit var boardCellLabel: CardView
-
             if (i in mainStationPos && j in mainStationPos) {
-                boardCellLabel = CardView(height = 100, width = 100,
+                boardCellLabel[i][j] = CardView(height = 100, width = 100,
                     front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0))
-
             } else {
-                boardCellLabel = CardView(height = 100, width = 100,
-                    front = ColorVisual.GREEN, back = ColorVisual.WHITE
+                boardCellLabel[i][j] = CardView(height = 100, width = 100,
+                    front = ColorVisual.GREEN, back = ColorVisual(0, 0, 0, 0)
                 ).apply {
-
-                    val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
-                    if (boardCellTile != null)
-                        setTileFront(boardCellLabel, boardCellTile)
-
                     onMouseClicked = {
                         if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
-                            setTileFront(boardCellLabel,currentTile!!)
-                            this.rotation = currentTile!!.rotationDegree.toDouble()
+                            setTileFront(boardCellLabel[i][j],currentTile!!)
                             showFront()
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
                         } else {
                             //TODO: playNopeSound()
                         }
-                        /*if (!isDrawnTilePlaced) {
-                            TODO: set myTile = drawnTiles[0]
-                        }*/
-
                     }
-
                 }
             }
-            mainBoardGrid[i, j] = boardCellLabel
+            mainBoardGrid[i, j] = boardCellLabel[i][j]
+        }
+    }
+
+    fun refreshGameBoard() {
+        for (i in 0..7) for (j in 0..7) {
+            val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
+            if (boardCellTile != null)
+                setTileFront(boardCellLabel[i][j], boardCellTile)
         }
     }
 
@@ -484,6 +507,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers()
+        refreshGameBoard()
         setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
         setTileFront(handTileCardView, currentTurn!!.
             players[ (currentTurn!!.currentPlayerIndex + 1) % currentTurn!!.players.size ].handTile!!)
@@ -525,7 +549,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
    // }
 
-    private fun setTileFront(tileCardView: CardView, tile: Tile){
+    private fun setTileFront(tileCardView: CardView, tile: Tile?){
         if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,0))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
@@ -583,6 +607,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
+
+        else if (tile == null) tileCardView.frontVisual = ColorVisual(0,0,0,0)
 
         else println(tile.ports + " TIME TO SCREAM!!")
     }
