@@ -98,6 +98,8 @@ class NetworkClient(playerName: String,
                 println("Too many players are connected to the game. Currently Connected Players: " +
                         "${networkService.joinedPlayers.size}")
                 return
+            } else if (networkService.joinedPlayers.size > 2) {
+                networkService.updateConnectionState(ConnectionState.READY_FOR_GAME)
             }
 
 
