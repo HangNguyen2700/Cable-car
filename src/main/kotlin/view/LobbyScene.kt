@@ -41,6 +41,8 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     private var realAISelection: Int? = null
 
+    var playerType = mutableListOf<Int>()
+
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
@@ -173,7 +175,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         isDisabled = true; opacity = 0.0
         onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked }}
 
-    private val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
+    val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
 
     private val confirmButton = Button(width = 400, height = 100, posX = 1120, posY = 850,
         visual = CompoundVisual(
@@ -185,7 +187,40 @@ class LobbyScene : MenuScene(1920, 1080) {
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
+    ).apply {
+        isDisabled = true; opacity = 0.0
+        onMouseClicked = {
+            isHostRealAIClickDisableLabel.isDisabled = false; isHostRealAIClickDisableLabel.opacity = 1.0
+            isHostRealAIBG.isDisabled = false; isHostRealAIBG.opacity = 1.0
+            hostRealButton.isDisabled = false; hostRealButton.opacity = 1.0
+            hostSmartButton.isDisabled = false; hostSmartButton.opacity = 1.0
+            hostDumbButton.isDisabled = false; hostDumbButton.opacity = 1.0
+        }
+    }
+
+    val isHostRealAIClickDisableLabel = Label(width = 1920, height = 1080, visual = ColorVisual(0,0,0,0)
     ).apply { isDisabled = true; opacity = 0.0 }
+
+    val isHostRealAIBG = Label(width = 1920, height = 500, posY = 290, visual = CompoundVisual(
+        ColorVisual(160,160,160).apply { transparency = 0.7 },
+        TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = "Is Host (1st Player) AI?",
+            offsetY = - 180))
+    ).apply { isDisabled = true; opacity = 0.0 }
+
+    val hostRealButton = Button(width = 200, height = 100, posX = 560, posY = 600, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.3 },
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Real"))
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 0 } }
+
+    val hostDumbButton = Button(width = 200, height = 100, posX = 860, posY = 600, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.3 },
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Dumb AI"))
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 1 } }
+
+    val hostSmartButton = Button(width = 200, height = 100, posX = 1160, posY = 600, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.3 },
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Dumb AI"))
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerType[0] = 2 } }
 
     val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
@@ -206,6 +241,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             deletePlayerButtons[0],deletePlayerButtons[1],deletePlayerButtons[2],
             deletePlayerButtons[3],deletePlayerButtons[4],
             startGameButton,
+            isHostRealAIClickDisableLabel, isHostRealAIBG, hostRealButton, hostSmartButton, hostDumbButton
         )
 
         background = ColorVisual(0,0,0)
@@ -223,7 +259,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         addComponents(playerColorLabel[playersJoined])
 
         playersJoined++
-        println("now there are $playersJoined Players in the lobby")
+        //println("now there are $playersJoined Players in the lobby")
 
         if (playersJoined > 1) {
             deletePlayerButtons[playersJoined-2].isDisabled = false
@@ -313,6 +349,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             aiPlayerButtonTrigger.opacity = 0.0; hotseatPlayerButtonTrigger.opacity = 0.0
             smartAICheckbox.opacity = 0.0; smartAICheckbox.isDisabled = true
             smartAI.opacity = 0.0; smartAI.isDisabled = true
+            playerType[playersJoined] = if (realAISelection == 0) if (smartAICheckbox.isChecked) 2 else 1 else 0
             realAISelection = null
             smartAICheckbox.isChecked = false
             removeComponents(
@@ -341,6 +378,7 @@ class LobbyScene : MenuScene(1920, 1080) {
                 TextVisual(font = Font(size = 60, color = Color.BLACK, family = "Calibri"), text = ""))
 
             nameFields[delPos-1].text = ""
+            playerType[delPos] = 0
 
             removeComponents(nameFields[delPos - 1], playerColorLabel[delPos])
 

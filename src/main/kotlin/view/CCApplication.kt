@@ -125,38 +125,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
         startGameButton.onMouseClicked = {
-            if (shuffleTurnOrderCheckbox.isChecked) {
-                this@CCApplication.rootService.gameService.startNewGame(
-                    listOfNotNull(
-                        Player(mainMenuScene.nameField.text,null),
-                        Player(this.nameFields[0].text,null),
-                        if (this.nameFields[1].text != "") Player(this.nameFields[1].text,null) else null,
-                        if (this.nameFields[2].text != "") Player(this.nameFields[2].text,null) else null,
-                        if (this.nameFields[3].text != "") Player(this.nameFields[3].text,null) else null,
-                        if (this.nameFields[4].text != "") Player(this.nameFields[4].text,null) else null,
-                    ).shuffled(),
-                    isLocalOnlyGame = true,
-                    isHostedGame = false,
-                    rotationAllowed = this.allowTileRotationCheckbox.isChecked
-                )
-            } else {
-                this@CCApplication.rootService.gameService.startNewGame(
-                    listOfNotNull(
-                        Player(mainMenuScene.nameField.text,null),
-                        Player(this.nameFields[0].text,null),
-                        if (this.nameFields[1].text != "") Player(this.nameFields[1].text,null) else null,
-                        if (this.nameFields[2].text != "") Player(this.nameFields[2].text,null) else null,
-                        if (this.nameFields[3].text != "") Player(this.nameFields[3].text,null) else null,
-                        if (this.nameFields[4].text != "") Player(this.nameFields[4].text,null) else null,
-                    ),
-                    isLocalOnlyGame = true,
-                    isHostedGame = false,
-                    rotationAllowed = this.allowTileRotationCheckbox.isChecked
-                )
-            }
-            hideMenuScene(3000)
-            showGameScene(gameScene)
-            //println(rootService.gameService.tileLookUp)
+            startLobbyGame()
         }
     }
 
@@ -320,6 +289,44 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             playNopeSound()
         }
 
+    }
+
+    fun startLobbyGame() {
+        lobbyScene.isHostRealAIClickDisableLabel.isDisabled = true
+        lobbyScene.isHostRealAIClickDisableLabel.opacity = 0.0
+        lobbyScene.isHostRealAIBG.isDisabled = true; lobbyScene.isHostRealAIBG.opacity = 0.0
+        lobbyScene.hostRealButton.isDisabled = true; lobbyScene.hostRealButton.opacity = 0.0
+        lobbyScene.hostSmartButton.isDisabled = true; lobbyScene.hostSmartButton.opacity = 0.0
+        lobbyScene.hostDumbButton.isDisabled = true; lobbyScene.hostDumbButton.opacity = 0.0
+
+        val tempPlayerList = listOfNotNull(
+            Player(mainMenuScene.nameField.text, if(lobbyScene.playerType[0] == 0) null
+            else lobbyScene.playerType[0] != 1),
+            Player(lobbyScene.nameFields[0].text, if(lobbyScene.playerType[1] == 0) null
+            else lobbyScene.playerType[1] != 1),
+            if (lobbyScene.nameFields[1].text != "") Player(lobbyScene.nameFields[1].text,
+                if(lobbyScene.playerType[2] == 0) null else lobbyScene.playerType[2] != 1) else null,
+            if (lobbyScene.nameFields[2].text != "") Player(lobbyScene.nameFields[2].text,
+                if(lobbyScene.playerType[3] == 0) null else lobbyScene.playerType[3] != 1) else null,
+            if (lobbyScene.nameFields[3].text != "") Player(lobbyScene.nameFields[3].text,
+                if(lobbyScene.playerType[4] == 0) null else lobbyScene.playerType[4] != 1) else null,
+            if (lobbyScene.nameFields[4].text != "") Player(lobbyScene.nameFields[4].text,
+                if(lobbyScene.playerType[5] == 0) null else lobbyScene.playerType[5] != 1) else null)
+
+        if (lobbyScene.shuffleTurnOrderCheckbox.isChecked) {
+            this@CCApplication.rootService.gameService.startNewGame(
+                tempPlayerList.shuffled(), isLocalOnlyGame = true, isHostedGame = false,
+                rotationAllowed = lobbyScene.allowTileRotationCheckbox.isChecked
+            )
+        } else {
+            this@CCApplication.rootService.gameService.startNewGame(
+                tempPlayerList, isLocalOnlyGame = true, isHostedGame = false,
+                rotationAllowed = lobbyScene.allowTileRotationCheckbox.isChecked
+            )
+        }
+
+        hideMenuScene(3000)
+        showGameScene(gameScene)
     }
 
     fun startHostedGame() {
