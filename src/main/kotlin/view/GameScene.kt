@@ -126,7 +126,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     init {
 
         // displays all players' information
-
         outerPlayersGrid[0, 0] = playersGrid
         playersGrid.setColumnWidths(400)
         mainGrid[0, 0] = outerPlayersGrid
@@ -449,7 +448,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                     front = ColorVisual.GREEN, back = ColorVisual.WHITE
                 ).apply {
 
-                    val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i][j]
+                    val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
                     if (boardCellTile != null)
                         setTileFront(boardCellLabel, boardCellTile)
 
@@ -481,8 +480,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     override fun refreshAfterPlaceTile() {
-        gameService = rootService.gameService
-        playerActionService = rootService.playerActionService
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
@@ -536,36 +533,36 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,0))
 
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,1))
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,1))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,1))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,1))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,1))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,1))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,1))
 
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,2))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,2))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,2))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,2))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,2))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,2))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,2))
 
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,3))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,3))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,3))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,3))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,3))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,3))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,3))
 
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,4))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
+            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,4))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,4))
 
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
@@ -573,16 +570,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,4))
 
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,5))
 
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,5))
 
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,5))
 
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
             tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
 
         else println(tile.ports + " TIME TO SCREAM!!")

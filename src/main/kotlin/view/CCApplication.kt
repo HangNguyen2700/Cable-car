@@ -180,7 +180,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 this@CCApplication.rootService.networkService.joinGame(
                     "cable22", mainMenuScene.nameField.text, sessionIDTextField.text
                 )
-                //switch to gameScene from another host
             } else {
                 playNopeSound()
             }
@@ -292,7 +291,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     }
 
     fun startLobbyGame() {
-        println(lobbyScene.playerType)
+        //println(lobbyScene.playerType)
         lobbyScene.removeComponents(lobbyScene.isHostRealAIClickDisableLabel, lobbyScene.isHostRealAIBG,
             lobbyScene.hostRealButton, lobbyScene.hostSmartButton, lobbyScene.hostDumbButton)
         lobbyScene.isHostRealAIClickDisableLabel.isDisabled = true
