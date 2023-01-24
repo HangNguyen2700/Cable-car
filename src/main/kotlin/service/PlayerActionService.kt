@@ -173,7 +173,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      */
     private fun isSpotFree(posX: Int, posY: Int) =
         !((posX in 0..9 && (posY == 0 || posY == 10)) || (posY in 0..9 && (posX == 0 || posX == 10)) ||
-            posX in 4..5 || posY in 4..5 ||
+            (posX in 4..5 && posY in 4..5) ||
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] != null)
 
 
