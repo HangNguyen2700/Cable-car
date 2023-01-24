@@ -96,7 +96,6 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
         sendGameInitMessage(gameInitMessage)
         updateConnectionState(ConnectionState.READY_FOR_GAME)
-        onAllRefreshables { refreshAfterJoinGameInitialized() }
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
@@ -132,6 +131,8 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         rootService.gameService.distributeTiles()
         rootService.gameService.playersToPositions()
         updateConnectionState(ConnectionState.GAME_INITIALIZED)
+
+        onAllRefreshables { refreshAfterJoinGameInitialized() }
     }
 
     fun sendGameInitMessage(message: GameInitMessage) {
