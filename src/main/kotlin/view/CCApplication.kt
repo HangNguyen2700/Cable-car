@@ -110,7 +110,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
         hostGameButton.onMouseClicked = {
-            if (secretTextField.text != "" && sessionIdTextField.text != "") {
+            if (sessionIdTextField.text != "") {
                 startHostedGame()
             } else {
                 playNopeSound()
@@ -180,7 +180,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
             showAndStoreMenuScene(mainMenuScene, 3000)
         }
         joinGameButton.onMouseClicked = {
-            if (secretTextField.text != "" && sessionIDTextField.text != "") {
+            if (sessionIDTextField.text != "") {
                 hideMenuScene(3000)
                 this@CCApplication.rootService.networkService.joinGame(
                     "cable22", mainMenuScene.nameField.text, sessionIDTextField.text
@@ -349,7 +349,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
         println("1. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
         println(mainMenuScene.nameField.text)
-        println(hostLobbyScene.secretTextField.text)
         println(hostLobbyScene.sessionIdTextField.text)
         /*if (allowShufflePlayerOrderCheckbox.isChecked) {
             println("test1")
