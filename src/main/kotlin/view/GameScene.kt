@@ -204,6 +204,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             rootService.networkService.joinedPlayers.contains(playerList[i].name))
         }
 
+        println(isInputPlayer)
+
         showPlayers()
         initGameBoard()
         refreshGameBoard()

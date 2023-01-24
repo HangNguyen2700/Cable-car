@@ -44,13 +44,13 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     val allowKITurnierCheckbox = CheckBox(posX = 730, posY = 333)
 
     //Shuffle Player
-    private val allowShufflePlayerOrderButton = Button(width = 600, height = 100, posX = 100, posY = 450,
+    /*private val allowShufflePlayerOrderButton = Button(width = 600, height = 100, posX = 100, posY = 450,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Shuffle Player Order"))
     ).apply { onMouseClicked = { allowShufflePlayerOrderCheckbox.isChecked = !allowShufflePlayerOrderCheckbox.isChecked } }
 
-    val allowShufflePlayerOrderCheckbox = CheckBox(posX = 730, posY = 483)
+    val allowShufflePlayerOrderCheckbox = CheckBox(posX = 730, posY = 483)*/
 
     //Tile Rotation
 
@@ -73,14 +73,14 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     ).apply { onKeyTyped = { parametersInput() } }
 
     // Secret
-    private val secretLabel = Label(width = 300, height = 100, posX = 1450, posY = 400,
+    /*private val secretLabel = Label(width = 300, height = 100, posX = 1450, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "Secret")))
 
     val secretTextField = TextField(width = 300, height = 80, posX = 1450, posY = 550,
         prompt = "Choose Secret", font = Font(size = 40, family = "Calibri")
-    ).apply { onKeyTyped = { parametersInput() } }
+    ).apply { onKeyTyped = { parametersInput() } }*/
 
     val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
@@ -96,9 +96,8 @@ class HostLobbyScene: MenuScene(1920, 1080) {
             backToMainMenuSceneButton,
             soundToggleButton, musicToggleButton,
             hostGameLabel,allowKITurnier,allowKITurnierCheckbox,
-            allowShufflePlayerOrderButton,allowShufflePlayerOrderCheckbox,
             allowTileRotationButton,allowTileRotationCheckbox,
-            secretLabel,secretTextField,sessionIdLabel,sessionIdTextField,
+            sessionIdLabel,sessionIdTextField,
             quitButton,hostGameButton
         )
         background = ColorVisual(0,0,0)
@@ -107,7 +106,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
 
     private fun parametersInput() {
         if (hostGameButton.isDisabled &&
-            sessionIdTextField.text != "" && secretTextField.text != "") {
+            sessionIdTextField.text != "") {
             hostGameButton.isDisabled = false; hostGameButton.opacity = 1.0
         }
     }

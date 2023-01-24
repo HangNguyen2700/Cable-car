@@ -35,13 +35,13 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         font = Font(size = 40, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() } }
 
-    private val secretLabel = Label(width = 600, height = 100, posX = 1140, posY = 350,
+    /*private val secretLabel = Label(width = 600, height = 100, posX = 1140, posY = 350,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "Secret"))
 
     val secretTextField = TextField(width = 300, height = 80, posX = 1290, posY = 500, prompt = "Enter Secret",
         font = Font(size = 40, family = "Calibri")
-    ).apply { onKeyTyped = { parametersInput() }   }
+    ).apply { onKeyTyped = { parametersInput() }   }*/
 
     private val aiGameButton = Button(width = 370, height = 100, posX = 775, posY = 500,
         visual = CompoundVisual(
@@ -71,7 +71,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         opacity = 0.3
         addComponents(
             topLabel, backToMainMenuSceneButton,
-            sessionIDLabel, sessionIDTextField, secretLabel, secretTextField,
+            sessionIDLabel, sessionIDTextField,
             aiGameButton, aiGameCheckBox,
             quitButton, musicToggleButton, soundToggleButton,
             joinGameButton,
@@ -80,7 +80,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
 
     private fun parametersInput() {
         if (joinGameButton.isDisabled &&
-            sessionIDTextField.text != "" && secretTextField.text != "") {
+            sessionIDTextField.text != "") {
             joinGameButton.isDisabled = false; joinGameButton.opacity = 1.0
         }
     }
