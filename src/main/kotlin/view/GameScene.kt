@@ -199,9 +199,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
+        println(rootService.networkService.joinedPlayers)
+
         for( i in playerList.indices){
-            isInputPlayer[i] = !(playerList[i].isSmartAi != null ||
-            rootService.networkService.joinedPlayers.contains(playerList[i].name))
+            isInputPlayer[i] = playerList[i].isSmartAi == null
         }
 
         println(isInputPlayer)
