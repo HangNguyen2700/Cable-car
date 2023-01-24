@@ -93,9 +93,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
             players = playerInfoList,
             tileSupply = tileStack
         )
-
-        sendGameInitMessage(gameInitMessage)
         updateConnectionState(ConnectionState.READY_FOR_GAME)
+        sendGameInitMessage(gameInitMessage)
+
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {
