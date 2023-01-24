@@ -175,6 +175,9 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         TODO("Not yet implemented")
     }
 
+    override fun refreshAfterJoinGameInitialized() {
+        TODO("Fuck me")
+    }
 
     override fun refreshAfterGameFinished() {
 

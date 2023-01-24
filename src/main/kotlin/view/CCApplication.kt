@@ -253,6 +253,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     init {
         rootService.addRefreshables(
             gameScene
+
         )
         this.showGameScene(titleScene)
         isFullScreen = false        //TODO: set to true for final build

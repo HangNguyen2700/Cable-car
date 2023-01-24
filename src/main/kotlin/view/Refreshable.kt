@@ -23,13 +23,15 @@ interface Refreshable {
      */
     fun refreshAfterStartGame() {}
 
-    fun refreshAfterPlayerJoinedInWaitSession(playerName:String){}
 
-    fun refreshAfterPlayerLeftInWaitSession(playerName:String){}
 
     fun refreshAfterJoinGameInitialized()
 
     fun refreshAfterTileRotation(tile: Tile)
+
+    fun refreshAfterPlayerJoinedInWaitSession(playerName:String){}
+
+    fun refreshAfterPlayerLeftInWaitSession(playerName:String){}
 
     /**
      * Refresh after current player placed tile and next player is called     *
