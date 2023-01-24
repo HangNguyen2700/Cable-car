@@ -37,7 +37,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private lateinit var playerActionService: PlayerActionService
     private var currentTurn: Turn? = null
     var playerList = listOf<Player>()
-    var isInputPlayer = listOf<Boolean>()
+    var isInputPlayer = mutableListOf<Boolean>(true,true,true,true,true,true)
     private var currentTile: Tile? = null
 
     private var isDrawStackTileChosen : Boolean? = null
@@ -168,8 +168,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     }
 
-    private fun isInputNeeded() = gameService.isLocalOnlyGame ||
-            currentTurn?.currentPlayerIndex?.let { currentTurn?.players?.get(it)?.name } == rootService.networkService.playerName
+    private fun isInputNeeded() = isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]
 
     fun turn() {
         playerList = rootService.currentGame!!.currentTurn.players
@@ -199,6 +198,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerActionService = rootService.playerActionService
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
+
+        for( i in playerList.indices){
+            isInputPlayer[i] = !(playerList[i].isSmartAi != null ||
+            rootService.networkService.joinedPlayers.contains(playerList[i].name))
+        }
 
         showPlayers()
         initGameBoard()
@@ -265,14 +269,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 // highlight current player
                 val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
                     alignment = Alignment.CENTER_LEFT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex + 1 %
+                    currentTurn!!.players.size) font = playerScoreHighlightedFont }
 
                 playerGrid[2, 0] = playerNameLabel
 
                 // highlight current player
                 val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
                     text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex + 1 %
+                    currentTurn!!.players.size) font = playerScoreHighlightedFont }
 
                 playerGrid[3,0] = playerScoreLabel
 

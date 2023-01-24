@@ -108,8 +108,10 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         if(rootService.currentGame!!.currentTurn.currentPlayerIndex ==
             rootService.currentGame!!.currentTurn.players.size-1) {
             rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
+            println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
         } else {
             rootService.currentGame!!.currentTurn.currentPlayerIndex++
+            println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
         }
         val isSmartAi = rootService.currentGame!!.currentTurn
             .players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi
