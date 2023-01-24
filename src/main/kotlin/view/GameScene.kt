@@ -37,7 +37,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private lateinit var playerActionService: PlayerActionService
     private var currentTurn: Turn? = null
     var playerList = listOf<Player>()
-    var isInputPlayer = mutableListOf<Boolean>(true,true,true,true,true,true)
+    var isInputPlayer = mutableListOf<Boolean>(false,false,false,false,false,false)
     private var currentTile: Tile? = null
 
     private var isDrawStackTileChosen : Boolean? = null
