@@ -185,6 +185,8 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                 this@CCApplication.rootService.networkService.joinGame(
                     "cable22", mainMenuScene.nameField.text, sessionIDTextField.text
                 )
+                hideMenuScene()
+                explicitlyShowGameScene()
             } else {
                 playNopeSound()
             }

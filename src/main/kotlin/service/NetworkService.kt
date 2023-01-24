@@ -96,6 +96,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
         sendGameInitMessage(gameInitMessage)
         updateConnectionState(ConnectionState.READY_FOR_GAME)
+        onAllRefreshables { refreshAfterJoinGameInitialized() }
     }
 
     fun startNewJoinedGame(message: GameInitMessage) {

@@ -263,6 +263,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
     }
 
+    override fun refreshAfterJoinGameInitialized(){
+        refreshAfterStartGame()
+    }
+
     private fun showPlayers() {
 
         for (i in 0..5) {
