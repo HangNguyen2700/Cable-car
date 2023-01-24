@@ -266,7 +266,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     fun readTileCSV() {
         // read file lines into lines array
-        val file = File("src\\main\\resources\\tiles.csv").inputStream()
+        val file = File("src/main/resources/tiles.csv").inputStream()
         val reader = file.bufferedReader()
         val lines = mutableListOf<String>()
         reader.lineSequence().forEach {
