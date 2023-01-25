@@ -268,29 +268,11 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * parses tile path connections to draw stack
      */
 
+
     fun readTileCSV() {
         // read file lines into lines array
-        //Please extract the file strictly in the following directory only!
-        //under distributions...
 
-        //val fileString="C:\\Users\\poudy\\IdeaProjects\\Projekt2\\GUI V9\\src\\main\\resources\\tiles.csv"
-
-        val fileDir = System.getProperty("user.dir")
-        val fileString: String
-
-        if (fileDir.contains("distributions")) {
-            val parentDir = File(fileDir).parentFile.parentFile.parentFile.parentFile.parentFile.toString()
-            println(parentDir)
-
-            fileString = (parentDir.plus("\\src\\main\\resources\\tiles.csv"))
-        } else {
-            fileString = (fileDir.plus("\\src\\main\\resources\\tiles.csv"))
-
-        }
-
-        val file = File(fileString).inputStream()
-
-        val reader = file.bufferedReader()
+        val reader = javaClass.getResource("/tiles.csv").openStream().bufferedReader()
         val lines = mutableListOf<String>()
 
         reader.lineSequence().forEach {
