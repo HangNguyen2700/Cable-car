@@ -224,17 +224,17 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                             checkAgain = true
                         }
                     }
-                    /*
-                    else if (a new tile was placed in front of startPos) {
-                        add tile to path.tiles
-                                set inPort to in-port of tile corresponding to startPos:
-                        startPos 1-8 -> port 4
-                        startPos 9-16 -> port 2
-                        startPos 17-24 -> port 0
-                        startPos 25-32 -> port 6
-                        set lastPort to connected out-port: lastPort := tile.ports[inPort].getSecond()
-                        checkAgain := true
-                    }*/
+                    else if (placedTile.posX == 0 || placedTile.posX == 8
+                        || placedTile.posY == 0 || placedTile.posY == 8)
+                    {
+                        path.tiles.add(placedTile)
+                        val inPort = inPortFromStartPos()
+                        path.lastPort =
+                            if (placedTile.ports[inPort].first == inPort)
+                                placedTile.ports[inPort].second
+                            else placedTile.ports[inPort].first
+                        checkAgain = true
+                    }
                 }
                 /*
                 if (path.tiles.last() is connected to a station) {
@@ -244,6 +244,15 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     player.score += path.tiles.count()
                 }*/
             }
+        }
+
+        private fun inPortFromStartPos(): Int {
+            /* set inPort to in-port of tile corresponding to startPos:
+                startPos 1-8 -> port 4
+                startPos 9-16 -> port 2
+                startPos 17-24 -> port 0
+                startPos 25-32 -> port 6*/
+            TODO()
         }
 
         /**
