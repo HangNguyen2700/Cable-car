@@ -23,21 +23,20 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * initializes game with given values
      */
 
-    fun startNewGame(players: List<Player>,
-                     isLocalOnlyGame: Boolean = true,
-                     isHostedGame: Boolean = false,
-                     rotationAllowed: Boolean = false)
-    {
+    fun startNewGame(
+        players: List<Player>,
+        isLocalOnlyGame: Boolean = true,
+        isHostedGame: Boolean = false,
+        rotationAllowed: Boolean = false
+    ) {
         this.isLocalOnlyGame = isLocalOnlyGame
         this.isHostedGame = isHostedGame
         this.rotationAllowed = rotationAllowed
-        if(rootService.currentGame == null) {
+        if (rootService.currentGame == null) {
             rootService.currentGame = Game(
                 Turn(
                     GameField(
-                        mutableListOf(),
-                        mutableListOf(),
-                        TileStack(mutableListOf())
+                        mutableListOf(), mutableListOf(), TileStack(mutableListOf())
                     ), mutableListOf()
                 )
             )
@@ -78,14 +77,14 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     fun undo() {
         var currentGame = rootService.currentGame
         checkNotNull(currentGame)
-        if(currentGame.currentTurn.previousTurn!=null)
-        {
+        if (currentGame.currentTurn.previousTurn != null) {
             currentGame.currentTurn = currentGame.currentTurn.previousTurn!!
 
         }
 
         onAllRefreshables { this.refreshAfterUndo() }
     }
+
     /**
      * @author Ikhlawi
      * Moves the game to the next state.
@@ -95,8 +94,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     fun redo() {
         var currentGame = rootService.currentGame
         checkNotNull(currentGame)
-        if(currentGame.currentTurn.nextTurn!=null)
-        {
+        if (currentGame.currentTurn.nextTurn != null) {
             currentGame.currentTurn = currentGame.currentTurn.nextTurn!!
 
         }
@@ -108,16 +106,15 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * iterates currentPlayerIndex over players.size in a loop
      */
     fun nextPlayer() {
-        if(rootService.currentGame!!.currentTurn.currentPlayerIndex ==
-            rootService.currentGame!!.currentTurn.players.size-1) {
+        if (rootService.currentGame!!.currentTurn.currentPlayerIndex == rootService.currentGame!!.currentTurn.players.size - 1) {
             rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
             println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
         } else {
             rootService.currentGame!!.currentTurn.currentPlayerIndex++
             println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
         }
-        val isSmartAi = rootService.currentGame!!.currentTurn
-            .players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi
+        val isSmartAi =
+            rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi
         if (isSmartAi != null) {
             if (isSmartAi) rootService.playerActionService.playAiTurn()
             else rootService.playerActionService.playRandomTurn()
@@ -130,7 +127,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      *
      * @return a mutable list of Player objects representing the winners of the current game.
      */
-     fun findWinner(): MutableList<Player> {
+    fun findWinner(): MutableList<Player> {
 
         // Get the maximum score of the players in the current game
         val maxScore = rootService.currentGame!!.currentTurn.players.sortByDescending { it.score }
@@ -141,7 +138,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         // Iterate through the players in the current game
         for (player in rootService.currentGame!!.currentTurn.players) {
             // If the player has the maximum score, add them to the winners list
-                winners.add(player)
+            winners.add(player)
         }
         winners.sortByDescending { it.score }
         // Return the winners list
@@ -163,14 +160,14 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      */
 
     fun distributeTiles() {
-        if(isLocalOnlyGame) {
+        if (isLocalOnlyGame) {
             // we have to generate the drawStack and give each player a tile
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileLookUp.toMutableList() // create copy
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.shuffle()
             for (player in rootService.currentGame!!.currentTurn.players) {
                 player.handTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
             }
-        } else if(isHostedGame) {
+        } else if (isHostedGame) {
             // we have to generate the drawStack, create and send the gameInitMessage and then give each player a tile
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles = tileLookUp.toMutableList() // create copy
             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.shuffle()
@@ -206,32 +203,32 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * - For 6 players: Yellow, Blue, Orange, Green, Purple, and Black
      *
      */
-     fun playersToPositions()
-    {
-        val players  = rootService.currentGame?.currentTurn?.players
+    fun playersToPositions() {
+        val players = rootService.currentGame?.currentTurn?.players
         val colors = listOf(Color.YELLOW, Color.BLUE, Color.ORANGE, Color.GREEN, Color.PURPLE, Color.BLACK)
         when (players?.size) {
-            2 ->{
+            2 -> {
                 for (i in 1 until 33) {
                     if (i % 2 == 1) {
                         players[0].color = Color.YELLOW
                         players[0].cars.add(i)
-                    }
-                    else {
+                    } else {
                         players[1].color = Color.BLUE
                         players[1].cars.add(i)
                     }
                 }
             }
+
             3 -> {
-                players[0].cars = mutableListOf(1 , 4, 6, 11, 15, 20, 23, 25, 28, 31)
+                players[0].cars = mutableListOf(1, 4, 6, 11, 15, 20, 23, 25, 28, 31)
                 players[1].cars = mutableListOf(2, 7, 9, 12, 14, 19, 22, 27, 29, 32)
                 players[2].cars = mutableListOf(3, 5, 8, 10, 13, 18, 21, 24, 26, 30)
                 for ((index, player) in players.withIndex()) {
                     player.color = colors[index]
                 }
             }
-            4 ->  {
+
+            4 -> {
                 players[0].cars = mutableListOf(4, 7, 11, 16, 20, 23, 27, 32)
                 players[1].cars = mutableListOf(3, 8, 12, 15, 19, 24, 28, 31)
                 players[2].cars = mutableListOf(1, 6, 10, 13, 18, 21, 25, 30)
@@ -240,7 +237,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                     player.color = colors[index]
                 }
             }
-            5 ->  {
+
+            5 -> {
                 players[0].cars = mutableListOf(1, 5, 10, 14, 22, 28)
                 players[1].cars = mutableListOf(6, 12, 18, 23, 27, 32)
                 players[2].cars = mutableListOf(3, 7, 15, 19, 25, 29)
@@ -250,7 +248,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                     player.color = colors[index]
                 }
             }
-            6 ->  {
+
+            6 -> {
                 players[0].cars = mutableListOf(1, 5, 10, 19, 27)
                 players[1].cars = mutableListOf(2, 11, 18, 25, 29)
                 players[2].cars = mutableListOf(4, 8, 14, 21, 26)
@@ -271,17 +270,29 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     fun readTileCSV() {
         // read file lines into lines array
+        //Please extract the file strictly in the following directory only!
+        //under distributions...
 
-        //val file = File("src\\main\\resources\\tiles.csv").inputStream()
+        //val fileString="C:\\Users\\poudy\\IdeaProjects\\Projekt2\\GUI V9\\src\\main\\resources\\tiles.csv"
 
-        //val fileContent = this::class.java.classLoader.getResource("tiles.csv")
+        val fileDir = System.getProperty("user.dir")
+        val fileString: String
 
+        if (fileDir.contains("distributions")) {
+            val parentDir = File(fileDir).parentFile.parentFile.parentFile.parentFile.parentFile.toString()
+            println(parentDir)
 
-        val fileContent : InputStream = this::class.java.getResourceAsStream("tiles.csv") as InputStream;
-        /*val file1 =  fileContent.file
-        val file = File(file1).inputStream()*/
-        val reader = fileContent.bufferedReader()
+            fileString = (parentDir.plus("\\src\\main\\resources\\tiles.csv"))
+        } else {
+            fileString = (fileDir.plus("\\src\\main\\resources\\tiles.csv"))
+
+        }
+
+        val file = File(fileString).inputStream()
+
+        val reader = file.bufferedReader()
         val lines = mutableListOf<String>()
+
         reader.lineSequence().forEach {
             lines.add(it)
         }
@@ -299,8 +310,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         val tilePairList: MutableList<MutableList<Pair<Int, Int>>> = mutableListOf()
         for (i in matrix.indices) {
             tilePairList.add(mutableListOf())
-            for (j in 0..matrix[0].size-2 step 2) {
-                tilePairList[i].add(Pair(matrix[i][j], matrix[i][j+1]))
+            for (j in 0..matrix[0].size - 2 step 2) {
+                tilePairList[i].add(Pair(matrix[i][j], matrix[i][j + 1]))
             }
         }
 
