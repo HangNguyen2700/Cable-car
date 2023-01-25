@@ -157,6 +157,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
     ).apply { isDisabled = true; opacity = 0.0 }
 
+    var joinedNetworkPlayers = mutableListOf<String>()
+
     init {
         playersGrid.setColumnWidths(400)
 
@@ -176,6 +178,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         showPlayers()
         refreshGameBoard()
+
+        playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
 
         if (isInputNeeded()) {
             playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
@@ -202,21 +206,15 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         println(rootService.networkService.joinedPlayers)
 
         for( i in playerList.indices){
-            isInputPlayer[i] = playerList[i].isSmartAi == null
+            isInputPlayer[i] = playerList[i].isSmartAi == null && !joinedNetworkPlayers.contains(playerList[i].name)
         }
 
         println(isInputPlayer)
 
-        showPlayers()
         initGameBoard()
-        refreshGameBoard()
         initStationPosition()
 
-        setTileFront(handTileCardView, currentTurn!!.players[currentTurn!!.currentPlayerIndex].handTile!!)
-        setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-
-        if (isInputNeeded()) playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
-        rotateButton.isVisible = gameService.rotationAllowed
+        turn()
     }
 
     fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
@@ -232,6 +230,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList += Player(playerName,null)
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        joinedNetworkPlayers = rootService.networkService.joinedPlayers
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -242,6 +241,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList -= toBeDeleted!!
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        joinedNetworkPlayers = rootService.networkService.joinedPlayers
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}

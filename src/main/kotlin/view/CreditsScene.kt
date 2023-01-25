@@ -32,7 +32,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
     )
 
     private val memberQuotes = listOf(
-        "\"\"","\"\"","\"Alles hat ein Ende. Nur die Wurst hat 2.\"","\"\"","\"\"","\"Microsoft ist nicht schlecht, sie machen nur ein beschissenes OS.\"","\"\"","\"\"","\"\""
+        "\"\"","\"\"","\"Alles hat ein Ende. Nur die Wurst hat 2.\"","\"Now that my Code runs, I don't need Therapy anymore\"","\"\"","\"Microsoft ist nicht schlecht, sie machen nur ein beschissenes OS.\"","\"\"","\"\"","\"\""
     )
 
     private val memberImages = listOf(
