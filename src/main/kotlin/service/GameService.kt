@@ -5,6 +5,9 @@ import java.io.File
 import entity.Color
 import entity.Player
 import entity.Turn
+import java.io.InputStream
+import java.nio.file.Paths
+import javax.imageio.ImageIO
 
 /**
  * broad game logic
@@ -268,8 +271,16 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
     fun readTileCSV() {
         // read file lines into lines array
-        val file = File("src/main/resources/tiles.csv").inputStream()
-        val reader = file.bufferedReader()
+
+        //val file = File("src\\main\\resources\\tiles.csv").inputStream()
+
+        //val fileContent = this::class.java.classLoader.getResource("tiles.csv")
+
+
+        val fileContent : InputStream = this::class.java.getResourceAsStream("tiles.csv") as InputStream;
+        /*val file1 =  fileContent.file
+        val file = File(file1).inputStream()*/
+        val reader = fileContent.bufferedReader()
         val lines = mutableListOf<String>()
         reader.lineSequence().forEach {
             lines.add(it)
