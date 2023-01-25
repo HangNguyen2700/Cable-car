@@ -179,6 +179,73 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
 
     companion object {
+        fun buildPathsAnastasiia(player: Player, placedTile: Tile, turn: Turn) {
+            for (path in player.paths) {
+                if (path.complete) continue
+                var checkAgain = true
+
+                while(checkAgain) {
+                    checkAgain = false
+                    if (path.tiles.isNotEmpty()) {
+                        if (path.lastPort == 2 or 3 /*&& new tile placed to the right of path.tiles.last()*/) {
+                            path.tiles.add(placedTile)
+                            val inPort = if (path.lastPort == 2) 7 else 6
+                            path.lastPort =
+                                if (placedTile.ports[inPort].first == inPort)
+                                    placedTile.ports[inPort].second
+                                else placedTile.ports[inPort].first
+                            checkAgain = true
+                        }
+                        if (path.lastPort == 0 or 1 /*&& new tile placed at the top of path.tiles.last()*/) {
+                            path.tiles.add(placedTile)
+                            val inPort = if (path.lastPort == 0) 5 else 4
+                            path.lastPort =
+                                if (placedTile.ports[inPort].first == inPort)
+                                    placedTile.ports[inPort].second
+                                else placedTile.ports[inPort].first
+                            checkAgain = true
+                        }
+                        if (path.lastPort == 6 or 7 /*&& new tile placed to the left of path.tiles.last()*/) {
+                            path.tiles.add(placedTile)
+                            val inPort = if (path.lastPort == 6) 3 else 2
+                            path.lastPort =
+                                if (placedTile.ports[inPort].first == inPort)
+                                    placedTile.ports[inPort].second
+                                else placedTile.ports[inPort].first
+                            checkAgain = true
+                        }
+                        if (path.lastPort == 4 or 5 /*&& new tile placed at the bottom of path.tiles.last()*/) {
+                            path.tiles.add(placedTile)
+                            val inPort = if (path.lastPort == 4) 1 else 0
+                            path.lastPort =
+                                if (placedTile.ports[inPort].first == inPort)
+                                    placedTile.ports[inPort].second
+                                else placedTile.ports[inPort].first
+                            checkAgain = true
+                        }
+                    }
+                    /*
+                    else if (a new tile was placed in front of startPos) {
+                        add tile to path.tiles
+                                set inPort to in-port of tile corresponding to startPos:
+                        startPos 1-8 -> port 4
+                        startPos 9-16 -> port 2
+                        startPos 17-24 -> port 0
+                        startPos 25-32 -> port 6
+                        set lastPort to connected out-port: lastPort := tile.ports[inPort].getSecond()
+                        checkAgain := true
+                    }*/
+                }
+                /*
+                if (path.tiles.last() is connected to a station) {
+                    player.score += path.tiles.count()
+                    path.complete := true
+                    if (station is a power station)
+                    player.score += path.tiles.count()
+                }*/
+            }
+        }
+
         /**
          * @author Ikhlawi
          * Check if there is an adjacent tile at the spot (posX, posY).
