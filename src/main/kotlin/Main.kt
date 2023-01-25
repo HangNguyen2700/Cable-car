@@ -17,6 +17,4 @@ fun main() {
     rootService.networkService.joinGame("cable22", "dein leo", "Gruppe130")
     //rootService.gameService.startNewGame(listOf("Martin", "Werner"))*/
 
-
-
 }
