@@ -7,6 +7,7 @@ import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import entity.Player
+import entity.Tile
 import kotlinx.coroutines.GlobalScope
 import service.RootService
 import tools.aqua.bgw.core.Alignment
@@ -29,7 +30,7 @@ import java.awt.Color
  * [nameEmptyCheck] writes the Host name in the Lobby Scene when not empty
  * */
 
-class CCApplication : BoardGameApplication("Carbel Car Game") {
+class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
 
     private val rootService = RootService()
 
@@ -255,8 +256,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
 
     init {
         rootService.addRefreshables(
-            gameScene
-
+            gameScene,
+            this,
+            gameOverScene
         )
         this.showGameScene(titleScene)
         isFullScreen = false        //TODO: set to true for final build
@@ -538,6 +540,18 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
     private fun showAndStoreMenuScene(menuScene: MenuScene, fadeTime: Int) {
         activeMenuScene = menuScene
         showMenuScene(menuScene, fadeTime)
+    }
+
+    override fun refreshAfterGameFinished() {
+        explicitlyShowGameOverScene()
+    }
+
+    override fun refreshAfterJoinGameInitialized() {
+        TODO("Not yet implemented")
+    }
+
+    override fun refreshAfterTileRotation(tile: Tile) {
+        TODO("Not yet implemented")
     }
 
 }

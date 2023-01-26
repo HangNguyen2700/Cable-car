@@ -17,15 +17,14 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     fun isGameOver() : Boolean {
         val turn = rootService.currentGame!!.currentTurn
         var isFieldFull = true
-        for (row in turn.gameField.field) {
-            for (cell in row) {
-                if (cell == null) {
-                    isFieldFull = false
-                    break
-                }
+        for (i in 1..8) for (j in 1..8) {
+            if (!(i in 4..5 && j in 4..5) &&
+                rootService.currentGame!!.currentTurn.gameField.field[i][j] == null) {
+                isFieldFull = false
+                break
             }
         }
-        return isFieldFull || turn.gameField.tileStack.tiles.isEmpty()
+        return isFieldFull
     }
 
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
@@ -111,11 +110,11 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             buildPaths(rootService.currentGame!!.currentTurn.
             players[rootService.currentGame!!.currentTurn.currentPlayerIndex], tile)
         }
-        if (!isGameOver()) {
-            rootService.gameService.nextPlayer()
-            onAllRefreshables { this.refreshAfterPlaceTile() }
-        }
-        else rootService.gameService.endGame()
+
+        rootService.gameService.nextPlayer()
+        onAllRefreshables { this.refreshAfterPlaceTile() }
+
+        if(isGameOver()) rootService.gameService.endGame()
     }
 
     /**
@@ -277,10 +276,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 throw Exception("Tile coordinates must lie between 1 and 8.")
 
             if (posY == 1 || posY == 8 || posX == 1 || posX == 8 ||
-                posX in 3..6 && posY == 3 ||
-                posX in 3..6 && posY == 6 ||
-                posY in 3..6 && posX == 3 ||
-                posY in 3..6 && posX == 6) return true
+                posX in 4..5 && posY == 3 ||
+                posX in 4..5 && posY == 6 ||
+                posY in 4..5 && posX == 3 ||
+                posY in 4..5 && posX == 6) return true
 
             return (currentField[posX][posY + 1] != null ||
                     currentField[posX][posY - 1] != null ||

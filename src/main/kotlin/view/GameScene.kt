@@ -198,7 +198,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         if (isInputNeeded()) {
             playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
 
-            drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
+            if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty())
+                drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
             handTileCardView.frontVisual = setTileFront(currentTurn!!.
             players[ (currentTurn!!.currentPlayerIndex) % currentTurn!!.players.size ].handTile!!)
             //increment order workaround

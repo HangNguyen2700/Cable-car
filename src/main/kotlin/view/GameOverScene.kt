@@ -120,7 +120,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
     )
 
     private val crown = Button(
-        width = 100, height = 50, posX = 1000, posY = 250, visual = ImageVisual("Crown.png")
+        width = 100, height = 50, posX = 1015, posY = 250, visual = ImageVisual("Crown.png")
     )
 
     private val restartButton = Button(
@@ -160,10 +160,10 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         addComponents(
             endGameLabel,
             soundToggleButton,  musicToggleButton,
-            p1Name, p2Name,  p3Name,  p4Name,   p5Name,  p6Name,
-            playerImg1, playerImg2,  playerImg3,  playerImg4,playerImg5,playerImg6,
+            p1Name, p2Name,
+            playerImg1, playerImg2,
             crown,
-            first, second, third, fourth, fifth, sixth,
+            first, second,
             restartButton, mainMenuButton,
             quitButton
         )
