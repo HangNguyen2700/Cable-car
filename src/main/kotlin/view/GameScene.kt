@@ -200,7 +200,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
             drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
             handTileCardView.frontVisual = setTileFront(currentTurn!!.
-            players[ (currentTurn!!.currentPlayerIndex + 1) % currentTurn!!.players.size ].handTile!!)
+            players[ (currentTurn!!.currentPlayerIndex) % currentTurn!!.players.size ].handTile!!)
             //increment order workaround
 
             handTileCardView.showFront()
@@ -231,6 +231,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         println(isInputPlayer)
 
         pleaseWaitLabel.opacity = 0.0; pleaseWaitLabel.isDisabled = true
+        drawnTilesLabel.isVisible = true; drawnTilesCardView.isVisible = true
 
         initGameBoard()
         initStationPosition()
@@ -404,6 +405,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     override fun refreshAfterUndo() { turn() }
 
     override fun refreshAfterRedo() { turn() }
+
+    override fun refreshAfterDrawStackEmpty() {
+        drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false
+    }
 
     override fun refreshAfterGameFinished() {  }
 

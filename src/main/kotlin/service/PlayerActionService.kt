@@ -63,12 +63,19 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // put tile onto Field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
                 // give player new tile from tileStack
-                rootService.currentGame!!.currentTurn.
-                    players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
-                        rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isNotEmpty()){
+                    rootService.currentGame!!.currentTurn.
+                        players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                            rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                    if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
+                        onAllRefreshables { refreshAfterDrawStackEmpty() }
+                }
+
             } else {
                 // tile from tileStack
                 tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
+                    onAllRefreshables { refreshAfterDrawStackEmpty() }
                 // rotate tile if needed
                 if (rotationDegree != 0) {
                     val tempId = tile.id

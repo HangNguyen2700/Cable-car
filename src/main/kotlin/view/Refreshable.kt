@@ -23,7 +23,7 @@ interface Refreshable {
      */
     fun refreshAfterStartGame() {}
 
-
+    fun refreshAfterDrawStackEmpty() {}
 
     fun refreshAfterJoinGameInitialized()
 
