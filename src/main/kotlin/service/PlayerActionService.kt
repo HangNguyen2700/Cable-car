@@ -104,8 +104,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             players[rootService.currentGame!!.currentTurn.currentPlayerIndex], tile)
         }
         if (!isGameOver()) {
-            onAllRefreshables { this.refreshAfterPlaceTile() }
             rootService.gameService.nextPlayer()
+            onAllRefreshables { this.refreshAfterPlaceTile() }
         }
         else rootService.gameService.endGame()
     }

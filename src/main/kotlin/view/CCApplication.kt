@@ -93,6 +93,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
         }
         startGameButton.onMouseClicked = {
             startGameButton.isDisabled = true; startGameButton.opacity = 0.0
+            pleaseWaitLabel.isDisabled = false; pleaseWaitLabel.opacity = 1.0
             rootService.gameService.startNewGame(playerList, isLocalOnlyGame = false, isHostedGame = true,
                 rotationAllowed = hostLobbyScene.allowTileRotationCheckbox.isChecked)
         }
@@ -186,7 +187,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game") {
                     "cable22", mainMenuScene.nameField.text, sessionIDTextField.text
                 )
                 hideMenuScene()
+                gameScene.joinGameWaitForPlayers(mainMenuScene.nameField.text,aiGameCheckBox.isChecked)
                 explicitlyShowGameScene()
+                gameScene.pleaseWaitLabel.opacity = 1.0; gameScene.pleaseWaitLabel.isDisabled = false
             } else {
                 playNopeSound()
             }

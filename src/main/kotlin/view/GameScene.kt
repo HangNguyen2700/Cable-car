@@ -9,6 +9,7 @@ import service.PlayerActionService
 import service.RootService
 import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.CardView
+import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.layoutviews.GridPane
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -32,6 +33,8 @@ import java.awt.Color
 class GameScene(private val rootService: RootService) : BoardGameScene(1920, 1080), Refreshable {
 
     private val cardImageLoader = CardImageLoader()
+
+    private var networkPlayerName :String? = null
 
     private lateinit var gameService: GameService
     private lateinit var playerActionService: PlayerActionService
@@ -125,39 +128,51 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
         ).apply { opacity = 0.8 }
 
-    val boardCellLabel =
-        mutableListOf(
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))),
-            mutableListOf(CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)),
-                CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0)), CardView(front = ColorVisual(0,0,0,0))))
+    val boardCellLabel = arrayOf(
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
+            TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0))),
+        )
 
     val startGameButton = Button(width = 350, height = 100, posX = 20, posY = 880, visual = CompoundVisual(
         ColorVisual.WHITE.apply { transparency = 0.3 },
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
     ).apply { isDisabled = true; opacity = 0.0 }
 
-    var joinedNetworkPlayers = mutableListOf<String>()
+    val pleaseWaitLabel = Button(width = 600, height = 200, posX = 660, posY = 440, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.3 },
+        TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
+            text = "please wait..."))
+    ).apply { isDisabled = true; opacity = 0.0 }
 
     init {
         playersGrid.setColumnWidths(400)
@@ -165,9 +180,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         background = ImageVisual("game_scene.png")
         addComponents(playerScoreBGLabel, playersGrid, topStationGrid, leftStationGrid, rightStationGrid,
             bottomStationGrid, mainBoardGrid, quickMenuButton, startGameButton, handTileLabel, handTileCardView,
-            drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton)
-
-
+            drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, pleaseWaitLabel)
     }
 
     private fun isInputNeeded() = isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]
@@ -176,16 +189,17 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
-        showPlayers()
-        refreshGameBoard()
+        showPlayers(); refreshGameBoard()
 
         playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
+
+        println(rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
 
         if (isInputNeeded()) {
             playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
 
-            setTileFront(drawnTilesCardView, currentTurn!!.gameField.tileStack.tiles.first())
-            setTileFront(handTileCardView, currentTurn!!.
+            drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
+            handTileCardView.frontVisual = setTileFront(currentTurn!!.
             players[ (currentTurn!!.currentPlayerIndex + 1) % currentTurn!!.players.size ].handTile!!)
             //increment order workaround
 
@@ -203,13 +217,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
-        println(rootService.networkService.joinedPlayers)
-
-        for( i in playerList.indices){
-            isInputPlayer[i] = playerList[i].isSmartAi == null && !joinedNetworkPlayers.contains(playerList[i].name)
-        }
+        if(networkPlayerName == null)         //hotseatmode
+            for( i in playerList.indices)
+                isInputPlayer[i] = playerList[i].isSmartAi == null
+        else           //network mode TODO: set networkPlayerName to null on GameScene exit
+            isInputPlayer[playerList.indexOf(playerList.find { it.name == networkPlayerName })] =
+                playerList.find { it.name == networkPlayerName }?.isSmartAi != true
 
         println(isInputPlayer)
+
+        pleaseWaitLabel.opacity = 0.0; pleaseWaitLabel.isDisabled = true
 
         initGameBoard()
         initStationPosition()
@@ -217,7 +234,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         turn()
     }
 
+    fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) {
+        this.networkPlayerName = joinName
+        pleaseWaitLabel.opacity = 1.0; pleaseWaitLabel.isDisabled = false
+    }
+
     fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
+        this.networkPlayerName = hostName
         playerList += Player(hostName,if(isHostAi) true else null)
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
@@ -230,7 +253,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList += Player(playerName,null)
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
-        joinedNetworkPlayers = rootService.networkService.joinedPlayers
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -241,7 +263,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList -= toBeDeleted!!
         playerList.forEach { println("playerList " + it.name) }
         rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
-        joinedNetworkPlayers = rootService.networkService.joinedPlayers
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -257,7 +278,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             val playerGrid = GridPane<ComponentView>(columns = 5, rows = 1)
 
             if (i in playerList.indices){
-
 
                 val playerColorLabel = Label(height = 50, width = 50,
                     visual = when(i) {
@@ -287,7 +307,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
                 playerGrid[4,0] = Label(width = 100, visual = ColorVisual(0,0,0,0))
             }
-
             playersGrid[0,i] = playerGrid
         }
     }
@@ -299,32 +318,29 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private fun initStationPosition() {
         val stations = initStationArray()
 
-        for (i in 0..3) {
+        for (i in 0..3) for (j in 0..7) {
 
-            for (j in 0..7) {
-
-                val stationCardView = CardView(
-                    height = 100, width = 100,
-                    front = ColorVisual(0, 0, 0, 0),
-                    back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
-                ).apply {
-                    if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
-                        this.showFront()
-                    }
-                    when (i) {
-                        0 -> this.rotation = 90.0
-                        1 -> this.rotation = 180.0
-                        2 -> this.rotation = 270.0
-                        3 -> this.rotation = 0.0
-                    }
+            val stationCardView = CardView(
+                height = 100, width = 100,
+                front = ColorVisual(0, 0, 0, 0),
+                back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
+            ).apply {
+                if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
+                    this.showFront()
                 }
-
                 when (i) {
-                    0 -> topStationGrid[j, 0] = stationCardView
-                    1 -> rightStationGrid[0, j] = stationCardView
-                    2 -> bottomStationGrid[j, 0] = stationCardView
-                    3 -> leftStationGrid[0, j] = stationCardView
+                    0 -> this.rotation = 90.0
+                    1 -> this.rotation = 180.0
+                    2 -> this.rotation = 270.0
+                    3 -> this.rotation = 0.0
                 }
+            }
+
+            when (i) {
+                0 -> topStationGrid[j, 0] = stationCardView
+                1 -> rightStationGrid[0, j] = stationCardView
+                2 -> bottomStationGrid[j, 0] = stationCardView
+                3 -> leftStationGrid[0, j] = stationCardView
             }
         }
     }
@@ -348,16 +364,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         for (i in 0..7) for (j in 0..7) {
 
             if (i in mainStationPos && j in mainStationPos) {
-                boardCellLabel[i][j] = CardView(height = 100, width = 100,
-                    front = ColorVisual(0, 0, 0, 0), back = ColorVisual(0, 0, 0, 0))
+                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
+                    visual = ColorVisual(0, 0, 0, 0))
             } else {
-                boardCellLabel[i][j] = CardView(height = 100, width = 100,
-                    front = ColorVisual(0, 0, 0, 0), back = ColorVisual(0, 0, 0, 0)
+                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
+                    visual = ColorVisual(0, 0, 0, 0)
                 ).apply {
                     onMouseClicked = {
                         if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
-                            //setTileFront(boardCellLabel[i][j],currentTile!!)
-                            //showFront()
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
                         } else {
                             //TODO: playNopeSound()
@@ -373,7 +387,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         for (i in 0..7) for (j in 0..7) {
             val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
             if (boardCellTile != null)
-                setTileFront(boardCellLabel[i][j], boardCellTile); boardCellLabel[i][j].showFront()
+                boardCellLabel[i][j].visual = setTileFront(boardCellTile)
+            else
+                boardCellLabel[i][j].visual = ColorVisual(0,0,0,0)
         }
     }
 
@@ -383,15 +399,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     override fun refreshAfterPlaceTile() { turn() }
 
-
-
     override fun refreshAfterUndo() { turn() }
 
     override fun refreshAfterRedo() { turn() }
 
-   // override fun refreshAfterGameFinished() {
-
-   // }
+    override fun refreshAfterGameFinished() {  }
 
     private fun initStationArray(): Array<Array<Pair<entity.Color, Boolean>>> {
         val numOfPlayers = playerList.size
@@ -521,68 +533,66 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    private fun setTileFront(tileCardView: CardView, tile: Tile?){
+    private fun setTileFront(tile: Tile?): ImageVisual {
         if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,0))
+            return ImageVisual(cardImageLoader.frontImage(0,0))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,0))
+            return ImageVisual(cardImageLoader.frontImage(1,0))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,0))
+            return ImageVisual(cardImageLoader.frontImage(2,0))
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,0))
+            return ImageVisual(cardImageLoader.frontImage(3,0))
 
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,1))
+            return ImageVisual(cardImageLoader.frontImage(0,1))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,1))
+            return ImageVisual(cardImageLoader.frontImage(1,1))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,1))
+            return ImageVisual(cardImageLoader.frontImage(2,1))
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,1))
+            return ImageVisual(cardImageLoader.frontImage(3,1))
 
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,2))
+            return ImageVisual(cardImageLoader.frontImage(0,2))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,2))
+            return ImageVisual(cardImageLoader.frontImage(1,2))
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,2))
+            return ImageVisual(cardImageLoader.frontImage(2,2))
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,2))
+            return ImageVisual(cardImageLoader.frontImage(3,2))
 
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,3))
+            return ImageVisual(cardImageLoader.frontImage(0,3))
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,3))
+            return ImageVisual(cardImageLoader.frontImage(1,3))
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,3))
+            return ImageVisual(cardImageLoader.frontImage(2,3))
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,3))
+            return ImageVisual(cardImageLoader.frontImage(3,3))
 
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,4))
+            return ImageVisual(cardImageLoader.frontImage(0,4))
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,4))
+            return ImageVisual(cardImageLoader.frontImage(1,4))
 
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,4))
+            return ImageVisual(cardImageLoader.frontImage(2,4))
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,4))
+            return ImageVisual(cardImageLoader.frontImage(3,4))
 
         else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(0,5))
+            return ImageVisual(cardImageLoader.frontImage(0,5))
 
         else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(1,5))
+            return ImageVisual(cardImageLoader.frontImage(1,5))
 
         else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(2,5))
+            return ImageVisual(cardImageLoader.frontImage(2,5))
 
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
-            tileCardView.frontVisual = ImageVisual(cardImageLoader.frontImage(3,5))
+            return ImageVisual(cardImageLoader.frontImage(3,5))
 
-        else if (tile == null) tileCardView.frontVisual = ColorVisual(0,0,0,0)
-
-        else println(tile.ports + " TIME TO SCREAM!!")
+        else throw Exception("TIME TO SCREAM!!")
     }
 
 
