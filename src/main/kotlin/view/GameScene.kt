@@ -217,12 +217,19 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList = rootService.currentGame!!.currentTurn.players
         currentTurn = rootService.currentGame!!.currentTurn
 
+        undoButton.isVisible = true; redoButton.isVisible = true
+
         if(networkPlayerName == null)         //hotseatmode
             for( i in playerList.indices)
                 isInputPlayer[i] = playerList[i].isSmartAi == null
-        else           //network mode TODO: set networkPlayerName to null on GameScene exit
+        else {
             isInputPlayer[playerList.indexOf(playerList.find { it.name == networkPlayerName })] =
                 playerList.find { it.name == networkPlayerName }?.isSmartAi != true
+
+            undoButton.isVisible = false; redoButton.isVisible = false
+        //network mode TODO: set networkPlayerName to null on GameScene exit
+        }
+
 
         println(isInputPlayer)
 
