@@ -89,6 +89,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
             }
+            println("laying tile with pairs " + tile.ports)
             if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
 
                 rootService.networkService.sendTurnMessage(

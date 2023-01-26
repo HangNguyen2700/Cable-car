@@ -164,12 +164,12 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         )
 
     val startGameButton = Button(width = 350, height = 100, posX = 20, posY = 880, visual = CompoundVisual(
-        ColorVisual.WHITE.apply { transparency = 0.3 },
+        ColorVisual.WHITE.apply { transparency = 0.5 },
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
     ).apply { isDisabled = true; opacity = 0.0 }
 
     val pleaseWaitLabel = Button(width = 600, height = 200, posX = 660, posY = 440, visual = CompoundVisual(
-        ColorVisual.WHITE.apply { transparency = 0.3 },
+        ColorVisual.WHITE.apply { transparency = 0.5 },
         TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
             text = "please wait..."))
     ).apply { isDisabled = true; opacity = 0.0 }
@@ -208,6 +208,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             drawnTilesCardView.showBack()
 
             rotateButton.isVisible = gameService.rotationAllowed
+        }
+        else {
+            if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
+                rootService.playerActionService.playAiTurn()
         }
     }
 
