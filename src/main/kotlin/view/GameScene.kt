@@ -209,10 +209,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
             rotateButton.isVisible = gameService.rotationAllowed
         }
-        else {
-            if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
-                rootService.playerActionService.playAiTurn()
-        }
     }
 
     override fun refreshAfterStartGame() {
@@ -235,6 +231,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         initGameBoard()
         initStationPosition()
+
+        if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
+            rootService.playerActionService.playAiTurn()
 
         turn()
     }
