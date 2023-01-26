@@ -292,16 +292,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 // highlight current player
                 val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
                     alignment = Alignment.CENTER_LEFT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex + 1 %
-                    currentTurn!!.players.size) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
 
                 playerGrid[2, 0] = playerNameLabel
 
                 // highlight current player
                 val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
                     text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex + 1 %
-                    currentTurn!!.players.size) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
 
                 playerGrid[3,0] = playerScoreLabel
 
