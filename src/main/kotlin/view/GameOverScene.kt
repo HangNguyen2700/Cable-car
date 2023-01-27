@@ -196,11 +196,9 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         refreshAfterRestartGame(playerName)
     }
 
-    override fun refreshAfterJoinGameInitialized() {
-        TODO("Not yet implemented")    }
+    override fun refreshAfterJoinGameInitialized() {}
 
-    override fun refreshAfterTileRotation(tile: Tile) {
-        TODO("Not yet implemented")    }
+    override fun refreshAfterTileRotation(tile: Tile) {}
 
     init {
         addComponents(
