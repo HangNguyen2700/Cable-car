@@ -245,7 +245,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         initGameBoard()
         initStationPosition()
-        showPlayersCard()
+        playersHandCard()
 
         if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
@@ -253,11 +253,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         turn()
     }
 
-    fun showPlayersCard(){
+    fun playersHandCard(){
         // by default is 2 players and player card set initialized
         player1HandCard.frontVisual= setTileFront(currentTurn!!.players[0].handTile)
         player2HandCard.frontVisual= setTileFront(currentTurn!!.
         players[ 1 ].handTile!!)
+        player1HandCard.showFront()
+        player2HandCard.showFront()
 
 
         if (playerList.size >= 3) {
@@ -284,15 +286,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                         player6HandCard.frontVisual= setTileFront(currentTurn!!.
                         players[ 5 ].handTile!!)
                         player6HandCard.showFront()}}}}
-
-
-
-        player1HandCard.showFront()
-        player2HandCard.showFront()
-        player3HandCard.showFront()
-        player4HandCard.showFront()
-        player5HandCard.showFront()
-        player6HandCard.showFront()
 
     }
 
@@ -457,13 +450,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     override fun refreshAfterPlaceTile() { turn()
-    showPlayersCard()}
+        playersHandCard()}
 
     override fun refreshAfterUndo() { turn()
-        showPlayersCard()}
+        playersHandCard()}
 
     override fun refreshAfterRedo() { turn()
-        showPlayersCard()}
+        playersHandCard()}
 
     override fun refreshAfterDrawStackEmpty() {
         drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false
