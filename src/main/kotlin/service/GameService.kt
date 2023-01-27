@@ -306,4 +306,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         // create tileMap
         this.tileLookUp = tileList
     }
+
+    fun playNopeSound() {
+        onAllRefreshables { playNopeSoundInCCApp() }
+    }
 }

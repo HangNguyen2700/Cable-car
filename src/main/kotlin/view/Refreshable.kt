@@ -41,6 +41,12 @@ interface Refreshable {
     fun refreshAfterPlayerLeftInWaitSession(playerName:String){}
 
     /**
+     * workaround to route call to CCApplication
+     */
+
+    fun playNopeSoundInCCApp(){}
+
+    /**
      * Refresh after current player placed tile or undo or redo. next player is called right beforehand
      */
 

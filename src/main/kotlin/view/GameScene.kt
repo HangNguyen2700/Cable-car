@@ -38,7 +38,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private lateinit var playerActionService: PlayerActionService
     private var currentTurn: Turn? = null
     var playerList = listOf<Player>()
-    var isInputPlayer = mutableListOf<Boolean>(false,false,false,false,false,false)
+    private var isInputPlayer = mutableListOf(false,false,false,false,false,false)
 
     private var networkPlayerName :String? = null
     private val tileBackImage = ImageVisual("tile_back.png")
@@ -65,36 +65,36 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val mainBoardGrid = GridPane<ComponentView>(columns = 8, rows = 8,
         posX = 560, posY = 140, layoutFromCenter = false)
 
-    private val player1HandCard=CardView(width = 100, height = 100, posX = 35, posY = 820,
+    private val player1HandCard = CardView(width = 100, height = 100, posX = 35, posY = 820,
         front = ColorVisual.WHITE, back = tileBackImage)
-    private val player2HandCard=CardView(width = 100, height = 100, posX = 155, posY = 820,
+    private val player2HandCard = CardView(width = 100, height = 100, posX = 155, posY = 820,
         front = ColorVisual.WHITE, back = tileBackImage)
-    private val player3HandCard=CardView(width = 100, height = 100, posX = 275, posY = 820,
+    private val player3HandCard = CardView(width = 100, height = 100, posX = 275, posY = 820,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
-    private val player4HandCard=CardView(width = 100, height = 100, posX = 35, posY = 940,
+    private val player4HandCard = CardView(width = 100, height = 100, posX = 35, posY = 940,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
-    private val player5HandCard=CardView(width = 100, height = 100, posX = 155, posY = 940,
+    private val player5HandCard = CardView(width = 100, height = 100, posX = 155, posY = 940,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
-    private val player6HandCard=CardView(width = 100, height = 100, posX = 275, posY = 940,
+    private val player6HandCard = CardView(width = 100, height = 100, posX = 275, posY = 940,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
 
-    val playerHandCardList= mutableListOf(player1HandCard,player2HandCard,player3HandCard,
+    private val playerHandCardList = mutableListOf(player1HandCard,player2HandCard,player3HandCard,
             player4HandCard,player5HandCard,player6HandCard)
 
-    private val player1HandCardBG=TokenView(width = 120, height = 120, posX = 25, posY = 810,
+    private val player1HandCardBG = TokenView(width = 120, height = 120, posX = 25, posY = 810,
         visual = ColorVisual.YELLOW)
-    private val player2HandCardBG=TokenView(width = 120, height = 120, posX = 145, posY = 810,
+    private val player2HandCardBG = TokenView(width = 120, height = 120, posX = 145, posY = 810,
         visual = ColorVisual.BLUE)
-    private val player3HandCardBG=TokenView(width = 120, height = 120, posX = 265, posY = 810,
+    private val player3HandCardBG = TokenView(width = 120, height = 120, posX = 265, posY = 810,
         visual = ColorVisual.ORANGE).apply { isDisabled = true; opacity = 0.0 }
-    private val player4HandCardBG=TokenView(width = 120, height = 120, posX = 25, posY = 930,
+    private val player4HandCardBG = TokenView(width = 120, height = 120, posX = 25, posY = 930,
         visual = ColorVisual.GREEN).apply { isDisabled = true; opacity = 0.0 }
-    private val player5HandCardBG=TokenView(width = 120, height = 120, posX = 145, posY = 930,
+    private val player5HandCardBG = TokenView(width = 120, height = 120, posX = 145, posY = 930,
         visual = ColorVisual(183,0,255)).apply { isDisabled = true; opacity = 0.0 }
-    private val player6HandCardBG=TokenView(width = 120, height = 120, posX = 265, posY = 930,
+    private val player6HandCardBG = TokenView(width = 120, height = 120, posX = 265, posY = 930,
         visual = ColorVisual.BLACK).apply { isDisabled = true; opacity = 0.0 }
 
-    val playerHandCardBGList= mutableListOf(player1HandCardBG,player2HandCardBG,player3HandCardBG,
+    private val playerHandCardBGList = mutableListOf(player1HandCardBG,player2HandCardBG,player3HandCardBG,
         player4HandCardBG,player5HandCardBG,player6HandCardBG)
 
     private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
@@ -151,15 +151,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 currentTile!!.rotationDegree = (currentTile!!.rotationDegree + 90) % 360
                 currentTileCardView!!.frontVisual = setTileFront(currentTile) } } }
 
-    val playerInputs = listOf(handTileLabel, handTileCardView, drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton)
+    private val playerInputs = listOf(handTileLabel, handTileCardView, drawnTilesLabel, drawnTilesCardView, undoButton,
+        redoButton, rotateButton)
 
     val quickMenuButton = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
 
-    val playerScoreBGLabel = Label(width = 420, height = 580, posY = 200, visual = ColorVisual.WHITE
+    private val playerScoreBGLabel = Label(width = 420, height = 580, posY = 200, visual = ColorVisual.WHITE
         ).apply { opacity = 0.8 }
 
-    val boardCellLabel = arrayOf(
+    private val boardCellLabel = arrayOf(
         arrayOf(TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
             TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
             TokenView(visual = ColorVisual(0,0,0,0)), TokenView(visual = ColorVisual(0,0,0,0)),
@@ -224,7 +225,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         this.networkPlayerName = hostName
         playerList += Player(hostName,if(isHostAi) true else null)
         playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList$it") }
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -237,7 +238,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
         playerList += Player(playerName,null)
         playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList$it") }
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -251,7 +252,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         val toBeDeleted = playerList.find { it.name == playerName }
         playerList -= toBeDeleted!!
         playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList$it") }
         showPlayers()
         if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
         else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
@@ -278,7 +279,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         undoButton.isVisible = true; redoButton.isVisible = true
 
-        if(networkPlayerName == null)         //hotseatmode
+        if(networkPlayerName == null)         //Hotseat mode
             for( i in playerList.indices)
                 isInputPlayer[i] = playerList[i].isSmartAi == null
         else {
@@ -325,7 +326,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
                                 currentTile!!.rotationDegree/90)
                         } else {
-                            //TODO: playNopeSound()
+                            gameService.playNopeSound()
                         }
                     }
                 }
@@ -445,7 +446,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
      * refreshes display of game field of all places tiles
      */
 
-    fun refreshGameBoard() {
+    private fun refreshGameBoard() {
         for (i in 0..7) for (j in 0..7) {
             val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
             if (boardCellTile != null)
@@ -459,7 +460,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
      * refreshes view of all current hand tiles distributed to active players
      */
 
-    fun playersHandCard(){
+    private fun playersHandCard(){
         // by default is 2 players and player card set initialized
         for (i in playerList.indices) {
             playerHandCardList[i].apply { isDisabled = false; opacity = 1.0 }

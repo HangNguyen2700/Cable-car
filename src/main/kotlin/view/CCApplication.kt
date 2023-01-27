@@ -302,8 +302,11 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
 
     }
 
-    fun startLobbyGame() {
-        //println(lobbyScene.playerType)
+    /**
+     * initializes hotseat mode game
+     */
+
+    private fun startLobbyGame() {
         lobbyScene.removeComponents(lobbyScene.isHostRealAIClickDisableLabel, lobbyScene.isHostRealAIBG,
             lobbyScene.hostRealButton, lobbyScene.hostSmartButton, lobbyScene.hostDumbButton)
         lobbyScene.isHostRealAIClickDisableLabel.isDisabled = true
@@ -343,54 +346,24 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         showGameScene(gameScene)
     }
 
-    fun startHostedGame() {
+    /**
+     * starts game in host mode
+     */
+
+    private fun startHostedGame() {
         this@CCApplication.rootService.networkService.hostGame(
             "cable22", mainMenuScene.nameField.text, hostLobbyScene.sessionIdTextField.text)
         gameScene.hostGameWaitForPlayers(mainMenuScene.nameField.text,hostLobbyScene.allowKITurnierCheckbox.isChecked)
 
-        hideMenuScene(3000)
-        showGameScene(gameScene)
+        hideMenuScene(3000); showGameScene(gameScene)
+    }
 
-        println("1. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-        println(mainMenuScene.nameField.text)
-        println(hostLobbyScene.sessionIdTextField.text)
-        /*if (allowShufflePlayerOrderCheckbox.isChecked) {
-            println("test1")
-            println("joinedPlayers:" + rootService.networkService.joinedPlayers)
+    /**
+     * ugh
+     */
 
-            println("2. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-            println(mainMenuScene.nameField.text)
-            println(secretTextField.text)
-            println(sessionIdTextField.text)
-        } else {*/
-        println("test2")
-        println("joinedPlayers:" + rootService.networkService.joinedPlayers)
-        println("joinedPlayers:" + rootService.networkService.joinedPlayers.size)
-
-        /*
-
-        this@CCApplication.rootService.networkService.startNewHostedGame(
-            mainMenuScene.nameField.text,
-            rotationAllowed = this.hostLobbyScene.allowTileRotationCheckbox.isChecked,
-            rootService.gameService.tileLookUp)
-
-        this@CCApplication.rootService.gameService.startNewGame(
-            rootService.networkService.joinedPlayers,
-            isLocalOnlyGame = false,
-            isHostedGame = true,
-            rotationAllowed = this.hostLobbyScene.allowTileRotationCheckbox.isChecked
-        )
-
-        println("3. secretTextField.text,mainMenuScene.nameField.text,sessionIdTextField.text")
-        println(mainMenuScene.nameField.text)
-        println(hostLobbyScene.secretTextField.text)
-        println(hostLobbyScene.sessionIdTextField.text)
-
-
-        //}
-
-         */
-
+    override fun playNopeSoundInCCApp() {
+        playNopeSound()
     }
 
     /**
@@ -540,6 +513,10 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         activeMenuScene = menuScene
         showMenuScene(menuScene, fadeTime)
     }
+
+    /**
+     * calls game over scene
+     */
 
     override fun refreshAfterGameFinished() {
         explicitlyShowGameOverScene()
