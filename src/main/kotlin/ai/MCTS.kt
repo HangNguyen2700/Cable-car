@@ -53,8 +53,14 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     }
     //stupid Ai random move
     private fun selectRandomNode(node: Node): Node {
-        if(node.children.isEmpty()) throw Exception("node children is empty")
-        return node.children.shuffled().first()
+        var current = node
+        while (current.children.isNotEmpty()) {
+            current = current.children.maxByOrNull {
+                if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount
+                else it.score
+            }!!
+        }
+        return current
     }
 
 
