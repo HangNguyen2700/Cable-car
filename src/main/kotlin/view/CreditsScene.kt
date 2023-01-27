@@ -32,7 +32,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
     )
 
     private val memberQuotes = listOf(
-        "\"\"","\"\"","\"Alles hat ein Ende. Nur die Wurst hat 2.\"","\"Now that my Code runs, I don't need Therapy anymore\"","\"\"","\"Microsoft ist nicht schlecht, sie machen nur ein beschissenes OS.\"","\"\"","\"\"","\"\""
+        "\"\"","\"\"","\"Alles hat ein Ende.\nNur die Wurst hat 2.\"","\"Now that my Code runs,\nI don't need Therapy anymore.\"","\"\"","\"Microsoft ist nicht schlecht,\nsie machen nur ein beschissenes OS.\"","\"Nur noch ein Tag,\ndann ist morgen.\"","\"\"","\"Das Sopra ist voll cool\""
     )
 
     private val memberImages = listOf(
@@ -60,7 +60,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
     private val nameFont = Font(size = 60, color = Color.WHITE, family = "Calibri")
     private val jobFont = Font(size = 40, color = Color.WHITE, family = "Calibri")
-    private val quoteFont = Font(size = 40, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
+    private val quoteFont = Font(size = 50, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
 
     val moveAnimation = MovementAnimation(componentView = movePane, byY = -8800, duration = 80000)
 
