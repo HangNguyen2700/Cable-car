@@ -8,15 +8,20 @@ package entity
  * @property complete a boolean indicating if the path is complete or not
  * @property startPos an integer indicating the starting position of the path on the game board.
  */
-data class Path(var tiles: MutableList<Tile>, var lastPort: Int,
-                var complete: Boolean,
-                var startPos: Int) {
+data class Path(var startPos: Int) {
+
+    var tiles: MutableList<Tile> = mutableListOf()
+    var lastPort: Int = -1
+    var complete: Boolean = false
 
     /**
      * copies the object
      */
-
     fun copy(): Path {
-        return Path(tiles.toMutableList(), lastPort, complete, startPos)
+        val newPath = Path(startPos)
+        newPath.tiles = tiles
+        newPath.lastPort = lastPort
+        newPath.complete = complete
+        return newPath
     }
 }

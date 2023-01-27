@@ -115,7 +115,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val redoButton = Button(width = 150, height = 50, posX = 1750, posY = 800,
         font = buttonTextFont, text = "Redo", visual = ColorVisual(186, 136, 133)
-    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { gameService.undo() } }
+    ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { gameService.redo() } }
 
     private val rotateButton = Button(width = 150, height = 50, posX = 1645, posY = 900,
         font = buttonTextFont, text = "Rotate", visual = ColorVisual(186, 136, 133, 255)
@@ -454,7 +454,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     override fun refreshAfterTileRotation(tile: Tile) {
-        TODO("Not yet implemented")
     }
 
     override fun refreshAfterPlaceTile() { turn()

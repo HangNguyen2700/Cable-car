@@ -3,6 +3,7 @@ package service
 import ai.MCTS
 import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
 import edu.udo.cs.sopra.ntf.TurnMessage
+import entity.GameField
 import entity.Player
 import entity.Tile
 import entity.Turn
@@ -95,7 +96,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // remove tile from tileStack and put it onto the field
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
             }
-            println("laying tile with pairs " + tile.ports)
+            rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.forEach { println(it.id) }
+            println("laying tile with pairs " + tile.ports + " with id " + tile.id)
             if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
 
                 rootService.networkService.sendTurnMessage(
@@ -128,11 +130,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     *  @author Anastasiia
-     * playRandomTurn: a function to play the turn of the 'dumb AI' player.
+     *  @author Anastasiia , Aziz
+     * playRandomTurn: a function to play the turn of the 'dumb/random AI' player.
      */
     fun playRandomTurn() {
-        TODO()
+        val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
+        val move = MCTS(rootService, aiIndex).findRandomMove()
+        placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
     /**
@@ -183,83 +187,138 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             (posX in 4..5 && posY in 4..5) ||
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] != null)
 
-
-
     companion object {
-        fun buildPathsAnastasiia(player: Player, placedTile: Tile, turn: Turn) {
-            for (path in player.paths) {
-                if (path.complete) continue
-                var checkAgain = true
+        fun buildPathsAnastasiia(turn: Turn) {
+            for (player in turn.players) {
+                for (path in player.paths) {
+                    if (path.complete) continue
+                    var checkAgain = true
 
-                while(checkAgain) {
-                    checkAgain = false
-                    if (path.tiles.isNotEmpty()) {
-                        if (path.lastPort == 2 or 3 /*&& new tile placed to the right of path.tiles.last()*/) {
+                    while(checkAgain) {
+                        checkAgain = false
+                        // TODO:
+//                        if (path.tiles.last() is connected to a station) {
+//                            player.score += path.tiles.count()
+//                            path.complete := true
+//                            if (station is a power station)
+//                            player.score += path.tiles.count()
+//                        }
+
+                        if (path.tiles.isNotEmpty()) {
+                            var placedTile = tileToTheRight(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                            if (path.lastPort == 2 or 3 && placedTile != null) {
+                                path.tiles.add(placedTile)
+                                val inPort = if (path.lastPort == 2) 7 else 6
+                                path.lastPort =
+                                    if (placedTile.ports[inPort].first == inPort)
+                                        placedTile.ports[inPort].second
+                                    else placedTile.ports[inPort].first
+                                checkAgain = true
+                            }
+                            placedTile = tileAtTheTop(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                            if (path.lastPort == 0 or 1 && placedTile != null) {
+                                path.tiles.add(placedTile)
+                                val inPort = if (path.lastPort == 0) 5 else 4
+                                path.lastPort =
+                                    if (placedTile.ports[inPort].first == inPort)
+                                        placedTile.ports[inPort].second
+                                    else placedTile.ports[inPort].first
+                                checkAgain = true
+                            }
+                            placedTile = tileToTheLeft(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                            if (path.lastPort == 6 or 7 && placedTile != null) {
+                                path.tiles.add(placedTile)
+                                val inPort = if (path.lastPort == 6) 3 else 2
+                                path.lastPort =
+                                    if (placedTile.ports[inPort].first == inPort)
+                                        placedTile.ports[inPort].second
+                                    else placedTile.ports[inPort].first
+                                checkAgain = true
+                            }
+                            placedTile = tileAtTheBottom(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                            if (path.lastPort == 4 or 5 && placedTile != null) {
+                                path.tiles.add(placedTile)
+                                val inPort = if (path.lastPort == 4) 1 else 0
+                                path.lastPort =
+                                    if (placedTile.ports[inPort].first == inPort)
+                                        placedTile.ports[inPort].second
+                                    else placedTile.ports[inPort].first
+                                checkAgain = true
+                            }
+                        }
+                        else {
+                            var placedTile: Tile?
+                            val coordinate = stationNoToCoordinate(path.startPos)
+                            if (path.startPos in 1..8)
+                                placedTile = tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
+                            else if (path.startPos in 9..16)
+                                placedTile = tileToTheLeft(coordinate.first, coordinate.second, turn.gameField)
+                            else if (path.startPos in 17..24)
+                                placedTile = tileAtTheBottom(coordinate.first, coordinate.second, turn.gameField)
+                            else
+                                placedTile = tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
+
+                            if (placedTile == null) continue
+
                             path.tiles.add(placedTile)
-                            val inPort = if (path.lastPort == 2) 7 else 6
+                            val inPort = inPortFromStartPos(path.startPos)
                             path.lastPort =
                                 if (placedTile.ports[inPort].first == inPort)
                                     placedTile.ports[inPort].second
                                 else placedTile.ports[inPort].first
                             checkAgain = true
                         }
-                        if (path.lastPort == 0 or 1 /*&& new tile placed at the top of path.tiles.last()*/) {
-                            path.tiles.add(placedTile)
-                            val inPort = if (path.lastPort == 0) 5 else 4
-                            path.lastPort =
-                                if (placedTile.ports[inPort].first == inPort)
-                                    placedTile.ports[inPort].second
-                                else placedTile.ports[inPort].first
-                            checkAgain = true
-                        }
-                        if (path.lastPort == 6 or 7 /*&& new tile placed to the left of path.tiles.last()*/) {
-                            path.tiles.add(placedTile)
-                            val inPort = if (path.lastPort == 6) 3 else 2
-                            path.lastPort =
-                                if (placedTile.ports[inPort].first == inPort)
-                                    placedTile.ports[inPort].second
-                                else placedTile.ports[inPort].first
-                            checkAgain = true
-                        }
-                        if (path.lastPort == 4 or 5 /*&& new tile placed at the bottom of path.tiles.last()*/) {
-                            path.tiles.add(placedTile)
-                            val inPort = if (path.lastPort == 4) 1 else 0
-                            path.lastPort =
-                                if (placedTile.ports[inPort].first == inPort)
-                                    placedTile.ports[inPort].second
-                                else placedTile.ports[inPort].first
-                            checkAgain = true
-                        }
-                    }
-                    else if (placedTile.posX == 0 || placedTile.posX == 8
-                        || placedTile.posY == 0 || placedTile.posY == 8)
-                    {
-                        path.tiles.add(placedTile)
-                        val inPort = inPortFromStartPos()
-                        path.lastPort =
-                            if (placedTile.ports[inPort].first == inPort)
-                                placedTile.ports[inPort].second
-                            else placedTile.ports[inPort].first
-                        checkAgain = true
                     }
                 }
-                /*
-                if (path.tiles.last() is connected to a station) {
-                    player.score += path.tiles.count()
-                    path.complete := true
-                    if (station is a power station)
-                    player.score += path.tiles.count()
-                }*/
             }
         }
 
-        private fun inPortFromStartPos(): Int {
-            /* set inPort to in-port of tile corresponding to startPos:
-                startPos 1-8 -> port 4
-                startPos 9-16 -> port 2
-                startPos 17-24 -> port 0
-                startPos 25-32 -> port 6*/
-            TODO()
+        fun stationNoToCoordinate(stationNo: Int): Pair<Int, Int> {
+            if (stationNo < 1 || stationNo > 32)
+                throw IllegalStateException("Tf you doin?")
+
+            if (stationNo <= 8)
+                return Pair(stationNo, 0)
+            if (stationNo <= 16)
+                return Pair(9, stationNo - 8)
+            if (stationNo <= 24)
+                return Pair(9 - (stationNo - 16), 9)
+            else
+                return Pair(0, 9 - (stationNo - 24))
+        }
+        private fun tileToTheRight(x: Int, y: Int, field: GameField): Tile? {
+            if (x + 1 > 8)
+                throw IllegalStateException("Illegal coordinate x.")
+            return field.field[x + 1][y]
+        }
+        private fun tileAtTheTop(x: Int, y: Int, field: GameField): Tile? {
+            if (y + 1 > 8)
+                throw IllegalStateException("Illegal coordinate y.")
+            return field.field[x][y + 1]
+        }
+        private fun tileToTheLeft(x: Int, y: Int, field: GameField): Tile? {
+            if (x - 1 < 1)
+                throw IllegalStateException("Illegal coordinate x.")
+            return field.field[x - 1][y]
+        }
+        private fun tileAtTheBottom(x: Int, y: Int, field: GameField): Tile? {
+            if (y - 1 < 1)
+                throw IllegalStateException("Illegal coordinate y.")
+            return field.field[x][y - 1]
+        }
+        private fun stationNoFromOutPort(x: Int, y: Int, outPort: Int): Int {
+            // add power station!!!
+            if (y == 8 && outPort == 1) return 25 - x
+            if (y == 1 && outPort == 5) return x
+            if (x == 1 && outPort == 7) return 33 - y
+            if (x == 8 && outPort == 3) return 8 + y
+            return -1
+        }
+        private fun inPortFromStartPos(startPos: Int): Int {
+            if (startPos in 1..8) return 4
+            if (startPos in 9..16) return 2
+            if (startPos in 17..24) return 0
+            return 6
         }
 
         /**
