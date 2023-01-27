@@ -128,11 +128,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     *  @author Anastasiia
-     * playRandomTurn: a function to play the turn of the 'dumb AI' player.
+     *  @author Anastasiia , Aziz
+     * playRandomTurn: a function to play the turn of the 'dumb/random AI' player.
      */
     fun playRandomTurn() {
-        TODO()
+        val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
+        val move = MCTS(rootService, aiIndex).findRandomMove()
+        placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
     /**

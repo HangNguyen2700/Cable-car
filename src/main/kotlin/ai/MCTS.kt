@@ -7,11 +7,11 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         val root = Node(rs, null, defaultMove, aiIndex)
 
         while (true) {
-            println("Still thinking")
+            println("Still Thinking")
             val node = selectPromisingNode(root)
             if (AiActionService.isGameOver(node.state)) {
                 backpropagation(node, true)
-                println("Decision made")
+                println("Decision Made")
                 return node.move
             }
             expandNode(node, aiIndex)
@@ -20,6 +20,26 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
             backpropagation(nodeToExplore, aiWon)
         }
     }
+    //for the stupid AI xD
+    fun findRandomMove() : Move {
+        val defaultMove = Move(false, -1, -1, -1)
+        val root = Node(rs, null, defaultMove, aiIndex)
+
+        while (true) {
+            println("Still Thinking")
+            val node = selectRandomNode(root)
+            if (AiActionService.isGameOver(node.state)) {
+                backpropagation(node, true)
+                println("Decision Made")
+                return node.move
+            }
+            expandNode(node, aiIndex)
+            val nodeToExplore = selectRandomNode(node)
+            val aiWon = simulateRandomPlayout(nodeToExplore)
+            backpropagation(nodeToExplore, aiWon)
+        }
+    }
+
 
     private fun selectPromisingNode(node: Node): Node {
         var current = node
@@ -31,6 +51,13 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         }
         return current
     }
+    //stupid Ai random move
+    private fun selectRandomNode(node: Node): Node {
+        if(node.children.isEmpty()) throw Exception("node children is empty")
+        return node.children.shuffled().first()
+    }
+
+
 
     private fun expandNode(node: Node, playerIndex: Int) {
         node.getPossibleMoves().forEach {
