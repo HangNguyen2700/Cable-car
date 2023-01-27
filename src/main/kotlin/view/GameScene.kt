@@ -66,6 +66,12 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var currentTileCardView: CardView? = null
 
     private val tileBackImage = ImageVisual("tile_back.png")
+    private val player1HandCard=CardView(width = 117, height = 112, posX = 72, posY = 716,front = ColorVisual.WHITE, back = tileBackImage)
+    private val player2HandCard=CardView(width = 117, height = 112, posX = 212, posY = 718,front = ColorVisual.WHITE, back = tileBackImage)
+    private val player3HandCard=CardView(width = 117, height = 112, posX = 352, posY = 716,front = ColorVisual.WHITE, back = tileBackImage)
+    private val player4HandCard=CardView(width = 117, height = 112, posX = 72, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
+    private val player5HandCard=CardView(width = 117, height = 112, posX = 212, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
+    private val player6HandCard=CardView(width = 117, height = 112, posX = 352, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
 
     private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
         font = labelFont, text = "Hand Tile").apply { isDisabled = true; opacity = 0.0 }
@@ -180,6 +186,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         background = ImageVisual("game_scene.png")
         addComponents(playerScoreBGLabel, playersGrid, topStationGrid, leftStationGrid, rightStationGrid,
             bottomStationGrid, mainBoardGrid, quickMenuButton, startGameButton, handTileLabel, handTileCardView,
+            player1HandCard,player2HandCard,player3HandCard,player4HandCard,player5HandCard,player6HandCard,
             drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, pleaseWaitLabel)
     }
 
@@ -231,7 +238,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         //network mode TODO: set networkPlayerName to null on GameScene exit
         }
 
-
         println(isInputPlayer)
 
         pleaseWaitLabel.opacity = 0.0; pleaseWaitLabel.isDisabled = true
@@ -239,11 +245,55 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         initGameBoard()
         initStationPosition()
+        showPlayersCard()
 
         if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
 
         turn()
+    }
+
+    fun showPlayersCard(){
+        // by default is 2 players and player card set initialized
+        player1HandCard.frontVisual= setTileFront(currentTurn!!.players[0].handTile)
+        player2HandCard.frontVisual= setTileFront(currentTurn!!.
+        players[ 1 ].handTile!!)
+
+
+        if (playerList.size >= 3) {
+            println("player size 3: ")
+
+            player3HandCard.frontVisual= setTileFront(currentTurn!!.
+            players[ 2 ].handTile!!)
+            player3HandCard.showFront()
+            if (playerList.size >= 4) {
+                println("player size 4: ")
+
+                player4HandCard.frontVisual= setTileFront(currentTurn!!.
+                players[ 3 ].handTile!!)
+                player4HandCard.showFront()
+                if (playerList.size >= 5) {
+                    println("player size 5: ")
+
+                    player5HandCard.frontVisual= setTileFront(currentTurn!!.
+                    players[ 4 ].handTile!!)
+                    player5HandCard.showFront()
+                    if (playerList.size == 6) {
+                        println("player size 6: ")
+
+                        player6HandCard.frontVisual= setTileFront(currentTurn!!.
+                        players[ 5 ].handTile!!)
+                        player6HandCard.showFront()}}}}
+
+
+
+        player1HandCard.showFront()
+        player2HandCard.showFront()
+        player3HandCard.showFront()
+        player4HandCard.showFront()
+        player5HandCard.showFront()
+        player6HandCard.showFront()
+
     }
 
     fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) {
@@ -407,11 +457,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         TODO("Not yet implemented")
     }
 
-    override fun refreshAfterPlaceTile() { turn() }
+    override fun refreshAfterPlaceTile() { turn()
+    showPlayersCard()}
 
-    override fun refreshAfterUndo() { turn() }
+    override fun refreshAfterUndo() { turn()
+        showPlayersCard()}
 
-    override fun refreshAfterRedo() { turn() }
+    override fun refreshAfterRedo() { turn()
+        showPlayersCard()}
 
     override fun refreshAfterDrawStackEmpty() {
         drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false
