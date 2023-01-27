@@ -78,7 +78,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val player6HandCard=CardView(width = 100, height = 100, posX = 275, posY = 940,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
 
-    val playerHandCardList= mutableListOf<CardView>(player1HandCard,player2HandCard,player3HandCard,
+    val playerHandCardList= mutableListOf(player1HandCard,player2HandCard,player3HandCard,
             player4HandCard,player5HandCard,player6HandCard)
 
     private val player1HandCardBG=TokenView(width = 120, height = 120, posX = 25, posY = 810,
@@ -94,7 +94,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val player6HandCardBG=TokenView(width = 120, height = 120, posX = 265, posY = 930,
         visual = ColorVisual.BLACK).apply { isDisabled = true; opacity = 0.0 }
 
-    val playerHandCardBGList= mutableListOf<TokenView>(player1HandCardBG,player2HandCardBG,player3HandCardBG,
+    val playerHandCardBGList= mutableListOf(player1HandCardBG,player2HandCardBG,player3HandCardBG,
         player4HandCardBG,player5HandCardBG,player6HandCardBG)
 
     private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
@@ -216,36 +216,59 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, pleaseWaitLabel)
     }
 
-    private fun isInputNeeded() = isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]
+    /**
+     * only called in host mode: shows primitive lobby screen with player names and shows start game button, when permitted
+     */
 
-    fun turn() {
-        playerList = rootService.currentGame!!.currentTurn.players
-        currentTurn = rootService.currentGame!!.currentTurn
-
-        showPlayers(); refreshGameBoard(); playersHandCard()
-
-        if (currentTile != null) currentTile!!.rotationDegree = 0
-        if (currentTileCardView != null) currentTileCardView!!.rotation = 0.0
-        playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
-
-        println(rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
-
-        if (isInputNeeded()) {
-            playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
-
-            if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty())
-                drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
-            handTileCardView.frontVisual = setTileFront(currentTurn!!.
-            players[ (currentTurn!!.currentPlayerIndex) % currentTurn!!.players.size ].handTile!!)
-            //increment order workaround
-
-            handTileCardView.showFront()
-            isDrawStackTileChosen = null
-            drawnTilesCardView.showBack()
-
-            rotateButton.isVisible = gameService.rotationAllowed
-        }
+    fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
+        this.networkPlayerName = hostName
+        playerList += Player(hostName,if(isHostAi) true else null)
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
     }
+
+    /**
+     * update player table on join
+     */
+
+    override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
+        playerList += Player(playerName,null)
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
+    }
+
+    /**
+     * update player table on leave
+     */
+
+    override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
+        val toBeDeleted = playerList.find { it.name == playerName }
+        playerList -= toBeDeleted!!
+        playerList.forEach { println("playerList " + it.name) }
+        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
+        showPlayers()
+        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
+        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
+    }
+
+    /**
+     * only called in join mode
+     */
+
+    fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) { //TODO: isJoinAi
+        this.networkPlayerName = joinName
+        pleaseWaitLabel.opacity = 1.0; pleaseWaitLabel.isDisabled = false
+    }
+
+    /**
+     * main scene init method. determines if players are to make inputs. if first player is AI playAITurn() is called
+     */
 
     override fun refreshAfterStartGame() {
         gameService = rootService.gameService
@@ -263,7 +286,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 playerList.find { it.name == networkPlayerName }?.isSmartAi != true
 
             undoButton.isVisible = false; redoButton.isVisible = false
-        //network mode TODO: set networkPlayerName to null on GameScene exit
+            //network mode TODO: set networkPlayerName to null on GameScene exit
         }
 
         println(isInputPlayer)
@@ -280,43 +303,106 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         turn()
     }
 
-    fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) { //TODO: isJoinAi
-        this.networkPlayerName = joinName
-        pleaseWaitLabel.opacity = 1.0; pleaseWaitLabel.isDisabled = false
+    /**
+     * initializes game board,
+     * each board cell is a token view, click on board cell to place tile
+     */
+
+    private fun initGameBoard() {
+        val mainStationPos = 3..4
+
+        for (i in 0..7) for (j in 0..7) {
+
+            if (i in mainStationPos && j in mainStationPos) {
+                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
+                    visual = ColorVisual(0, 0, 0, 0))
+            } else {
+                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
+                    visual = ColorVisual(0, 0, 0, 0)
+                ).apply {
+                    onMouseClicked = {
+                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
+                            playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
+                                currentTile!!.rotationDegree/90)
+                        } else {
+                            //TODO: playNopeSound()
+                        }
+                    }
+                }
+            }
+            mainBoardGrid[i, j] = boardCellLabel[i][j]
+        }
     }
 
-    fun hostGameWaitForPlayers(hostName :String, isHostAi : Boolean) {
-        this.networkPlayerName = hostName
-        playerList += Player(hostName,if(isHostAi) true else null)
-        playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
-        showPlayers()
-        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
-        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
+    /**
+     * initializes all stations in 2d-array to positions around the game board
+     */
+
+    private fun initStationPosition() {
+        val stations = initStationArray()
+
+        for (i in 0..3) for (j in 0..7) {
+
+            val stationCardView = TokenView(
+                height = 100, width = 100,
+                visual = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
+            ).apply {
+                if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
+                    this.visual = ColorVisual(0,0,0,0)
+                }
+                when (i) {
+                    0 -> this.rotation = 90.0
+                    1 -> this.rotation = 180.0
+                    2 -> this.rotation = 270.0
+                    3 -> this.rotation = 0.0
+                }
+            }
+
+            when (i) {
+                0 -> topStationGrid[j, 0] = stationCardView
+                1 -> rightStationGrid[0, j] = stationCardView
+                2 -> bottomStationGrid[j, 0] = stationCardView
+                3 -> leftStationGrid[0, j] = stationCardView
+            }
+        }
     }
 
-    override fun refreshAfterPlayerJoinedInWaitSession(playerName:String){
-        playerList += Player(playerName,null)
-        playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
-        showPlayers()
-        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
-        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
+    /**
+     * method is called on every turn. refreshes scene and shows input options if necessary
+     */
+
+    fun turn() {
+        playerList = rootService.currentGame!!.currentTurn.players
+        currentTurn = rootService.currentGame!!.currentTurn
+
+        showPlayers(); refreshGameBoard(); playersHandCard()
+
+        if (currentTile != null) currentTile!!.rotationDegree = 0
+        if (currentTileCardView != null) currentTileCardView!!.rotation = 0.0
+        playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
+
+        println(rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
+
+        if (isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]) {
+            playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
+
+            if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty())
+                drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
+            handTileCardView.frontVisual = setTileFront(currentTurn!!.
+            players[ (currentTurn!!.currentPlayerIndex) % currentTurn!!.players.size ].handTile!!)
+            //increment order workaround
+
+            handTileCardView.showFront()
+            isDrawStackTileChosen = null
+            drawnTilesCardView.showBack()
+
+            rotateButton.isVisible = gameService.rotationAllowed
+        }
     }
 
-    override fun refreshAfterPlayerLeftInWaitSession(playerName:String){
-        val toBeDeleted = playerList.find { it.name == playerName }
-        playerList -= toBeDeleted!!
-        playerList.forEach { println("playerList " + it.name) }
-        rootService.networkService.joinedPlayers.forEach { println("net playerList" + it) }
-        showPlayers()
-        if(playerList.size in 2..6) {startGameButton.isDisabled = false; startGameButton.opacity = 1.0}
-        else {startGameButton.isDisabled = true; startGameButton.opacity = 0.0}
-    }
-
-    override fun refreshAfterJoinGameInitialized(){
-        refreshAfterStartGame()
-    }
+    /**
+     * refreshes player list with score. on the left side. current player is highlighted green
+     */
 
     private fun showPlayers() {
 
@@ -356,77 +442,23 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     }
 
     /**
-     * initializes all stations in 2d-array to positions around the game board
+     * refreshes display of game field of all places tiles
      */
 
-    private fun initStationPosition() {
-        val stations = initStationArray()
-
-        for (i in 0..3) for (j in 0..7) {
-
-            val stationCardView = CardView(
-                height = 100, width = 100,
-                front = ColorVisual(0, 0, 0, 0),
-                back = ImageVisual(cardImageLoader.stationImage(stations[i][j].first, stations[i][j].second))
-            ).apply {
-                if ((i == 1 || i == 2) && j == 7 && stations[i][j] == Pair(entity.Color.BLACK, false)) {
-                    this.showFront()
-                }
-                when (i) {
-                    0 -> this.rotation = 90.0
-                    1 -> this.rotation = 180.0
-                    2 -> this.rotation = 270.0
-                    3 -> this.rotation = 0.0
-                }
-            }
-
-            when (i) {
-                0 -> topStationGrid[j, 0] = stationCardView
-                1 -> rightStationGrid[0, j] = stationCardView
-                2 -> bottomStationGrid[j, 0] = stationCardView
-                3 -> leftStationGrid[0, j] = stationCardView
-            }
-        }
-    }
-
-    /**
-     * 2D-array performs all stations around the game board and their car's colors according to player number
-     * when number of players is 1,2,4: 32 cars with color
-     * when number of players is 3,5,6: no car at positions 16 & 17 (30 cars with color)
-     */
-
-
-
-    /**
-     * initializes game board,
-     * each board cell is a card view, click on board cell to place tile
-     */
-
-    private fun initGameBoard() {
-        val mainStationPos = 3..4
-
+    fun refreshGameBoard() {
         for (i in 0..7) for (j in 0..7) {
-
-            if (i in mainStationPos && j in mainStationPos) {
-                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
-                    visual = ColorVisual(0, 0, 0, 0))
-            } else {
-                boardCellLabel[i][j] = TokenView(height = 100, width = 100,
-                    visual = ColorVisual(0, 0, 0, 0)
-                ).apply {
-                    onMouseClicked = {
-                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
-                            playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
-                                currentTile!!.rotationDegree/90)
-                        } else {
-                            //TODO: playNopeSound()
-                        }
-                    }
-                }
-            }
-            mainBoardGrid[i, j] = boardCellLabel[i][j]
+            val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
+            if (boardCellTile != null)
+                boardCellLabel[i][j].visual = setTileFront(boardCellTile)
+            else
+                boardCellLabel[i][j].visual = ColorVisual(0,0,0,0)
         }
     }
+
+    /**
+     * refreshes view of all current hand tiles distributed to active players
+     */
+
     fun playersHandCard(){
         // by default is 2 players and player card set initialized
         for (i in playerList.indices) {
@@ -440,29 +472,29 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    fun refreshGameBoard() {
-        for (i in 0..7) for (j in 0..7) {
-            val boardCellTile = rootService.currentGame!!.currentTurn.gameField.field[i+1][j+1]
-            if (boardCellTile != null)
-                boardCellLabel[i][j].visual = setTileFront(boardCellTile)
-            else
-                boardCellLabel[i][j].visual = ColorVisual(0,0,0,0)
-        }
-    }
+    /**
+     * triggered by service when ready for next turn
+     */
 
-    override fun refreshAfterTileRotation(tile: Tile) { }
+    override fun refreshAfterTurn() { turn() }
 
-    override fun refreshAfterPlaceTile() { turn() }
+    /**
+     * triggered by service if draw stack empty
+     */
 
-    override fun refreshAfterUndo() { turn() }
+    override fun refreshAfterDrawStackEmpty() { drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false }
 
-    override fun refreshAfterRedo() { turn() }
-
-    override fun refreshAfterDrawStackEmpty() {
-        drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false
-    }
+    /**
+     * triggered by service when game over
+     */
 
     override fun refreshAfterGameFinished() {  }
+
+    /**
+     * 2D-array performs all stations around the game board and their car's colors according to player number
+     * when number of players is 1,2,4: 32 cars with color
+     * when number of players is 3,5,6: no car at positions 16 & 17 (30 cars with color)
+     */
 
     private fun initStationArray(): Array<Array<Pair<entity.Color, Boolean>>> {
         val numOfPlayers = playerList.size
@@ -592,66 +624,38 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
+    /**
+     * lut returns texture for input Tile
+     */
+
     private fun setTileFront(tile: Tile?): ImageVisual {
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(0,0))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(1,0))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
-            return ImageVisual(cardImageLoader.frontImage(2,0))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(3,0))
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
-            return ImageVisual(cardImageLoader.frontImage(0,1))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(1,1))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
-            return ImageVisual(cardImageLoader.frontImage(2,1))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
-            return ImageVisual(cardImageLoader.frontImage(3,1))
-
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
-            return ImageVisual(cardImageLoader.frontImage(0,2))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(1,2))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(2,2))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(3,2))
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
-            return ImageVisual(cardImageLoader.frontImage(0,3))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(1,3))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
-            return ImageVisual(cardImageLoader.frontImage(2,3))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
-            return ImageVisual(cardImageLoader.frontImage(3,3))
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(0,4))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
-            return ImageVisual(cardImageLoader.frontImage(1,4))
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(2,4))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
-            return ImageVisual(cardImageLoader.frontImage(3,4))
-
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
-            return ImageVisual(cardImageLoader.frontImage(0,5))
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
-            return ImageVisual(cardImageLoader.frontImage(1,5))
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
-            return ImageVisual(cardImageLoader.frontImage(2,5))
-
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
-            return ImageVisual(cardImageLoader.frontImage(3,5))
-
-        else throw Exception("TIME TO SCREAM!!")
+        when (tile) {
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,0))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(1,0))
+            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(2,0))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(3,0))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))) -> return ImageVisual(cardImageLoader.frontImage(0,1))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(1,1))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))) -> return ImageVisual(cardImageLoader.frontImage(2,1))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(3,1))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(0,2))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(1,2))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(2,2))
+            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(3,2))
+            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(0,3))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(1,3))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(2,3))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(3,3))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,4))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))) -> return ImageVisual(cardImageLoader.frontImage(1,4))
+            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(2,4))
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(3,4))
+            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,5))
+            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))) -> return ImageVisual(cardImageLoader.frontImage(1,5))
+            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(2,5))
+            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(3,5))
+            else -> throw Exception("TIME TO SCREAM!!")
+        }
     }
 
 

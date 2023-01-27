@@ -132,7 +132,7 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         rootService.gameService.playersToPositions()
         updateConnectionState(ConnectionState.GAME_INITIALIZED)
 
-        onAllRefreshables { refreshAfterJoinGameInitialized() }
+        onAllRefreshables { refreshAfterStartGame() }
     }
 
     fun sendGameInitMessage(message: GameInitMessage) {

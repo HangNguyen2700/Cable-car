@@ -1,7 +1,6 @@
 package view
 
 import entity.Player
-import entity.Tile
 import service.RootService
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -125,7 +124,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
      */
     override fun refreshAfterGameFinished() {
 
-        val playerList = rootService.currentGame!!.currentTurn!!.players
+        val playerList = rootService.currentGame!!.currentTurn.players
         val winner: List<Player> = rootService.gameService.findWinner()
         winner.forEach { println(it.score) }
 
@@ -174,7 +173,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
      */
 
     private fun resetConfig() {
-        var playerList = rootService.currentGame!!.currentTurn.players
+        val playerList = rootService.currentGame!!.currentTurn.players
         for (player in playerList) {
             player.name = ""
             player.score = 0
@@ -195,11 +194,6 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         }
         refreshAfterRestartGame(playerName)
     }
-
-    override fun refreshAfterJoinGameInitialized() {}
-
-    override fun refreshAfterTileRotation(tile: Tile) {}
-
     init {
         addComponents(
             soundToggleButton, musicToggleButton,

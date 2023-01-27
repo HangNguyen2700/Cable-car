@@ -7,7 +7,6 @@ import entity.GameField
 import entity.Player
 import entity.Tile
 import entity.Turn
-import tools.aqua.bgw.visual.ImageVisual
 
 /**
  * class to handle player ingame actions
@@ -114,7 +113,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         }
 
         rootService.gameService.nextPlayer()
-        onAllRefreshables { this.refreshAfterPlaceTile() }
+        onAllRefreshables { this.refreshAfterTurn() }
 
         if(isGameOver()) rootService.gameService.endGame()
     }

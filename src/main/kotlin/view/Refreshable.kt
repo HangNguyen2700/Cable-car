@@ -1,7 +1,6 @@
 package view
 
 import entity.Player
-import entity.Tile
 import service.AbstractRefreshingService
 
 /**
@@ -23,32 +22,29 @@ interface Refreshable {
      */
     fun refreshAfterStartGame() {}
 
+    /**
+     * perform refresh if draw stack empty
+     */
+
     fun refreshAfterDrawStackEmpty() {}
 
-    fun refreshAfterJoinGameInitialized()
-
-    fun refreshAfterTileRotation(tile: Tile)
+    /**
+     * perform refresh when network player joins in host lobby
+     */
 
     fun refreshAfterPlayerJoinedInWaitSession(playerName:String){}
+
+    /**
+     * perform refresh when network player leaves in host lobby
+     */
 
     fun refreshAfterPlayerLeftInWaitSession(playerName:String){}
 
     /**
-     * Refresh after current player placed tile and next player is called     *
-     */
-    fun refreshAfterPlaceTile(){}
-
-    /**
-     * refreshes Turn after undo is engaged
+     * Refresh after current player placed tile or undo or redo. next player is called right beforehand
      */
 
-    fun refreshAfterUndo(){}
-
-    /**
-     * refreshes Turn after redo is engaged
-     */
-
-    fun refreshAfterRedo(){}
+    fun refreshAfterTurn(){}
 
     /**
      * refreshes after game is finished
@@ -59,5 +55,6 @@ interface Refreshable {
     /**
      * Refresh game config except player name and numbers
      */
+
     fun refreshAfterRestartGame(playerNames: MutableList<Player>){}
 }

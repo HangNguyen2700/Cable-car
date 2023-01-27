@@ -1,13 +1,9 @@
 package service
 
 import entity.*
-import java.io.File
 import entity.Color
 import entity.Player
 import entity.Turn
-import java.io.InputStream
-import java.nio.file.Paths
-import javax.imageio.ImageIO
 
 /**
  * broad game logic
@@ -75,14 +71,14 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * @throws IllegalArgumentException if there is no previous game state.
      */
     fun undo() {
-        var currentGame = rootService.currentGame
+        val currentGame = rootService.currentGame
         checkNotNull(currentGame)
         if (currentGame.currentTurn.previousTurn != null) {
             currentGame.currentTurn = currentGame.currentTurn.previousTurn!!
 
         }
 
-        onAllRefreshables { this.refreshAfterUndo() }
+        onAllRefreshables { this.refreshAfterTurn() }
     }
 
     /**
@@ -92,14 +88,14 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * @throws IllegalArgumentException if there is no next game state.
      */
     fun redo() {
-        var currentGame = rootService.currentGame
+        val currentGame = rootService.currentGame
         checkNotNull(currentGame)
         if (currentGame.currentTurn.nextTurn != null) {
             currentGame.currentTurn = currentGame.currentTurn.nextTurn!!
 
         }
 
-        onAllRefreshables { this.refreshAfterRedo() }
+        onAllRefreshables { this.refreshAfterTurn() }
     }
 
     /**

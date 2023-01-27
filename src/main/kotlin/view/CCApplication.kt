@@ -7,7 +7,6 @@ import com.soywiz.korau.sound.readMusic
 import com.soywiz.korio.async.async
 import com.soywiz.korio.file.std.resourcesVfs
 import entity.Player
-import entity.Tile
 import kotlinx.coroutines.GlobalScope
 import service.RootService
 import tools.aqua.bgw.core.Alignment
@@ -544,12 +543,6 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
 
     override fun refreshAfterGameFinished() {
         explicitlyShowGameOverScene()
-    }
-
-    override fun refreshAfterJoinGameInitialized() {
-    }
-
-    override fun refreshAfterTileRotation(tile: Tile) {
     }
 
 }
