@@ -8,7 +8,7 @@ package entity
  * @property posX an integer representing the tile's x position on the game board
  * @property posY an integer representing the tile's y position on the game board
  */
-data class Tile(val ports: MutableList<Pair<Int, Int>>, /*val tilePos: Int*/) {
+data class Tile(var ports: MutableList<Pair<Int, Int>>) {
 
     var id: Int = -1
     var originalPorts = mutableListOf<Pair<Int, Int>>()

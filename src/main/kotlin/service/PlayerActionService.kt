@@ -187,6 +187,80 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             (posX in 4..5 && posY in 4..5) ||
                 rootService.currentGame!!.currentTurn.gameField.field[posX][posY] != null)
 
+    /**
+     * @author Jonah
+     * Rotate a tile 90 degrees clockwise Sense
+     *
+     * @param tile The tile which should rotate
+     */
+    fun rotate(tile: Tile) : Tile{
+
+        tile.rotationDegree = (tile.rotationDegree + 1) % 4
+
+        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
+            return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
+            return Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
+            return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
+            return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
+            return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
+            return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
+            return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
+            return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
+            return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
+            return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
+            return Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
+            return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
+            return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
+            return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
+            return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
+            return Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
+            return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
+            return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
+            return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
+            return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
+
+        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+            return tile
+
+        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
+            return tile
+
+        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
+            return tile
+
+        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
+            return tile
+
+        else {
+            throw Exception("ROTATE FUNKTIONIERT NICHT :(((((")
+        }
+
+    }
+
     companion object {
         fun buildPathsAnastasiia(turn: Turn) {
             for (player in turn.players) {
@@ -575,7 +649,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 throw Exception("ROTATE FUNKTIONIERT NICHT :(((((")
             }
 
-        }
-    }
 
+        }
+
+    }
 }

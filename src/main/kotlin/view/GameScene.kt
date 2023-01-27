@@ -34,15 +34,17 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private val cardImageLoader = CardImageLoader()
 
-    private var networkPlayerName :String? = null
-
     private lateinit var gameService: GameService
     private lateinit var playerActionService: PlayerActionService
     private var currentTurn: Turn? = null
     var playerList = listOf<Player>()
     var isInputPlayer = mutableListOf<Boolean>(false,false,false,false,false,false)
-    private var currentTile: Tile? = null
 
+    private var networkPlayerName :String? = null
+    private val tileBackImage = ImageVisual("tile_back.png")
+
+    private var currentTile: Tile? = null
+    private var currentTileCardView: CardView? = null
     private var isDrawStackTileChosen : Boolean? = null
 
     private val labelFont = Font(50, Color.BLACK, family = "Calibri")
@@ -63,10 +65,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val mainBoardGrid = GridPane<ComponentView>(columns = 8, rows = 8,
         posX = 560, posY = 140, layoutFromCenter = false)
 
-    private var currentTileCardView: CardView? = null
-
-    private val tileBackImage = ImageVisual("tile_back.png")
-
     private val player1HandCard=CardView(width = 117, height = 112 ,posY = 770,
         front = ColorVisual.WHITE, back = tileBackImage)
     private val player2HandCard=CardView(width = 117, height = 112, posX = 151.5, posY = 770,
@@ -86,7 +84,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
         font = labelFont, text = "Hand Tile").apply { isDisabled = true; opacity = 0.0 }
 
-    private val handTileCardView = CardView(width = 180, height = 180, posX = 1630, posY = 230,
+    private val handTileCardView = CardView(width = 200, height = 200, posX = 1620, posY = 230,
         front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         isDisabled = true; opacity = 0.0
@@ -103,7 +101,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val drawnTilesLabel = Label(height = 100, width = 300, posX = 1570, posY = 450,
         font = labelFont, text = "Draw Stack").apply { isDisabled = true; opacity = 0.0 }
 
-    private val drawnTilesCardView = CardView(height = 180, width = 180, posX = 1630, posY = 580,
+    private val drawnTilesCardView = CardView(height = 200, width = 200, posX = 1620, posY = 580,
         front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         isDisabled = true; opacity = 0.0
@@ -131,12 +129,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         font = buttonTextFont, text = "Rotate", visual = ColorVisual(186, 136, 133, 255)
     ).apply {
         isDisabled = true; opacity = 0.0
-        /*onMouseClicked = {
-            if (currentTile != null && currentTileCardView != null) {
-                currentTile!!.rotationDegree += 90
-                currentTileCardView!!.rotation = currentTile!!.rotationDegree.toDouble() } }*/ }
+        onMouseClicked = {
+            if (isDrawStackTileChosen != null && currentTile != null && currentTileCardView != null) {
+                currentTile!!.ports = playerActionService.rotate(currentTile!!).ports
+                currentTile!!.rotationDegree = (currentTile!!.rotationDegree + 90) % 360
+                currentTileCardView!!.frontVisual = setTileFront(currentTile) } } }
 
-    val playerInputs = listOf(handTileLabel,handTileCardView,drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton)
+    val playerInputs = listOf(handTileLabel, handTileCardView, drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton)
 
     val quickMenuButton = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
@@ -207,7 +206,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers(); refreshGameBoard()
-
+        if (currentTile != null) currentTile!!.rotationDegree = 0
+        if (currentTileCardView != null) currentTileCardView!!.rotation = 0.0
         playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
 
         println(rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
@@ -399,7 +399,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 ).apply {
                     onMouseClicked = {
                         if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
-                            playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1)
+                            playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
+                                currentTile!!.rotationDegree/90)
                         } else {
                             //TODO: playNopeSound()
                         }
