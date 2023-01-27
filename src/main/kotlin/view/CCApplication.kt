@@ -547,11 +547,9 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     override fun refreshAfterJoinGameInitialized() {
-        TODO("Not yet implemented")
     }
 
     override fun refreshAfterTileRotation(tile: Tile) {
-        TODO("Not yet implemented")
     }
 
 }
