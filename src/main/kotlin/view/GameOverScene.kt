@@ -137,8 +137,8 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
             restartButton, mainMenuButton, quitButton, endGameLabel
         ).forEach { it.opacity = 1.0 }
 
-        background = ColorVisual(Color(180, 89, 188))
-        opacity = 0.4
+        background = ImageVisual("game_over_screen.jpg")
+        opacity = 1.0
     }
 
     /**
