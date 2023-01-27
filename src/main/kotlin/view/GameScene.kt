@@ -51,7 +51,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val buttonTextFont = Font(30, color = Color.WHITE, family = "Calibri")
 
     private val playersGrid = GridPane<GridPane<ComponentView>>(columns = 1, rows = 6,
-        spacing = 50.0, posX = 62, posY = 268, layoutFromCenter = false)
+        spacing = 50.0, posX = 62, posY = 200, layoutFromCenter = false)
     private val topStationGrid = GridPane<ComponentView>(columns = 8, rows = 1,
         posX = 560, posY = 40, layoutFromCenter = false)
     private val leftStationGrid = GridPane<ComponentView>(columns = 1, rows = 8,
@@ -66,12 +66,22 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var currentTileCardView: CardView? = null
 
     private val tileBackImage = ImageVisual("tile_back.png")
-    private val player1HandCard=CardView(width = 117, height = 112, posX = 72, posY = 716,front = ColorVisual.WHITE, back = tileBackImage)
-    private val player2HandCard=CardView(width = 117, height = 112, posX = 212, posY = 718,front = ColorVisual.WHITE, back = tileBackImage)
-    private val player3HandCard=CardView(width = 117, height = 112, posX = 352, posY = 716,front = ColorVisual.WHITE, back = tileBackImage)
-    private val player4HandCard=CardView(width = 117, height = 112, posX = 72, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
-    private val player5HandCard=CardView(width = 117, height = 112, posX = 212, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
-    private val player6HandCard=CardView(width = 117, height = 112, posX = 352, posY = 868,front = ColorVisual.WHITE, back = tileBackImage)
+
+    private val player1HandCard=CardView(width = 117, height = 112 ,posY = 770,
+        front = ColorVisual.WHITE, back = tileBackImage)
+    private val player2HandCard=CardView(width = 117, height = 112, posX = 151.5, posY = 770,
+        front = ColorVisual.WHITE, back = tileBackImage)
+    private val player3HandCard=CardView(width = 117, height = 112, posX = 303, posY = 770,
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
+    private val player4HandCard=CardView(width = 117, height = 112,  posY = 940,
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
+    private val player5HandCard=CardView(width = 117, height = 112, posX = 151.5, posY = 940,
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
+    private val player6HandCard=CardView(width = 117, height = 112, posX = 303, posY = 940,
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
+
+    val playerHandCardList= mutableListOf<CardView>(player1HandCard,player2HandCard,player3HandCard,
+            player4HandCard,player5HandCard,player6HandCard)
 
     private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
         font = labelFont, text = "Hand Tile").apply { isDisabled = true; opacity = 0.0 }
@@ -131,7 +141,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     val quickMenuButton = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
 
-    val playerScoreBGLabel = Label(width = 420, height = 580, posY = 250, visual = ColorVisual.WHITE
+    val playerScoreBGLabel = Label(width = 420, height = 580, posY = 200, visual = ColorVisual.WHITE
         ).apply { opacity = 0.8 }
 
     val boardCellLabel = arrayOf(
@@ -251,42 +261,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             rootService.playerActionService.playAiTurn()
 
         turn()
-    }
-
-    fun playersHandCard(){
-        // by default is 2 players and player card set initialized
-        player1HandCard.frontVisual= setTileFront(currentTurn!!.players[0].handTile)
-        player2HandCard.frontVisual= setTileFront(currentTurn!!.
-        players[ 1 ].handTile!!)
-        player1HandCard.showFront()
-        player2HandCard.showFront()
-
-
-        if (playerList.size >= 3) {
-            println("player size 3: ")
-
-            player3HandCard.frontVisual= setTileFront(currentTurn!!.
-            players[ 2 ].handTile!!)
-            player3HandCard.showFront()
-            if (playerList.size >= 4) {
-                println("player size 4: ")
-
-                player4HandCard.frontVisual= setTileFront(currentTurn!!.
-                players[ 3 ].handTile!!)
-                player4HandCard.showFront()
-                if (playerList.size >= 5) {
-                    println("player size 5: ")
-
-                    player5HandCard.frontVisual= setTileFront(currentTurn!!.
-                    players[ 4 ].handTile!!)
-                    player5HandCard.showFront()
-                    if (playerList.size == 6) {
-                        println("player size 6: ")
-
-                        player6HandCard.frontVisual= setTileFront(currentTurn!!.
-                        players[ 5 ].handTile!!)
-                        player6HandCard.showFront()}}}}
-
     }
 
     fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) {
@@ -433,6 +407,15 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 }
             }
             mainBoardGrid[i, j] = boardCellLabel[i][j]
+        }
+    }
+    fun playersHandCard(){
+        // by default is 2 players and player card set initialized
+        for(i in playerList.indices){
+            playerHandCardList[i].apply { isDisabled=false;opacity=1.0 }
+            playerHandCardList[i].frontVisual=setTileFront(currentTurn!!.
+            players[ i ].handTile!!)
+            playerHandCardList[i].showFront()
         }
     }
 
