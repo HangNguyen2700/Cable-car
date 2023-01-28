@@ -129,6 +129,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }
                 else
                     throw IllegalStateException("no card must be placed here !")
+
             }
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }
