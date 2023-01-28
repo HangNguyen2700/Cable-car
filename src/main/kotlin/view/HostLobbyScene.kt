@@ -34,6 +34,9 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 60,
         visual = ImageVisual("sound_enabled.png"))
 
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1120, posY = 60,
+        visual = ImageVisual("fullscreen.png"))
+
    //KI Turnier
     private val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 300,
         visual = CompoundVisual(
@@ -94,7 +97,7 @@ class HostLobbyScene: MenuScene(1920, 1080) {
     init{
         addComponents(
             backToMainMenuSceneButton,
-            soundToggleButton, musicToggleButton,
+            soundToggleButton, musicToggleButton, fullscreenToggleButton,
             hostGameLabel,allowKITurnier,allowKITurnierCheckbox,
             allowTileRotationButton,allowTileRotationCheckbox,
             sessionIdLabel,sessionIdTextField,

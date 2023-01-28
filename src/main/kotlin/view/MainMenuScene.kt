@@ -111,13 +111,16 @@ class MainMenuScene : MenuScene(1920,1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
 
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 880,
+        visual = ImageVisual("fullscreen.png"))
+
     init{
         addComponents(
             nameField, nameFieldLabel,
             menuLabel,
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
-            quitButton, soundToggleButton, musicToggleButton,
+            quitButton, soundToggleButton, musicToggleButton, fullscreenToggleButton,
             debugGameSceneButton,
             debugGameEndSceneButton,
             nameErrorLabel, closeNameErrorButton,

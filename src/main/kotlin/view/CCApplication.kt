@@ -18,6 +18,7 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
+import java.awt.Image
 
 /**
  * Main BoardGameApplication. contains all scenes and manages scene traversing and audio playback & toggle
@@ -34,6 +35,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     private val rootService = RootService()
 
     private val creditsScene = CreditsScene().apply {
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         backToTitleSceneButton.onMouseClicked = {
             timesClicked++
             when (timesClicked) {
@@ -75,6 +77,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     private val gameOverScene = GameOverScene(rootService).apply {
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
         mainMenuButton.onMouseClicked = {
@@ -100,6 +103,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     private val hostLobbyScene = HostLobbyScene().apply {
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
             showMenuScene(confirmQuitMenuScene)
@@ -126,6 +130,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         backToMainMenuSceneButton.onMouseClicked = {
             hideMenuScene(3000)
             showAndStoreMenuScene(mainMenuScene, 3000)
@@ -143,6 +148,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         }
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         joinButton.onMouseClicked = { nameEmptyCheck(1) }
         hostButton.onMouseClicked = { nameEmptyCheck(2) }
         hotseatButton.onMouseClicked = { nameEmptyCheck(3) }
@@ -170,6 +176,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     private val networkJoinScene = NetworkJoinScene().apply {
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
             showMenuScene(confirmQuitMenuScene)
@@ -208,6 +215,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     private val quickMenuGameScene = QuickMenuGameScene().apply {
         soundToggleButton.onMouseClicked = { toggleSound() }
         musicToggleButton.onMouseClicked = { toggleMusic() }
+        fullscreenToggleButton.onMouseClicked = { toggleFullscreen() }
         exitQuitMenuSceneButton.onMouseClicked = { hideMenuScene(3000) }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
@@ -226,7 +234,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     private var musicChannel: SoundChannel? = null
     private var soundChannel: SoundChannel? = null
 
-    private var musicEnabled = false
+    private var musicEnabled = false         //TODO: set to true for final build
     private var soundEnabled = true
 
     private val musicButtons = listOf(
@@ -248,10 +256,23 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         hostLobbyScene.soundToggleButton
     )
 
+    private val fullscreenButtons = listOf(
+        mainMenuScene.fullscreenToggleButton,
+        lobbyScene.fullscreenToggleButton,
+        quickMenuGameScene.fullscreenToggleButton,
+        creditsScene.fullscreenToggleButton,
+        gameOverScene.fullscreenToggleButton,
+        networkJoinScene.fullscreenToggleButton,
+        hostLobbyScene.fullscreenToggleButton
+    )
+
     private val musicButtonEnableImage = ImageVisual("music_enabled.png")
     private val musicButtonDisableImage = ImageVisual("music_disabled.png")
     private val soundButtonEnableImage = ImageVisual("sound_enabled.png")
     private val soundButtonDisableImage = ImageVisual("sound_disabled.png")
+    private val fullscreenImage = ImageVisual("fullscreen.png")
+    private val windowedImage = ImageVisual("windowed.png")
+
 
     init {
         rootService.addRefreshables(
@@ -260,7 +281,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
             gameOverScene
         )
         this.showGameScene(titleScene)
-        isFullScreen = false        //TODO: set to true for final build
+        isFullScreen = false
         icon = ImageVisual("icon.png")
     }
 
@@ -396,6 +417,21 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
             } else {
                 button.visual = soundButtonEnableImage
                 if (soundChannel != null) soundChannel!!.volume = 1.0
+            }
+        }
+    }
+
+    /**
+     * analog to toggleMusic()
+     */
+
+    private fun toggleFullscreen() {
+        isFullScreen = !isFullScreen
+        for (button in fullscreenButtons) {
+            if (isFullScreen) {
+                button.visual = windowedImage
+            } else {
+                button.visual = fullscreenImage
             }
         }
     }

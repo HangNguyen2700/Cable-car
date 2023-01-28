@@ -60,11 +60,14 @@ class NetworkJoinScene : MenuScene(1920, 1080){
     val quitButton = Button(width = 140, height = 140, posX = 1720, posY = 60,
         visual = ImageVisual("quit_button.png"))
 
-    val musicToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 60,
+    val musicToggleButton = Button(width = 140, height = 140, posX = 1720, posY = 880,
         visual = ImageVisual("music_enabled.png"))
 
-    val soundToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 60,
+    val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
+
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 880,
+        visual = ImageVisual("fullscreen.png"))
 
     init {
         background = ColorVisual(0,0,0)
@@ -73,7 +76,7 @@ class NetworkJoinScene : MenuScene(1920, 1080){
             topLabel, backToMainMenuSceneButton,
             sessionIDLabel, sessionIDTextField,
             aiGameButton, aiGameCheckBox,
-            quitButton, musicToggleButton, soundToggleButton,
+            quitButton, musicToggleButton, soundToggleButton, fullscreenToggleButton,
             joinGameButton,
         )
     }

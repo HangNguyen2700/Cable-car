@@ -20,6 +20,9 @@ class QuickMenuGameScene : MenuScene(600, 1080) {
         font = Font(size = 100, color = Color.BLUE, family = "Calibri"),
         text = "Quick Menu")
 
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 230, posY = 18,
+        visual = ImageVisual("fullscreen.png"))
+
     private val soundToggleLabel = Label(width = 600, height = 100, posX = 0, posY = 300,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.5 },
@@ -53,7 +56,7 @@ class QuickMenuGameScene : MenuScene(600, 1080) {
     init {
         addComponents(
             menuLabel,
-            soundToggleLabel, soundToggleButton, musicToggleLabel, musicToggleButton,
+            soundToggleLabel, soundToggleButton, musicToggleLabel, musicToggleButton, fullscreenToggleButton,
             exitQuitMenuSceneButton, quitButton
         )
         background = ColorVisual(128,255,128)

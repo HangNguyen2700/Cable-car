@@ -58,6 +58,9 @@ class CreditsScene : BoardGameScene(1920,1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1520, posY = 880,
         visual = ImageVisual("sound_enabled.png"))
 
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 880,
+        visual = ImageVisual("fullscreen.png"))
+
     private val nameFont = Font(size = 60, color = Color.WHITE, family = "Calibri")
     private val jobFont = Font(size = 40, color = Color.WHITE, family = "Calibri")
     private val quoteFont = Font(size = 50, color = Color.WHITE, family = "Calibri", fontStyle = Font.FontStyle.ITALIC)
@@ -294,8 +297,9 @@ class CreditsScene : BoardGameScene(1920,1080) {
             i += 1; tk.visual = explosionImageVisualList[i]; println("frame$i") }}
     )
 
-    private val copyrightLabel = Label(text = "Copyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"),
-        width = 1920, height = 200, posY = 9250)
+    private val copyrightLabel = Label(text = "Falls du nen Kartoffel PC hast,\ngehst du jetzt besser." +
+            "\n\n\nCopyright 2023", font = Font(size = 50, color = Color.WHITE, family = "Calibri"),
+        width = 1920, height = 600, posY = 9050)
 
     init {
 
@@ -338,7 +342,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
         addComponents(tk)
 
         background = ColorVisual(0,0,0)
-        addComponents(movePane, backToTitleSceneButton, soundToggleButton, musicToggleButton)
+        addComponents(movePane, backToTitleSceneButton, soundToggleButton, musicToggleButton, fullscreenToggleButton)
     }
 
     private fun pathToImageVisuals(path: String, length : Int) :List<Visual>{

@@ -36,10 +36,13 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         font = Font(100, Color.WHITE, family = "Calibri", fontWeight = Font.FontWeight.BOLD), text = "GAME OVER")
 
     val musicToggleButton = Button(
-        width = 140, height = 140, posX = 1620, posY = 880, visual = ImageVisual("music_enabled.png")    )
+        width = 140, height = 140, posX = 1720, posY = 880, visual = ImageVisual("music_enabled.png")    )
 
     val soundToggleButton = Button(
-        width = 140, height = 140, posX = 1320, posY = 880, visual = ImageVisual("sound_enabled.png")    )
+        width = 140, height = 140, posX = 1520, posY = 880, visual = ImageVisual("sound_enabled.png")    )
+
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 880,
+        visual = ImageVisual("fullscreen.png"))
 
     //aligns player names
     private var p1Name = Label(width = 400, height = 50, posX = 825, posY = 810,
@@ -123,14 +126,14 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
 
     init {
         addComponents(
-            soundToggleButton, musicToggleButton,
+            soundToggleButton, musicToggleButton, fullscreenToggleButton,
             p4Name, p5Name, p3Name, p1Name, p2Name, p6Name,
             playerImg1, playerImg2, playerImg3, playerImg4, playerImg5, playerImg6,
             crown, first, second, third, fourth, fifth, sixth,
             restartButton, mainMenuButton, quitButton, endGameLabel
         )
         arrayOf(
-            soundToggleButton, musicToggleButton,
+            soundToggleButton, musicToggleButton, fullscreenToggleButton,
             p1Name, p2Name, p3Name, p4Name, p5Name, p6Name,
             playerImg1, playerImg2, playerImg3, playerImg4, playerImg5, playerImg6,
             crown, first, second, third, fourth, fifth, sixth,
