@@ -40,7 +40,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     var playerList = listOf<Player>()
     private var isInputPlayer = mutableListOf(false,false,false,false,false,false)
 
-    private var networkPlayerName :String? = null
+    var networkPlayerName :String? = null
     private val tileBackImage = ImageVisual("tile_back.png")
 
     private var currentTile: Tile? = null
@@ -298,9 +298,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         initGameBoard()
         initStationPosition()
 
-        if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
+        /*if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
-
+*/
         turn()
     }
 
