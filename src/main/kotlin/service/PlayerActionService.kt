@@ -347,11 +347,11 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                             val coordinate = stationNoToCoordinate(path.startPos)
                             // Check if a new tile was placed at the station
                             if (path.startPos in 1..8)
-                                placedTile = tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
+                                placedTile = tileAtTheBottom(coordinate.first, coordinate.second, turn.gameField)
                             else if (path.startPos in 9..16)
                                 placedTile = tileToTheLeft(coordinate.first, coordinate.second, turn.gameField)
                             else if (path.startPos in 17..24)
-                                placedTile = tileAtTheBottom(coordinate.first, coordinate.second, turn.gameField)
+                                placedTile = tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
                             else
                                 placedTile = tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
 
@@ -376,13 +376,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 throw IllegalStateException("Tf you doin?")
 
             if (stationNo <= 8)
-                return Pair(stationNo, 9)
+                return Pair(stationNo, 0)
             if (stationNo <= 16)
-                return Pair(9, 17 - stationNo)
+                return Pair(9, stationNo - 8)
             if (stationNo <= 24)
-                return Pair(25 - stationNo, 0)
+                return Pair(25 - stationNo, 9)
             else
-                return Pair(0, stationNo - 24)
+                return Pair(0, 33 - stationNo)
         }
         private fun tileToTheRight(x: Int, y: Int, field: GameField): Tile? {
             if (x + 1 > 8)
@@ -390,9 +390,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             return field.field[x + 1][y]
         }
         private fun tileAtTheTop(x: Int, y: Int, field: GameField): Tile? {
-            if (y + 1 > 8)
+            if (y - 1 < 1)
                 throw IllegalStateException("Illegal coordinate y.")
-            return field.field[x][y + 1]
+            return field.field[x][y - 1]
         }
         private fun tileToTheLeft(x: Int, y: Int, field: GameField): Tile? {
             if (x - 1 < 1)
@@ -400,20 +400,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             return field.field[x - 1][y]
         }
         private fun tileAtTheBottom(x: Int, y: Int, field: GameField): Tile? {
-            if (y - 1 < 1)
+            if (y + 1 > 8)
                 throw IllegalStateException("Illegal coordinate y.")
-            return field.field[x][y - 1]
+            return field.field[x][y + 1]
         }
         private fun isConnectedToStation(x: Int, y: Int, outPort: Int): Boolean {
-            if (y == 8 && outPort == 1) return true
-            if (y == 1 && outPort == 5) return true
+            if (y == 1 && outPort == 1) return true
+            if (y == 8 && outPort == 5) return true
             if (x == 1 && outPort == 7) return true
             if (x == 8 && outPort == 3) return true
             return false
         }
         private fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
-            if (y == 3 && x == 4 or 5 && outPort == 0 or 1) return true
-            if (y == 6 && x == 4 or 5 && outPort == 4 or 5) return true
+            if (y == 6 && x == 4 or 5 && outPort == 0 or 1) return true
+            if (y == 3 && x == 4 or 5 && outPort == 4 or 5) return true
             if (x == 3 && y == 4 or 5 && outPort == 2 or 3) return true
             if (x == 6 && y == 4 or 5 && outPort == 6 or 7) return true
             return false
