@@ -270,21 +270,22 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     while(checkAgain) {
                         checkAgain = false
 
-                        // Check if connected to a power station
-                        if (isConnectedToPower(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
-                            path.complete = true
-                            player.score += 2 * path.tiles.count()
-                            break
-                        }
-                        // Check if connected to a normal station
-                        if (isConnectedToStation(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
-                            path.complete = true
-                            player.score += path.tiles.count()
-                            break
-                        }
-
-                        // For a non-empty path, check if it can be extended
+                        // For a non-empty path, check if it is connected to a station or can be extended
                         if (path.tiles.isNotEmpty()) {
+
+                            // Check if connected to a power station
+                            if (isConnectedToPower(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
+                                path.complete = true
+                                player.score += 2 * path.tiles.count()
+                                break
+                            }
+                            // Check if connected to a normal station
+                            if (isConnectedToStation(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
+                                path.complete = true
+                                player.score += path.tiles.count()
+                                break
+                            }
+
                             var placedTile: Tile?
                             // Check on the right if lastPort goes to the right
                             if (path.lastPort == 2 or 3) {
@@ -355,7 +356,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 placedTile = tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
 
                             // If not, then not.
-                            if (placedTile == null) continue
+                            if (placedTile == null) break
                             // Else add tile to the path and figure out its out-port
                             path.tiles.add(placedTile)
                             val inPort = inPortFromStartPos(path.startPos)
@@ -375,13 +376,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 throw IllegalStateException("Tf you doin?")
 
             if (stationNo <= 8)
-                return Pair(stationNo, 0)
+                return Pair(stationNo, 9)
             if (stationNo <= 16)
-                return Pair(9, stationNo - 8)
+                return Pair(9, 17 - stationNo)
             if (stationNo <= 24)
-                return Pair(9 - (stationNo - 16), 9)
+                return Pair(25 - stationNo, 0)
             else
-                return Pair(0, 9 - (stationNo - 24))
+                return Pair(0, stationNo - 24)
         }
         private fun tileToTheRight(x: Int, y: Int, field: GameField): Tile? {
             if (x + 1 > 8)
