@@ -39,6 +39,9 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
             // add given players
             rootService.currentGame!!.currentTurn.players = players.toMutableList()
+            for (player in rootService.networkService.joinedPlayers) {
+                rootService.currentGame!!.currentTurn.players.add(Player(player, null))
+            }
 
             readTileCSV()
 
