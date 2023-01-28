@@ -293,10 +293,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
                                     val inPort = if (path.lastPort == 2) 7 else 6
-                                    path.lastPort =
-                                        if (placedTile.ports[inPort].first == inPort)
-                                            placedTile.ports[inPort].second
-                                        else placedTile.ports[inPort].first
+                                    path.lastPort = findOutPort(inPort, placedTile.ports)
                                     checkAgain = true
                                 }
                             }
@@ -306,10 +303,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
                                     val inPort = if (path.lastPort == 0) 5 else 4
-                                    path.lastPort =
-                                        if (placedTile.ports[inPort].first == inPort)
-                                            placedTile.ports[inPort].second
-                                        else placedTile.ports[inPort].first
+                                    path.lastPort = findOutPort(inPort, placedTile.ports)
                                     checkAgain = true
                                 }
                             }
@@ -319,10 +313,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
                                     val inPort = if (path.lastPort == 6) 3 else 2
-                                    path.lastPort =
-                                        if (placedTile.ports[inPort].first == inPort)
-                                            placedTile.ports[inPort].second
-                                        else placedTile.ports[inPort].first
+                                    path.lastPort = findOutPort(inPort, placedTile.ports)
                                     checkAgain = true
                                 }
                             }
@@ -332,10 +323,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
                                     val inPort = if (path.lastPort == 4) 1 else 0
-                                    path.lastPort =
-                                        if (placedTile.ports[inPort].first == inPort)
-                                            placedTile.ports[inPort].second
-                                        else placedTile.ports[inPort].first
+                                    path.lastPort = findOutPort(inPort, placedTile.ports)
                                     checkAgain = true
                                 }
                             }
@@ -360,10 +348,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                             // Else add tile to the path and figure out its out-port
                             path.tiles.add(placedTile)
                             val inPort = inPortFromStartPos(path.startPos)
-                            path.lastPort =
-                                if (placedTile.ports[inPort].first == inPort)
-                                    placedTile.ports[inPort].second
-                                else placedTile.ports[inPort].first
+                            path.lastPort = findOutPort(inPort, placedTile.ports)
                             checkAgain = true
                         }
                     }
@@ -371,6 +356,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             }
         }
 
+        private fun findOutPort(inPort: Int, portList: MutableList<Pair<Int, Int>>): Int {
+            for (pair in portList) {
+                if (pair.first == inPort) return pair.second
+                if (pair.second == inPort) return pair.first
+            }
+            throw Exception("In-port number " + inPort + "not found in port list.")
+        }
         private fun stationNoToCoordinate(stationNo: Int): Pair<Int, Int> {
             if (stationNo < 1 || stationNo > 32)
                 throw IllegalStateException("Tf you doin?")
