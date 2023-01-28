@@ -128,6 +128,9 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
             joinedPlayers.add(player.name)
         }
 
+        rootService.gameService.isHostedGame = false
+        rootService.gameService.isLocalOnlyGame = false
+
         rootService.gameService.distributeTiles()
         rootService.gameService.playersToPositions()
         updateConnectionState(ConnectionState.GAME_INITIALIZED)
