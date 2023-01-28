@@ -43,7 +43,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     var playerType = mutableListOf<Int>(0,0,0,0,0,0)
 
-    val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 500, posY = 100,
+    val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 100, posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
@@ -183,7 +183,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Confirm"))
     ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerAddFinished() } }
 
-    val startGameButton = Button(width = 300, height = 100, posX = 100 , posY = 900,
+    val startGameButton = Button(width = 300, height = 100, posX = 800 , posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))
@@ -232,10 +232,14 @@ class LobbyScene : MenuScene(1920, 1080) {
     val soundToggleButton = Button(width = 140, height = 140, posX = 1320, posY = 60,
         visual = ImageVisual("sound_enabled.png"))
 
+    val fullscreenToggleButton = Button(width = 140, height = 140, posX = 1120, posY = 60,
+        visual = ImageVisual("fullscreen.png"))
+
     init {
 
         addComponents(
             backToMainMenuSceneButton, playerLabel, quitButton, musicToggleButton, soundToggleButton,
+            fullscreenToggleButton,
             playerBoxLabel[0], playerBoxLabel[1], playerBoxLabel[2],
             playerBoxLabel[3], playerBoxLabel[4], playerBoxLabel[5],
             shuffleTurnOrderButton, shuffleTurnOrderCheckbox, allowTileRotationButton, allowTileRotationCheckbox,
