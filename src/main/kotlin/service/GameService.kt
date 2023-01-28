@@ -204,11 +204,12 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         val colors = listOf(Color.YELLOW, Color.BLUE, Color.ORANGE, Color.GREEN, Color.PURPLE, Color.BLACK)
         when (players?.size) {
             2 -> {
-                for (i in 1 until 33) {
+                for (i in 1.. 32) {
                     if (i % 2 == 1) {
                         players[0].color = Color.YELLOW
                         players[0].cars.add(i)
-                    } else {
+                    }
+                    else {
                         players[1].color = Color.BLUE
                         players[1].cars.add(i)
                     }
@@ -257,7 +258,11 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
                 }
             }
         }
-
+        for (player in players!!) {
+            for (pos in player.cars) {
+                player.paths.add(Path(pos))
+            }
+        }
     }
 
     /**
