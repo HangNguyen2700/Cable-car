@@ -19,7 +19,14 @@ class AiActionService {
                     }
                 }
             }
-            return isFieldFull || turn.gameField.tileStack.tiles.isEmpty()
+            var noCardsLeft = true
+            for (player in turn.players) {
+                if (player.handTile != null) {
+                    noCardsLeft = false
+                    break
+                }
+            }
+            return isFieldFull || noCardsLeft
         }
 
         /**
@@ -38,6 +45,10 @@ class AiActionService {
             val newTurn = turn.copy()
             var tile: Tile?
 
+            println("Draw from stack: " + move.shouldDrawFromStack)
+            println("Stack is empty: " + turn.gameField.tileStack.tiles.isEmpty())
+            println("Hand tile is null: " + (turn.players[playerIndex].handTile == null))
+
             // add tile to gameField
             if (!isPositionLegal(newTurn, move.posX, move.posY))
                 throw IllegalStateException("Attempted tile placement is illegal!")
@@ -45,50 +56,62 @@ class AiActionService {
             if (!move.shouldDrawFromStack) {
                 // tile from hand
                 tile = newTurn.players[playerIndex].handTile
-                // rotate tile if needed
-                if (move.rotationsNo != 0) {
-                    val tempId = tile!!.id
-                    val tempOriginalPorts = tile.originalPorts
+                if (tile != null) {
+                    // rotate tile if needed
+                    if (move.rotationsNo != 0) {
+                        val tempId = tile.id
+                        val tempOriginalPorts = tile.originalPorts
 
-                    while (move.rotationsNo > tile!!.rotationDegree) {
-                        val rotDeg = tile.rotationDegree
-                        tile = PlayerActionService.rotate(tile)
-                        tile.rotationDegree = (rotDeg + 1) % 4
+                        while (move.rotationsNo > tile!!.rotationDegree) {
+                            val rotDeg = tile.rotationDegree
+                            tile = PlayerActionService.rotate(tile)
+                            tile.rotationDegree = (rotDeg + 1) % 4
+                        }
+                        tile.id = tempId
+                        tile.originalPorts = tempOriginalPorts
                     }
-                    tile.id = tempId
-                    tile.originalPorts = tempOriginalPorts
+                    tile.posX = move.posX
+                    tile.posY = move.posY
+
+                    // put tile onto Field
+                    newTurn.gameField.field[move.posX][move.posY] = tile
+
+                    // give player new tile from tileStack
+                    if (newTurn.gameField.tileStack.tiles.isNotEmpty()){
+                        newTurn.players[playerIndex].handTile = newTurn.gameField.tileStack.tiles.removeFirst()
+                    }
+                    else newTurn.players[playerIndex].handTile = null
                 }
-                tile!!.posX = move.posX
-                tile.posY = move.posY
-
-                // put tile onto Field
-                newTurn.gameField.field[move.posX][move.posY] = tile
-
-                // give player new tile from tileStack
-                newTurn.players[playerIndex].handTile =
-                    newTurn.gameField.tileStack.tiles.removeFirst()
+                else throw Exception("Hand tile is null!")
             }
             else {
                 // tile from tileStack
-                tile = newTurn.gameField.tileStack.tiles.removeFirst()
-                // rotate tile if needed
-                if (move.rotationsNo != 0) {
-                    val tempId = tile.id
-                    val tempOriginalPorts = tile.originalPorts
+                if (newTurn.gameField.tileStack.tiles.isNotEmpty()){
+                    tile = newTurn.gameField.tileStack.tiles.removeFirst()
 
-                    while (move.rotationsNo > tile!!.rotationDegree) {
-                        val rotDeg = tile.rotationDegree
-                        tile = PlayerActionService.rotate(tile)
-                        tile.rotationDegree = (rotDeg + 1) % 4
+                    // rotate tile if needed
+                    if (move.rotationsNo != 0) {
+                        val tempId = tile.id
+                        val tempOriginalPorts = tile.originalPorts
+
+                        while (move.rotationsNo > tile!!.rotationDegree) {
+                            val rotDeg = tile.rotationDegree
+                            tile = PlayerActionService.rotate(tile)
+                            tile.rotationDegree = (rotDeg + 1) % 4
+                        }
+                        tile.id = tempId
+                        tile.originalPorts = tempOriginalPorts
                     }
-                    tile.id = tempId
-                    tile.originalPorts = tempOriginalPorts
-                }
-                tile.posX = move.posX
-                tile.posY = move.posY
+                    tile.posX = move.posX
+                    tile.posY = move.posY
 
-                // remove tile from tileStack and put it onto the field
-                newTurn.gameField.field[move.posX][move.posY] = tile
+                    // put tile onto the field
+                    newTurn.gameField.field[move.posX][move.posY] = tile
+                }
+                else {
+                    val newMove = Move(false, move.rotationsNo, move.posX, move.posY)
+                    return doMove(newTurn, newMove, playerIndex)
+                }
             }
             PlayerActionService.buildPathsAnastasiia(newTurn)
             return newTurn

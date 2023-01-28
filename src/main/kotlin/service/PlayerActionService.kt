@@ -14,17 +14,26 @@ import entity.Turn
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    fun isGameOver() : Boolean {
+    private fun isGameOver() : Boolean {
         val turn = rootService.currentGame!!.currentTurn
+
         var isFieldFull = true
-        for (i in 1..8) for (j in 1..8) {
-            if (!(i in 4..5 && j in 4..5) &&
-                rootService.currentGame!!.currentTurn.gameField.field[i][j] == null) {
-                isFieldFull = false
+        for (row in turn.gameField.field) {
+            for (cell in row) {
+                if (cell == null) {
+                    isFieldFull = false
+                    break
+                }
+            }
+        }
+        var noCardsLeft = true
+        for (player in turn.players) {
+            if (player.handTile != null) {
+                noCardsLeft = false
                 break
             }
         }
-        return isFieldFull
+        return isFieldFull || noCardsLeft
     }
 
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
@@ -69,6 +78,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
                 }
+                else rootService.currentGame!!.currentTurn.
+                players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile = null
 
             } else {
                 // tile from tileStack
