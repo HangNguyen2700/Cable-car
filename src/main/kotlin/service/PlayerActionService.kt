@@ -108,8 +108,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     )
                 )
             }
-            buildPaths(rootService.currentGame!!.currentTurn.
-            players[rootService.currentGame!!.currentTurn.currentPlayerIndex], tile)
+            buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }
 
         rootService.gameService.nextPlayer()
@@ -265,63 +264,87 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             for (player in turn.players) {
                 for (path in player.paths) {
                     if (path.complete) continue
+
                     var checkAgain = true
 
                     while(checkAgain) {
                         checkAgain = false
-                        // TODO:
-//                        if (path.tiles.last() is connected to a station) {
-//                            player.score += path.tiles.count()
-//                            path.complete := true
-//                            if (station is a power station)
-//                            player.score += path.tiles.count()
-//                        }
 
+                        // Check if connected to a power station
+                        if (isConnectedToPower(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
+                            path.complete = true
+                            player.score += 2 * path.tiles.count()
+                            break
+                        }
+                        // Check if connected to a normal station
+                        if (isConnectedToStation(path.tiles.last().posX, path.tiles.last().posY, path.lastPort)) {
+                            path.complete = true
+                            player.score += path.tiles.count()
+                            break
+                        }
+
+                        // For a non-empty path, check if it can be extended
                         if (path.tiles.isNotEmpty()) {
-                            var placedTile = tileToTheRight(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
-                            if (path.lastPort == 2 or 3 && placedTile != null) {
-                                path.tiles.add(placedTile)
-                                val inPort = if (path.lastPort == 2) 7 else 6
-                                path.lastPort =
-                                    if (placedTile.ports[inPort].first == inPort)
-                                        placedTile.ports[inPort].second
-                                    else placedTile.ports[inPort].first
-                                checkAgain = true
+                            var placedTile: Tile?
+                            // Check on the right if lastPort goes to the right
+                            if (path.lastPort == 2 or 3) {
+                                placedTile = tileToTheRight(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                                if (placedTile != null) {
+                                    path.tiles.add(placedTile)
+                                    val inPort = if (path.lastPort == 2) 7 else 6
+                                    path.lastPort =
+                                        if (placedTile.ports[inPort].first == inPort)
+                                            placedTile.ports[inPort].second
+                                        else placedTile.ports[inPort].first
+                                    checkAgain = true
+                                }
                             }
-                            placedTile = tileAtTheTop(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
-                            if (path.lastPort == 0 or 1 && placedTile != null) {
-                                path.tiles.add(placedTile)
-                                val inPort = if (path.lastPort == 0) 5 else 4
-                                path.lastPort =
-                                    if (placedTile.ports[inPort].first == inPort)
-                                        placedTile.ports[inPort].second
-                                    else placedTile.ports[inPort].first
-                                checkAgain = true
+                            // Check at the top if lastPort goes to the top
+                            if (path.lastPort == 0 or 1) {
+                                placedTile = tileAtTheTop(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                                if (placedTile != null) {
+                                    path.tiles.add(placedTile)
+                                    val inPort = if (path.lastPort == 0) 5 else 4
+                                    path.lastPort =
+                                        if (placedTile.ports[inPort].first == inPort)
+                                            placedTile.ports[inPort].second
+                                        else placedTile.ports[inPort].first
+                                    checkAgain = true
+                                }
                             }
-                            placedTile = tileToTheLeft(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
-                            if (path.lastPort == 6 or 7 && placedTile != null) {
-                                path.tiles.add(placedTile)
-                                val inPort = if (path.lastPort == 6) 3 else 2
-                                path.lastPort =
-                                    if (placedTile.ports[inPort].first == inPort)
-                                        placedTile.ports[inPort].second
-                                    else placedTile.ports[inPort].first
-                                checkAgain = true
+                            // Check on the left if lastPort goes to the left
+                            if (path.lastPort == 6 or 7) {
+                                placedTile = tileToTheLeft(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                                if (placedTile != null) {
+                                    path.tiles.add(placedTile)
+                                    val inPort = if (path.lastPort == 6) 3 else 2
+                                    path.lastPort =
+                                        if (placedTile.ports[inPort].first == inPort)
+                                            placedTile.ports[inPort].second
+                                        else placedTile.ports[inPort].first
+                                    checkAgain = true
+                                }
                             }
-                            placedTile = tileAtTheBottom(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
-                            if (path.lastPort == 4 or 5 && placedTile != null) {
-                                path.tiles.add(placedTile)
-                                val inPort = if (path.lastPort == 4) 1 else 0
-                                path.lastPort =
-                                    if (placedTile.ports[inPort].first == inPort)
-                                        placedTile.ports[inPort].second
-                                    else placedTile.ports[inPort].first
-                                checkAgain = true
+                            // Check at the bottom if lastPort goes to the bottom
+                            if (path.lastPort == 4 or 5) {
+                                placedTile = tileAtTheBottom(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
+                                if (placedTile != null) {
+                                    path.tiles.add(placedTile)
+                                    val inPort = if (path.lastPort == 4) 1 else 0
+                                    path.lastPort =
+                                        if (placedTile.ports[inPort].first == inPort)
+                                            placedTile.ports[inPort].second
+                                        else placedTile.ports[inPort].first
+                                    checkAgain = true
+                                }
                             }
                         }
+                        // For an empty path, check if a new tile was placed at its starting position
                         else {
+                            // Get the coordinates of the starting station
                             var placedTile: Tile?
                             val coordinate = stationNoToCoordinate(path.startPos)
+                            // Check if a new tile was placed at the station
                             if (path.startPos in 1..8)
                                 placedTile = tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
                             else if (path.startPos in 9..16)
@@ -331,8 +354,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                             else
                                 placedTile = tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
 
+                            // If not, then not.
                             if (placedTile == null) continue
-
+                            // Else add tile to the path and figure out its out-port
                             path.tiles.add(placedTile)
                             val inPort = inPortFromStartPos(path.startPos)
                             path.lastPort =
@@ -346,7 +370,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             }
         }
 
-        fun stationNoToCoordinate(stationNo: Int): Pair<Int, Int> {
+        private fun stationNoToCoordinate(stationNo: Int): Pair<Int, Int> {
             if (stationNo < 1 || stationNo > 32)
                 throw IllegalStateException("Tf you doin?")
 
@@ -379,13 +403,19 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 throw IllegalStateException("Illegal coordinate y.")
             return field.field[x][y - 1]
         }
-        private fun stationNoFromOutPort(x: Int, y: Int, outPort: Int): Int {
-            // add power station!!!
-            if (y == 8 && outPort == 1) return 25 - x
-            if (y == 1 && outPort == 5) return x
-            if (x == 1 && outPort == 7) return 33 - y
-            if (x == 8 && outPort == 3) return 8 + y
-            return -1
+        private fun isConnectedToStation(x: Int, y: Int, outPort: Int): Boolean {
+            if (y == 8 && outPort == 1) return true
+            if (y == 1 && outPort == 5) return true
+            if (x == 1 && outPort == 7) return true
+            if (x == 8 && outPort == 3) return true
+            return false
+        }
+        private fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
+            if (y == 3 && x == 4 or 5 && outPort == 0 or 1) return true
+            if (y == 6 && x == 4 or 5 && outPort == 4 or 5) return true
+            if (x == 3 && y == 4 or 5 && outPort == 2 or 3) return true
+            if (x == 6 && y == 4 or 5 && outPort == 6 or 7) return true
+            return false
         }
         private fun inPortFromStartPos(startPos: Int): Int {
             if (startPos in 1..8) return 4
