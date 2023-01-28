@@ -90,7 +90,7 @@ class AiActionService {
                 // remove tile from tileStack and put it onto the field
                 newTurn.gameField.field[move.posX][move.posY] = tile
             }
-            PlayerActionService.buildPaths(newTurn.players[playerIndex], tile)
+            PlayerActionService.buildPathsAnastasiia(newTurn)
             return newTurn
         }
     }

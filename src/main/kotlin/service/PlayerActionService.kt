@@ -298,7 +298,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check at the top if lastPort goes to the top
-                            if (path.lastPort == 0 or 1) {
+                            else if (path.lastPort == 0 or 1) {
                                 placedTile = tileAtTheTop(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -308,7 +308,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check on the left if lastPort goes to the left
-                            if (path.lastPort == 6 or 7) {
+                            else if (path.lastPort == 6 or 7) {
                                 placedTile = tileToTheLeft(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -318,7 +318,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check at the bottom if lastPort goes to the bottom
-                            if (path.lastPort == 4 or 5) {
+                            else if (path.lastPort == 4 or 5) {
                                 placedTile = tileAtTheBottom(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -403,7 +403,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             if (x == 8 && outPort == 3) return true
             return false
         }
-        private fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
+        fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
             if (y == 6 && x == 4 or 5 && outPort == 0 or 1) return true
             if (y == 3 && x == 4 or 5 && outPort == 4 or 5) return true
             if (x == 3 && y == 4 or 5 && outPort == 2 or 3) return true
