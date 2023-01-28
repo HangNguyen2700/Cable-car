@@ -419,9 +419,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             return false
         }
         private fun inPortFromStartPos(startPos: Int): Int {
-            if (startPos in 1..8) return 4
+            if (startPos in 1..8) return 0
             if (startPos in 9..16) return 2
-            if (startPos in 17..24) return 0
+            if (startPos in 17..24) return 4
             return 6
         }
 
