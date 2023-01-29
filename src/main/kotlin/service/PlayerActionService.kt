@@ -2,6 +2,7 @@ package service
 
 import ai.MCTS
 import edu.udo.cs.sopra.ntf.GameStateVerificationInfo
+import edu.udo.cs.sopra.ntf.TileInfo
 import edu.udo.cs.sopra.ntf.TurnMessage
 import entity.GameField
 import entity.Player
@@ -97,13 +98,23 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.forEach { println(it.id) }
                     println("laying tile with pairs " + tile.ports + " with id " + tile.id)
                     if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
-
+                        // create placedTiles List
+                        val placedTiles = mutableListOf<TileInfo>()
+                        for (tile in rootService.currentGame!!.currentTurn.gameField.tiles) {
+                            placedTiles.add(TileInfo(tile.posX, tile.posY, tile.id, tile.rotationDegree))
+                        }
+                        // create tileStack ID list
+                        val supply = mutableListOf<Int>()
+                        rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.forEach { supply.add(it.id) }
+                        // create PlayerScore list
+                        val scores = mutableListOf<Int>()
+                        rootService.currentGame!!.currentTurn.players.forEach { scores.add(it.score) }
                         rootService.networkService.sendTurnMessage(
                             TurnMessage(
                                 posX, posY,
                                 !fromHand,
                                 tile.rotationDegree * 90,
-                                GameStateVerificationInfo(listOf(), listOf(), listOf())
+                                GameStateVerificationInfo(placedTiles, supply, scores)
                             )
                         )
                     }
@@ -114,6 +125,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }
 
             }
+            rootService.currentGame!!.currentTurn.gameField.tiles.add(tile)
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }
 
