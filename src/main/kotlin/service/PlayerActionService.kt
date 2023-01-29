@@ -362,21 +362,38 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         fun isGameOver(turn: Turn) : Boolean {
             var isFieldFull = true
-            for (row in turn.gameField.field) {
-                for (cell in row) {
-                    if (cell == null) {
+            var vbreak = false
+            for (i in 1 until turn.gameField.field.size-1) {
+                for (j in 1 until turn.gameField.field[i].size-1) {
+                    if (turn.gameField.field[i][j] == null) {
+
+                        if ((i == 4 && j == 4) || (i == 4 && j == 5) || (i == 5 && j == 4) || (i == 5 && j == 5)) {
+                            println("Spot ($i, $j) is empty, but it is MiddleStation.")
+                            continue
+                        }
+                        println("Spot ($i, $j) is empty")
                         isFieldFull = false
+                        vbreak = true
                         break
                     }
                 }
-            }
-            var noCardsLeft = true
-            for (player in turn.players) {
-                if (player.handTile != null) {
-                    noCardsLeft = false
+                if (vbreak) {
                     break
                 }
             }
+            println("isFieldFull = $isFieldFull")
+            var noCardsLeft = false
+            /*
+            for (player in turn.players) {
+                if (player.handTile != null) {
+                    println("${player.name} has handTileID: ${player.handTile!!.id}")
+                    noCardsLeft = false
+                    break
+                }
+                println("${player.name} has no handTile.")
+            }
+            println("noCardsLeft = $noCardsLeft")
+             */
             return isFieldFull || noCardsLeft
         }
 

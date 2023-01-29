@@ -123,7 +123,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     ).apply {
         isDisabled = true; opacity = 0.0
         onMouseClicked = {
-            if (isDrawStackTileChosen == null) {
+            if (isDrawStackTileChosen == null || isDrawStackTileChosen == false) {
                 flip()
                 handTileCardView.flip()
                 currentTileCardView = this
@@ -401,9 +401,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty()){
                 drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
             }
-            if(currentTurn!!.players[(currentTurn!!.currentPlayerIndex)%currentTurn!!.players.size].handTile!=null){
+            if(currentTurn!!.players[(currentTurn!!.currentPlayerIndex)%currentTurn!!.players.size].handTile!=null)
+            {
                 handTileCardView.frontVisual = setTileFront(currentTurn!!.players[ (currentTurn!!.currentPlayerIndex)
-                        % currentTurn!!.players.size ].handTile!!)}
+                        % currentTurn!!.players.size ].handTile!!)
+            } else { handTileCardView.frontVisual = ColorVisual(0,0,0,0) }
 
             //increment order workaround
 

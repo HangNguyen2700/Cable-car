@@ -82,6 +82,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         musicToggleButton.onMouseClicked = { toggleMusic() }
         mainMenuButton.onMouseClicked = {
             explicitlyShowTitleScene()
+            gameScene.resetScene()
         }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)
