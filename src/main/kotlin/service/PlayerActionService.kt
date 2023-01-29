@@ -29,7 +29,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         if (isPositionLegal(posX, posY, rootService.currentGame!!.currentTurn) ) {
             if (fromHand) {
 
-                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn) || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
+                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
+                    || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
@@ -69,7 +72,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
             } else {
                 // tile from tileStack
-                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)  || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
+                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
+                    || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
