@@ -105,6 +105,7 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
      * iterates currentPlayerIndex over players.size in a loop
      */
     fun nextPlayer(): Boolean {
+        println("Next player!")
         val turn = rootService.currentGame!!.currentTurn
 
         if (PlayerActionService.isGameOver(turn)) {

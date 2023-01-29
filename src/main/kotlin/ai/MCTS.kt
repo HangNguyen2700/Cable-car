@@ -28,21 +28,21 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         val defaultMove = Move(false, -1, -1, -1)
         val root = Node(rs, null, defaultMove, aiIndex)
 
+        var shouldStop = false
         while (true) {
             println("Still Thinking")
             val node = selectRandomNode(root)
-            if (PlayerActionService.isGameOver(node.state)) {
+            if (PlayerActionService.isGameOver(node.state) || shouldStop) {
                 backpropagation(node, true)
                 println("Decision Made")
                 return node.move
             }
-            expandNode(node, aiIndex)
+            shouldStop = expandNode(node, aiIndex)
             val nodeToExplore = selectRandomNode(node)
             val aiWon = simulateRandomPlayout(nodeToExplore)
             backpropagation(nodeToExplore, aiWon)
         }
     }
-
 
     private fun selectPromisingNode(node: Node): Node {
         var current = node
@@ -66,15 +66,11 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         return current
     }
 
-
-
     private fun expandNode(node: Node, playerIndex: Int): Boolean {
         node.getPossibleMoves().forEach {
-            if (node.state.players[playerIndex].handTile != null) {
-                val child = Node(rs, node, it, playerIndex)
-                child.setScore(node.state)
-                node.children.add(child)
-            }
+            val child = Node(rs, node, it, playerIndex)
+            child.setScore(node.state)
+            node.children.add(child)
         }
         return node.children.isEmpty()
     }
@@ -83,14 +79,15 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         var tempNode = node.copy()
         var playerIndex = aiIndex
 
-        while (!PlayerActionService.isGameOver(tempNode.state)) {
+        var shouldStop = false
+        while (!PlayerActionService.isGameOver(tempNode.state) && !shouldStop) {
 //            for (player in tempNode.state.players) {
 //                println(player.toString() + ": " + tempNode.state.players[playerIndex].handTile.toString())
 //            }
 //            println(tempNode.state.players[playerIndex].toString() + " - your turn.")
 
             playerIndex = (playerIndex + 1) % node.state.players.size
-            expandNode(tempNode, playerIndex)
+            shouldStop = expandNode(tempNode, playerIndex)
             tempNode = selectPromisingNode(tempNode)
         }
 
