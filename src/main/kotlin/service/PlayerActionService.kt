@@ -27,11 +27,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         // add tile to gameField and send TurnMessage
         if (isPositionLegal(posX, posY) ) {
             if (fromHand) {
-
-
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
-
 
                     // rotate tile if needed
                     if (rotationDegree != 0) {
@@ -107,7 +104,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }
                 else
                     throw IllegalStateException("no card must be placed here !")
-
             }
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }

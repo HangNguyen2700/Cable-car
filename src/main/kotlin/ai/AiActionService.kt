@@ -20,13 +20,16 @@ class AiActionService {
         fun doMove(turn: Turn, move: Move, playerIndex: Int) : Turn {
             // add new Turn
             val newTurn = turn.copy()
+            // copy all players separately!
+            for (i in 0 until turn.players.size) {
+                newTurn.players[i] = turn.players[i].copy()
+            }
             var tile: Tile?
 
             println("Draw from stack: " + move.shouldDrawFromStack)
             println("Stack is empty: " + turn.gameField.tileStack.tiles.isEmpty())
             println("Hand tile is null: " + (turn.players[playerIndex].handTile == null))
 
-            // add tile to gameField
             if (!isPositionLegal(newTurn, move.posX, move.posY))
                 throw IllegalStateException("Attempted tile placement is illegal!")
 
