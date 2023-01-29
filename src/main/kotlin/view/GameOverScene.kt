@@ -129,15 +129,13 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
             soundToggleButton, musicToggleButton, fullscreenToggleButton,
             p4Name, p5Name, p3Name, p1Name, p2Name, p6Name,
             playerImg1, playerImg2, playerImg3, playerImg4, playerImg5, playerImg6,
-            crown, first, second, third, fourth, fifth, sixth,
-            restartButton, mainMenuButton, quitButton, endGameLabel
+            crown, first, second, third, fourth, fifth, sixth, mainMenuButton, quitButton, endGameLabel
         )
         arrayOf(
             soundToggleButton, musicToggleButton, fullscreenToggleButton,
             p1Name, p2Name, p3Name, p4Name, p5Name, p6Name,
             playerImg1, playerImg2, playerImg3, playerImg4, playerImg5, playerImg6,
-            crown, first, second, third, fourth, fifth, sixth,
-            restartButton, mainMenuButton, quitButton, endGameLabel
+            crown, first, second, third, fourth, fifth, sixth, mainMenuButton, quitButton, endGameLabel
         ).forEach { it.opacity = 1.0 }
 
         background = ImageVisual("game_over_screen.jpg")
