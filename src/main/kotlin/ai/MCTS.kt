@@ -41,7 +41,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     //for the stupid AI xD
     fun findRandomMove() : Move {
         val defaultMove = Move(false, -1, -1, -1)
-        val root = Node(rs, null, defaultMove, aiIndex)
+        val node = Node(rs, null, defaultMove, aiIndex)
 
         node.getPossibleMoves().forEach {
             val child = Node(rs, node, it, aiIndex)
