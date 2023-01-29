@@ -123,7 +123,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     ).apply {
         isDisabled = true; opacity = 0.0
         onMouseClicked = {
-            if (isDrawStackTileChosen == null) {
+            if (isDrawStackTileChosen == null || isDrawStackTileChosen == false) {
                 flip()
                 handTileCardView.flip()
                 currentTileCardView = this

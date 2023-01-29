@@ -110,7 +110,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
 
     // Back to main Menu button
     val mainMenuButton = Button(
-        width = 400, height = 100, posX = 724, posY = 880, visual = CompoundVisual(
+        width = 400, height = 100, posX = 100, posY = 900, visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 }, TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Main Menu"
             )
