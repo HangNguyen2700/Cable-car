@@ -1,7 +1,13 @@
 package ai
 
 import service.PlayerActionService
-
+/**
+ * The MCTS class implements a Monte Carlo Tree Search algorithm to find the best move
+ * for a player in a given game state.
+ *
+ * @property rs the RootService instance that holds the game state information
+ * @property aiIndex the index of the player that the AI is playing as
+ */
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
     fun findNextMoveSimplified(allowRotation: Boolean): Move {
