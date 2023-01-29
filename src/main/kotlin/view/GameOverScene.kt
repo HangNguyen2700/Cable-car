@@ -53,16 +53,16 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         text = "aaaaaaaaaaaaaaaa")
     private var p3Name = Label(width = 400, height = 50, posX = 600, posY = 760,
         font = Font(60, Color.ORANGE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
-        text = "aaaaaaaaaaaaaaaaaaaaaaaa")
+        text = "aaaaaaaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p4Name = Label(width = 400, height = 50, posX = 65, posY = 760,
         font = Font(60, Color.GREEN, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
-        text = "aaaaaaaaaaaaaaaaaaaaa")
+        text = "aaaaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p5Name = Label(width = 400, height = 50, posX = 315, posY = 810,
         font = Font(60, Color(183,0,255), family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
-        text = "aaaaaaaaaaaaaaaaaa")
+        text = "aaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p6Name = Label(width = 400, height = 50, posX = 1350, posY = 810,
         font = Font(60, Color.BLACK, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
-        text = "aaaaaaaaaaaaaaaaaaa")
+        text = "aaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
 
     //aligns player image
     private val playerImg1 = TokenView(
@@ -70,13 +70,17 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
     private val playerImg2 = TokenView(
         width = 193, height = 500, posX = 1175, posY = 275, visual = ImageVisual("Player2.png")    )
     private val playerImg3 = TokenView(
-        width = 192, height = 500, posX = 675, posY = 275, visual = ImageVisual("Player3.png")    )
+        width = 192, height = 500, posX = 675, posY = 275, visual = ImageVisual("Player3.png")    ).
+    apply { isVisible=false }
     private val playerImg4 = TokenView(
-        width = 191, height = 500, posX = 175, posY = 275, visual = ImageVisual("Player4.png")    )
+        width = 191, height = 500, posX = 175, posY = 275, visual = ImageVisual("Player4.png")    ).
+    apply { isVisible=false }
     private val playerImg5 = TokenView(
-        width = 217.6, height = 600, posX = 425, posY = 175, visual = ImageVisual("Player5.png")    )
+        width = 217.6, height = 600, posX = 425, posY = 175, visual = ImageVisual("Player5.png")    ).
+    apply { isVisible=false }
     private val playerImg6 = TokenView(
-        width = 193.3, height = 600, posX = 1425, posY = 175, visual = ImageVisual("Player6.png")    )
+        width = 193.3, height = 600, posX = 1425, posY = 175, visual = ImageVisual("Player6.png")    ).
+    apply { isVisible=false }
 
     //aligns players Rank
     private var first = TokenView(
@@ -84,13 +88,17 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
     private val second = TokenView(
         width = 75, height = 31.4, posX = 1175, posY = 225, visual = ImageVisual("2nd.png")    )
     private val third = TokenView(
-        width = 75, height = 32, posX = 675, posY = 225, visual = ImageVisual("3rd.png")    )
+        width = 75, height = 32, posX = 675, posY = 225, visual = ImageVisual("3rd.png")    ).
+    apply { isVisible=false }
     private val fourth = TokenView(
-        width = 75, height = 35.5, posX = 175, posY = 225, visual = ImageVisual("4th.png")    )
+        width = 75, height = 35.5, posX = 175, posY = 225, visual = ImageVisual("4th.png")    ).
+    apply { isVisible=false }
     private val fifth = TokenView(
-        width = 75, height = 35.7,posX = 425, posY = 125, visual = ImageVisual("5th.png")    )
+        width = 75, height = 35.7,posX = 425, posY = 125, visual = ImageVisual("5th.png")    ).
+    apply { isVisible=false }
     private val sixth = TokenView(
-        width = 75, height = 34.6, posX = 1425, posY = 125, visual = ImageVisual("6th.png")    )
+        width = 75, height = 34.6, posX = 1425, posY = 125, visual = ImageVisual("6th.png")    ).
+    apply { isVisible=false }
 
     private val crown = TokenView(
         width = 120, height = 117.6, posX = 990, posY = 220, visual = ImageVisual("Crown.png")    )
@@ -157,22 +165,22 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
 
         if (rootService.currentGame!!.currentTurn.players.size > 2) {
             p3Name.text = "${winner[2].name}: ${winner[2].score}"
-            arrayOf(p3Name, third, playerImg3).forEach { it.opacity = 1.0 }
+            arrayOf(p3Name, third, playerImg3).forEach { it.isVisible=true;it.opacity = 1.0  }
         }
 
         if (rootService.currentGame!!.currentTurn.players.size > 3) {
             p4Name.text = "${winner[3].name}: ${winner[3].score}"
-            arrayOf(p4Name, fourth, playerImg4).forEach { it.opacity = 1.0 }
+            arrayOf(p4Name, fourth, playerImg4).forEach { it.isVisible=true;it.opacity = 1.0 }
         }
 
         if (rootService.currentGame!!.currentTurn.players.size > 4) {
             p5Name.text = "${winner[4].name}: ${winner[4].score}"
-            arrayOf(p5Name, fifth, playerImg5).forEach { it.opacity = 1.0 }
+            arrayOf(p5Name, fifth, playerImg5).forEach { it.isVisible=true;it.opacity = 1.0  }
         }
 
-        if (rootService.currentGame!!.currentTurn.players.size == 6) {
+        if (rootService.currentGame!!.currentTurn.players.size > 5) {
             p6Name.text = "${winner[5].name}: ${winner[5].score}"
-            arrayOf(p6Name, sixth, playerImg6).forEach { it.opacity = 1.0 }
+            arrayOf(p6Name, sixth, playerImg6).forEach { it.isVisible=true;it.opacity = 1.0  }
         }
     }
 
