@@ -41,6 +41,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var isInputPlayer = mutableListOf(false,false,false,false,false,false)
 
     var networkPlayerName :String? = null
+    var isJoinAiGameScene : Boolean? = null
     private val tileBackImage = ImageVisual("tile_back.png")
 
     private var currentTile: Tile? = null
@@ -66,9 +67,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         posX = 560, posY = 140, layoutFromCenter = false)
 
     private val player1HandCard = CardView(width = 100, height = 100, posX = 35, posY = 820,
-        front = ColorVisual.WHITE, back = tileBackImage)
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
     private val player2HandCard = CardView(width = 100, height = 100, posX = 155, posY = 820,
-        front = ColorVisual.WHITE, back = tileBackImage)
+        front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
     private val player3HandCard = CardView(width = 100, height = 100, posX = 275, posY = 820,
         front = ColorVisual.WHITE, back = tileBackImage).apply { isDisabled = true; opacity = 0.0 }
     private val player4HandCard = CardView(width = 100, height = 100, posX = 35, posY = 940,
@@ -82,9 +83,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             player4HandCard,player5HandCard,player6HandCard)
 
     private val player1HandCardBG = TokenView(width = 120, height = 120, posX = 25, posY = 810,
-        visual = ColorVisual.YELLOW)
+        visual = ColorVisual.YELLOW).apply { isDisabled = true; opacity = 0.0 }
     private val player2HandCardBG = TokenView(width = 120, height = 120, posX = 145, posY = 810,
-        visual = ColorVisual.BLUE)
+        visual = ColorVisual.BLUE).apply { isDisabled = true; opacity = 0.0 }
     private val player3HandCardBG = TokenView(width = 120, height = 120, posX = 265, posY = 810,
         visual = ColorVisual.ORANGE).apply { isDisabled = true; opacity = 0.0 }
     private val player4HandCardBG = TokenView(width = 120, height = 120, posX = 25, posY = 930,
@@ -264,6 +265,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) { //TODO: isJoinAi
         this.networkPlayerName = joinName
+        isJoinAiGameScene = isJoinAi
         pleaseWaitLabel.opacity = 1.0; pleaseWaitLabel.isDisabled = false
     }
 
@@ -283,8 +285,14 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             for( i in playerList.indices)
                 isInputPlayer[i] = playerList[i].isSmartAi == null
         else {
-            isInputPlayer[playerList.indexOf(playerList.find { it.name == networkPlayerName })] =
-                playerList.find { it.name == networkPlayerName }?.isSmartAi != true
+            if(isJoinAiGameScene == null) {         //host mode
+                isInputPlayer[playerList.indexOf(playerList.find { it.name == networkPlayerName })] =
+                    playerList.find { it.name == networkPlayerName }?.isSmartAi != true
+            }       //join mode
+            else{
+                isInputPlayer[playerList.indexOf(playerList.find { it.name == networkPlayerName })] =
+                    !isJoinAiGameScene!!
+            }
 
             undoButton.isVisible = false; redoButton.isVisible = false
             //network mode TODO: set networkPlayerName to null on GameScene exit
@@ -298,9 +306,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         initGameBoard()
         initStationPosition()
 
-        /*if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
+        playerList.forEach { println(it.isSmartAi) }
+
+        if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
-*/
+
         turn()
     }
 
@@ -493,6 +503,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
      */
 
     override fun refreshAfterGameFinished() {  }
+
+    fun resetScene(){
+        networkPlayerName = null
+        isJoinAiGameScene = null
+        playerList = emptyList()
+        currentTurn = null
+        currentTile = null
+        currentTileCardView = null
+        isDrawStackTileChosen = null
+    }
 
     /**
      * 2D-array performs all stations around the game board and their car's colors according to player number
