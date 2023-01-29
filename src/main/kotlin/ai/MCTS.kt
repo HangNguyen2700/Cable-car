@@ -84,10 +84,10 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         var playerIndex = aiIndex
 
         while (!PlayerActionService.isGameOver(tempNode.state)) {
-            for (player in tempNode.state.players) {
-                println(player.toString() + ": " + tempNode.state.players[playerIndex].handTile.toString())
-            }
-            println(tempNode.state.players[playerIndex].toString() + " - your turn.")
+//            for (player in tempNode.state.players) {
+//                println(player.toString() + ": " + tempNode.state.players[playerIndex].handTile.toString())
+//            }
+//            println(tempNode.state.players[playerIndex].toString() + " - your turn.")
 
             playerIndex = (playerIndex + 1) % node.state.players.size
             expandNode(tempNode, playerIndex)

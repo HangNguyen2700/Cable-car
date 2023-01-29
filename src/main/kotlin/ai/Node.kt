@@ -23,7 +23,7 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
                     if (PlayerActionService.handTileLegal(x, y, state))
                         moves.add(Move(false, i, x, y))
                     if (PlayerActionService.stackTileLegal(x, y, state))
-                    moves.add(Move(true, i, x, y))
+                        moves.add(Move(true, i, x, y))
                 }
             }
         }

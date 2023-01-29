@@ -260,7 +260,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 {
                     return false
                 }
-                else if (lastTile == 0)
+                else if(lastTile == 0)
                 {
                     return true
                 }

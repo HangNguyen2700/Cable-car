@@ -332,7 +332,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                     visual = ColorVisual(0, 0, 0, 0)
                 ).apply {
                     onMouseClicked = {
-                        if (playerActionService.isPositionLegal(i+1, j+1) && isDrawStackTileChosen != null) {
+                        if (PlayerActionService.isPositionLegal(i+1, j+1, rootService.currentGame!!.currentTurn) && isDrawStackTileChosen != null) {
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
                                 currentTile!!.rotationDegree/90)
                         } else {

@@ -2,18 +2,9 @@ package ai
 import entity.Tile
 import entity.Turn
 import service.PlayerActionService
-import java.lang.IllegalStateException
 
 class AiActionService {
     companion object {
-        /**
-         * Checks if position the AI chose for tile placement is legal.
-         */
-        fun isPositionLegal(turn: Turn, posX: Int, posY: Int): Boolean {
-            val isFree = (turn.gameField.field[posX][posY] == null)
-            return isFree && PlayerActionService.isConnectedToTile(turn.gameField.field, posX, posY)
-        }
-
         /**
          * Simulates a game move from for a given player in the AI analysis.
          */
@@ -26,12 +17,9 @@ class AiActionService {
             }
             var tile: Tile?
 
-            println("Draw from stack: " + move.shouldDrawFromStack)
-            println("Stack is empty: " + turn.gameField.tileStack.tiles.isEmpty())
-            println("Hand tile is null: " + (turn.players[playerIndex].handTile == null))
-
-            if (!isPositionLegal(newTurn, move.posX, move.posY))
-                throw IllegalStateException("Attempted tile placement is illegal!")
+//            println("Draw from stack: " + move.shouldDrawFromStack)
+//            println("Stack is empty: " + turn.gameField.tileStack.tiles.isEmpty())
+//            println("Hand tile is null: " + (turn.players[playerIndex].handTile == null))
 
             if (!move.shouldDrawFromStack) {
                 // tile from hand
