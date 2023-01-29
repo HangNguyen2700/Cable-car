@@ -32,7 +32,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
-
                     // rotate tile if needed
                     if (rotationDegree != 0) {
                         val tempId = tile!!.id

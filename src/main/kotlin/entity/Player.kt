@@ -27,7 +27,11 @@ data class Player(var name: String, val isSmartAi: Boolean?) {
         nPlayer.cars = cars.toMutableList()
         nPlayer.color = color
         nPlayer.paths = paths.toMutableList()
-        nPlayer.handTile = handTile
+
+        if (handTile != null)
+            nPlayer.handTile = handTile!!.copy()
+        else nPlayer.handTile = null
+
         nPlayer.score = score
         return nPlayer
     }
