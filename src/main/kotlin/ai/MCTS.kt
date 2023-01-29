@@ -4,6 +4,21 @@ import service.PlayerActionService
 
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
+    fun findNextMoveAlternative(): Move {
+        val defaultMove = Move(false, -1, -1, -1)
+        val node = Node(rs, null, defaultMove, aiIndex)
+
+        node.getPossibleMoves().forEach {
+            val child = Node(rs, node, it, aiIndex)
+            child.setScore()
+            node.children.add(child)
+        }
+        node.children.shuffle()
+
+        println("Decision made.")
+        return node.children.maxByOrNull { it.score }!!.move
+    }
+
     fun findNextMove() : Move {
         val defaultMove = Move(false, -1, -1, -1)
         val root = Node(rs, null, defaultMove, aiIndex)
@@ -58,9 +73,10 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     private fun expandNode(node: Node, playerIndex: Int): Boolean {
         node.getPossibleMoves().forEach {
             val child = Node(rs, node, it, playerIndex)
-            child.setScore(node.state)
+            child.setScore()
             node.children.add(child)
         }
+        node.children.shuffle()
         return node.children.isEmpty()
     }
 
