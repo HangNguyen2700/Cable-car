@@ -15,6 +15,7 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
 
     fun getPossibleMoves(): MutableList<Move> {
         val moves: MutableList<Move> = mutableListOf()
+        if (state.players[playerIndex].handTile == null) return moves
 
         for (x in 1 until state.gameField.field.size - 1) {
             for (y in 1 until state.gameField.field[x].size - 1) {
@@ -22,7 +23,9 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
                 for (i in 0..3) {
                     if (PlayerActionService.handTileLegal(x, y, state))
                         moves.add(Move(false, i, x, y))
-                    if (PlayerActionService.stackTileLegal(x, y, state))
+
+                    if (state.gameField.tileStack.tiles.isNotEmpty() &&
+                        PlayerActionService.stackTileLegal(x, y, state))
                         moves.add(Move(true, i, x, y))
                 }
             }

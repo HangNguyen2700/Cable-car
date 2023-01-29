@@ -361,10 +361,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             val tileEdge = isConnectedToTile(turn.gameField.field, posX, posY)
 
             if (isFree) {
-                println("tile is free")
+                //println("tile is free")
 
                 if (tileEdge) {
-                    println("tile does not stand alone")
+                    //println("tile does not stand alone")
                     return true
                 }
             }
