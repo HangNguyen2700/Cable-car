@@ -337,6 +337,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                                 currentTile!!.rotationDegree/90)
                         } else {
                             gameService.playNopeSound()
+
                         }
                     }
                 }
@@ -680,6 +681,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(3,5))
             else -> throw Exception("TIME TO SCREAM!!")
         }
+    }
+
+    /**
+     * to turn the sound for placing a tile
+     */
+    override fun refreshAfterTryingPlaceTile() {
+        gameService.playNopeSound()
     }
 
 

@@ -63,4 +63,9 @@ interface Refreshable {
      */
 
     fun refreshAfterRestartGame(playerNames: MutableList<Player>){}
+
+    /**
+     * refreshes after trying to place a tile, if is not accept
+     */
+    fun refreshAfterTryingPlaceTile(){}
 }
