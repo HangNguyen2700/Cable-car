@@ -8,6 +8,10 @@ import entity.GameField
 import entity.Player
 import entity.Tile
 import entity.Turn
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * class to handle player ingame actions
@@ -29,7 +33,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         if (isPositionLegal(posX, posY, rootService.currentGame!!.currentTurn) ) {
             if (fromHand) {
 
-                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn) || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
+                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
+                    || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
@@ -69,7 +76,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
             } else {
                 // tile from tileStack
-                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)  || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
+                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
+                    || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
@@ -134,22 +144,34 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     *  @author Aziz, Anastasiia
+     *  @author Anastasiia
      * playAiTurn: a function to play the turn of the 'smart AI' player.
      */
-    fun playAiTurn() {
+    fun playAiTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
-        val move = MCTS(rootService, aiIndex).findNextMove()
-        placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
+
+        runBlocking {
+            val move = try {
+                withTimeout(9000L) {
+                    MCTS(rootService, aiIndex).findNextMove(allowRotation)
+                }
+            } catch (err: OutOfMemoryError) {
+                MCTS(rootService, aiIndex).findNextMoveSimplified(allowRotation)
+            } catch (exc: TimeoutCancellationException) {
+                MCTS(rootService, aiIndex).findNextMoveSimplified(allowRotation)
+            }
+
+            placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
+        }
     }
 
     /**
-     *  @author Anastasiia , Aziz
+     *  @author Aziz
      * playRandomTurn: a function to play the turn of the 'dumb/random AI' player.
      */
-    fun playRandomTurn() {
+    fun playRandomTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
-        val move = MCTS(rootService, aiIndex).findRandomMove()
+        val move = MCTS(rootService, aiIndex).findRandomMove(allowRotation)
         placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
@@ -233,7 +255,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
          * check if no place more for Tiles in the hand & stack to set it
          * in the last 4 until 8 places on the edge
          */
-        private fun noPlaceMore(posX: Int, posY: Int, turn: Turn):Boolean
+        fun noPlaceMore(posX: Int, posY: Int, turn: Turn):Boolean
         {
             val size = turn.gameField.tileStack.tiles.size
             if ( ( (posX in 1..8 && posY == 1)|| (posY in 1..8 && posX == 1)||(posX in 1..8 && posY == 8)||(posY in 1..8 && posX == 8) ) &&
@@ -396,10 +418,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     if (turn.gameField.field[i][j] == null) {
 
                         if ((i == 4 && j == 4) || (i == 4 && j == 5) || (i == 5 && j == 4) || (i == 5 && j == 5)) {
-                            println("Spot ($i, $j) is empty, but it is MiddleStation.")
+                            //println("Spot ($i, $j) is empty, but it is MiddleStation.")
                             continue
                         }
-                        println("Spot ($i, $j) is empty")
+                        //println("Spot ($i, $j) is empty")
                         isFieldFull = false
                         vbreak = true
                         break
@@ -409,7 +431,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     break
                 }
             }
-            println("isFieldFull = $isFieldFull")
+            //println("isFieldFull = $isFieldFull")
             var noCardsLeft = false
             /*
             for (player in turn.players) {

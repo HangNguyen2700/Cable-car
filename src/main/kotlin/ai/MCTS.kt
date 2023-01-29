@@ -1,10 +1,31 @@
 package ai
 
 import service.PlayerActionService
-
+/**
+ * The MCTS class implements a Monte Carlo Tree Search algorithm to find the best move
+ * for a player in a given game state.
+ *
+ * @property rs the RootService instance that holds the game state information
+ * @property aiIndex the index of the player that the AI is playing as
+ */
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
-    fun findNextMove() : Move {
+    fun findNextMoveSimplified(allowRotation: Boolean): Move {
+        val defaultMove = Move(false, -1, -1, -1)
+        val node = Node(rs, null, defaultMove, aiIndex)
+
+        node.getPossibleMoves(allowRotation).forEach {
+            val child = Node(rs, node, it, aiIndex)
+            child.setScore()
+            node.children.add(child)
+        }
+        node.children.shuffle()
+
+        println("Decision made.")
+        return node.children.maxByOrNull { it.score }!!.move
+    }
+
+    fun findNextMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
         val root = Node(rs, null, defaultMove, aiIndex)
 
@@ -17,32 +38,26 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
                 println("Decision Made")
                 return node.move
             }
-            shouldStop = expandNode(node, aiIndex)
+            shouldStop = expandNode(node, aiIndex, allowRotation)
             val nodeToExplore = selectPromisingNode(node)
-            val aiWon = simulateRandomPlayout(nodeToExplore)
+            val aiWon = simulateRandomPlayout(nodeToExplore, allowRotation)
             backpropagation(nodeToExplore, aiWon)
         }
     }
     //for the stupid AI xD
-    fun findRandomMove() : Move {
+    fun findRandomMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
-        val root = Node(rs, null, defaultMove, aiIndex)
+        val node = Node(rs, null, defaultMove, aiIndex)
 
-        var shouldStop = false
-        while (true) {
-            //println("Still Thinking")
-            val node = selectRandomNode(root)
-            if (PlayerActionService.isGameOver(node.state) || shouldStop) {
-                backpropagation(node, true)
-                println("Bad Decision Made")
-                return node.move
-            }
-            shouldStop = expandNode(node, aiIndex)
-            val nodeToExplore = selectRandomNode(node)
-            val aiWon = simulateRandomPlayout(nodeToExplore)
-            backpropagation(nodeToExplore, aiWon)
+        node.getPossibleMoves(allowRotation).forEach {
+            val child = Node(rs, node, it, aiIndex)
+            child.setScore()
+            node.children.add(child)
         }
+
+        return node.children.random().move
     }
+
 
     private fun selectPromisingNode(node: Node): Node {
         var current = node
@@ -55,43 +70,28 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         return current
     }
 
-    private fun expandNode(node: Node, playerIndex: Int): Boolean {
-        node.getPossibleMoves().forEach {
+    private fun expandNode(node: Node, playerIndex: Int, allowRotation: Boolean): Boolean {
+        node.getPossibleMoves(allowRotation).forEach {
             val child = Node(rs, node, it, playerIndex)
-            child.setScore(node.state)
+            child.setScore()
             node.children.add(child)
         }
+        node.children.shuffle()
         return node.children.isEmpty()
     }
 
-    private fun simulateRandomPlayout(node: Node): Boolean {
+    private fun simulateRandomPlayout(node: Node, allowRotation: Boolean): Boolean {
         var tempNode = node.copy()
         var playerIndex = aiIndex
 
         var shouldStop = false
         while (!PlayerActionService.isGameOver(tempNode.state) && !shouldStop) {
-//            for (player in tempNode.state.players) {
-//                println(player.toString() + ": " + tempNode.state.players[playerIndex].handTile.toString())
-//            }
-//            println(tempNode.state.players[playerIndex].toString() + " - your turn.")
-
             playerIndex = (playerIndex + 1) % node.state.players.size
-            shouldStop = expandNode(tempNode, playerIndex)
+            shouldStop = expandNode(tempNode, playerIndex, allowRotation)
             tempNode = selectPromisingNode(tempNode)
         }
 
         return tempNode.state.players[aiIndex].score >= tempNode.state.players.maxOf { it.score }
-    }
-    //stupid Ai random move
-    private fun selectRandomNode(node: Node): Node {
-        var current =node
-        while (current.children.isNotEmpty()) {
-            current = current.children.maxByOrNull {
-                if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount
-                else it.score
-            }!!
-        }
-        return current
     }
 
     private fun backpropagation(last: Node, aiWon: Boolean) {

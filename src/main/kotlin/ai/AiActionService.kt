@@ -1,25 +1,38 @@
 package ai
+import entity.Path
 import entity.Tile
 import entity.Turn
 import service.PlayerActionService
 
 class AiActionService {
     companion object {
+        private fun createNextTurn(turn: Turn): Turn {
+            val newTurn = turn.copy()
+
+            // copy all players and their paths separately!
+            for (i in 0 until turn.players.size) {
+                newTurn.players[i] = turn.players[i].copy()
+                newTurn.players[i].paths = mutableListOf()
+
+                for (path in turn.players[i].paths) {
+                    val newPath = Path(path.startPos)
+                    newPath.tiles = path.tiles.toMutableList()
+                    newPath.complete = path.complete
+                    newPath.lastPort = path.lastPort
+
+                    newTurn.players[i].paths.add(newPath)
+                }
+            }
+            return newTurn
+        }
+
         /**
          * Simulates a game move from for a given player in the AI analysis.
          */
         fun doMove(turn: Turn, move: Move, playerIndex: Int) : Turn {
             // add new Turn
-            val newTurn = turn.copy()
-            // copy all players separately!
-            for (i in 0 until turn.players.size) {
-                newTurn.players[i] = turn.players[i].copy()
-            }
+            val newTurn = createNextTurn(turn)
             var tile: Tile?
-
-//            println("Draw from stack: " + move.shouldDrawFromStack)
-//            println("Stack is empty: " + turn.gameField.tileStack.tiles.isEmpty())
-//            println("Hand tile is null: " + (turn.players[playerIndex].handTile == null))
 
             if (!move.shouldDrawFromStack) {
                 // tile from hand

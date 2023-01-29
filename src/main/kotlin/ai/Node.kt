@@ -13,19 +13,21 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
     var winCount = 0.0
     var visitCount = 0.0
 
-    fun getPossibleMoves(): MutableList<Move> {
+    fun getPossibleMoves(allowRotation: Boolean): MutableList<Move> {
         val moves: MutableList<Move> = mutableListOf()
         if (state.players[playerIndex].handTile == null) return moves
+
+        val rotations = if (allowRotation) 3 else 0
 
         for (x in 1 until state.gameField.field.size - 1) {
             for (y in 1 until state.gameField.field[x].size - 1) {
                 if (!PlayerActionService.isPositionLegal(x, y, state)) continue
-                for (i in 0..3) {
-                    if (PlayerActionService.handTileLegal(x, y, state))
+                for (i in 0..rotations) {
+                    if (PlayerActionService.handTileLegal(x, y, state) || PlayerActionService.noPlaceMore(x, y, state))
                         moves.add(Move(false, i, x, y))
 
                     if (state.gameField.tileStack.tiles.isNotEmpty() &&
-                        PlayerActionService.stackTileLegal(x, y, state))
+                        (PlayerActionService.stackTileLegal(x, y, state) || PlayerActionService.noPlaceMore(x, y, state)))
                         moves.add(Move(true, i, x, y))
                 }
             }
@@ -33,8 +35,9 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
         return moves
     }
 
-    fun setScore (prev: Turn) {
+    fun setScore () {
         score = 0.0
+        val prev = parent!!.state
         var actComparator = 0
         var prevComparator = 0
 
