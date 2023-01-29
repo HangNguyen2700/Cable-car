@@ -116,8 +116,8 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
 
         val isSmartAi = turn.players[turn.currentPlayerIndex].isSmartAi
         if (isSmartAi != null) {
-            if (isSmartAi) rootService.playerActionService.playAiTurn()
-            else rootService.playerActionService.playRandomTurn()
+            if (isSmartAi) rootService.playerActionService.playAiTurn(rotationAllowed)
+            else rootService.playerActionService.playRandomTurn(rotationAllowed)
         }
         return true
     }

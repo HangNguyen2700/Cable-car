@@ -4,11 +4,11 @@ import service.PlayerActionService
 
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
-    fun findNextMoveSimplified(): Move {
+    fun findNextMoveSimplified(allowRotation: Boolean): Move {
         val defaultMove = Move(false, -1, -1, -1)
         val node = Node(rs, null, defaultMove, aiIndex)
 
-        node.getPossibleMoves().forEach {
+        node.getPossibleMoves(allowRotation).forEach {
             val child = Node(rs, node, it, aiIndex)
             child.setScore()
             node.children.add(child)
@@ -19,7 +19,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         return node.children.maxByOrNull { it.score }!!.move
     }
 
-    fun findNextMove() : Move {
+    fun findNextMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
         val root = Node(rs, null, defaultMove, aiIndex)
 
@@ -32,18 +32,18 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
                 println("Decision Made")
                 return node.move
             }
-            shouldStop = expandNode(node, aiIndex)
+            shouldStop = expandNode(node, aiIndex, allowRotation)
             val nodeToExplore = selectPromisingNode(node)
-            val aiWon = simulateRandomPlayout(nodeToExplore)
+            val aiWon = simulateRandomPlayout(nodeToExplore, allowRotation)
             backpropagation(nodeToExplore, aiWon)
         }
     }
     //for the stupid AI xD
-    fun findRandomMove() : Move {
+    fun findRandomMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
         val node = Node(rs, null, defaultMove, aiIndex)
 
-        node.getPossibleMoves().forEach {
+        node.getPossibleMoves(allowRotation).forEach {
             val child = Node(rs, node, it, aiIndex)
             child.setScore()
             node.children.add(child)
@@ -64,8 +64,8 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         return current
     }
 
-    private fun expandNode(node: Node, playerIndex: Int): Boolean {
-        node.getPossibleMoves().forEach {
+    private fun expandNode(node: Node, playerIndex: Int, allowRotation: Boolean): Boolean {
+        node.getPossibleMoves(allowRotation).forEach {
             val child = Node(rs, node, it, playerIndex)
             child.setScore()
             node.children.add(child)
@@ -74,14 +74,14 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         return node.children.isEmpty()
     }
 
-    private fun simulateRandomPlayout(node: Node): Boolean {
+    private fun simulateRandomPlayout(node: Node, allowRotation: Boolean): Boolean {
         var tempNode = node.copy()
         var playerIndex = aiIndex
 
         var shouldStop = false
         while (!PlayerActionService.isGameOver(tempNode.state) && !shouldStop) {
             playerIndex = (playerIndex + 1) % node.state.players.size
-            shouldStop = expandNode(tempNode, playerIndex)
+            shouldStop = expandNode(tempNode, playerIndex, allowRotation)
             tempNode = selectPromisingNode(tempNode)
         }
 

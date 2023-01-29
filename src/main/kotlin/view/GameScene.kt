@@ -309,7 +309,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         playerList.forEach { println(it.isSmartAi) }
 
         if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
-            rootService.playerActionService.playAiTurn()
+            rootService.playerActionService.playAiTurn(gameService.rotationAllowed)
 
         turn()
     }

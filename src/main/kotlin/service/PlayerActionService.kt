@@ -147,18 +147,18 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      *  @author Anastasiia
      * playAiTurn: a function to play the turn of the 'smart AI' player.
      */
-    fun playAiTurn() {
+    fun playAiTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
 
         runBlocking {
             val move = try {
                 withTimeout(9000L) {
-                    MCTS(rootService, aiIndex).findNextMove()
+                    MCTS(rootService, aiIndex).findNextMove(allowRotation)
                 }
             } catch (err: OutOfMemoryError) {
-                MCTS(rootService, aiIndex).findNextMoveSimplified()
+                MCTS(rootService, aiIndex).findNextMoveSimplified(allowRotation)
             } catch (exc: TimeoutCancellationException) {
-                MCTS(rootService, aiIndex).findNextMoveSimplified()
+                MCTS(rootService, aiIndex).findNextMoveSimplified(allowRotation)
             }
 
             placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
@@ -169,9 +169,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      *  @author Aziz
      * playRandomTurn: a function to play the turn of the 'dumb/random AI' player.
      */
-    fun playRandomTurn() {
+    fun playRandomTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
-        val move = MCTS(rootService, aiIndex).findRandomMove()
+        val move = MCTS(rootService, aiIndex).findRandomMove(allowRotation)
         placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
