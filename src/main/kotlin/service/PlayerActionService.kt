@@ -28,7 +28,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         if (isPositionLegal(posX, posY) ) {
             if (fromHand) {
 
-
+                if (handTileLegal(posX,posY)) {
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
@@ -47,13 +47,13 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                         tile.id = tempId
                         tile.originalPorts = tempOriginalPorts
                     }
-                if (handTileLegal(posX,posY)){
+
                     tile!!.posX = posX
                     tile.posY = posY
                     // put tile onto Field
-                    rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile}
-                else
-                    throw IllegalStateException("no card must be placed here !")
+                    rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
+
+
                     // give player new tile from tileStack
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isNotEmpty()) {
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
@@ -61,11 +61,15 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                         if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                             onAllRefreshables { refreshAfterDrawStackEmpty() }
                     }
-
+                }
+                    else {
+                        onAllRefreshables { refreshAfterTryingPlaceTile()  }
+                        return
+                    }
 
             } else {
                 // tile from tileStack
-
+                if (stackTileLegal(posX,posY)) {
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
@@ -85,7 +89,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                         tile.originalPorts = tempOriginalPorts
 
                     }
-                if (stackTileLegal(posX,posY)) {
+
                     tile.posX = posX
                     tile.posY = posY
                     // remove tile from tileStack and put it onto the field
@@ -106,7 +110,11 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                     }
                 }
                 else
-                    throw IllegalStateException("no card must be placed here !")
+
+                {
+                    onAllRefreshables { refreshAfterTryingPlaceTile() }
+                    return
+                }
 
             }
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
@@ -221,7 +229,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     private fun stackTileLegal(posX: Int,posY: Int): Boolean
     {
         val stackTile  = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles[0].ports
-        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles[1]
+        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size
         for (port in stackTile)
         {
 
@@ -257,7 +265,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             {
                 return false
             }
-            else if(lastTile == null)
+            else if(lastTile == 0)
             {
                 return true
             }
