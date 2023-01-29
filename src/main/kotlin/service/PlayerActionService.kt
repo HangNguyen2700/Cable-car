@@ -8,6 +8,10 @@ import entity.GameField
 import entity.Player
 import entity.Tile
 import entity.Turn
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * class to handle player ingame actions
@@ -145,12 +149,20 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
      */
     fun playAiTurn() {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
-        val move = try {
-            MCTS(rootService, aiIndex).findNextMove()
-        } catch (err: java.lang.OutOfMemoryError) {
-            MCTS(rootService, aiIndex).findNextMoveAlternative()
+
+        runBlocking {
+            val move = try {
+                withTimeout(9000L) {
+                    MCTS(rootService, aiIndex).findNextMove()
+                }
+            } catch (err: OutOfMemoryError) {
+                MCTS(rootService, aiIndex).findNextMoveSimplified()
+            } catch (exc: TimeoutCancellationException) {
+                MCTS(rootService, aiIndex).findNextMoveSimplified()
+            }
+
+            placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
         }
-        placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
 
     /**

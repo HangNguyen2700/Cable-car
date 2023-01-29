@@ -4,7 +4,7 @@ import service.PlayerActionService
 
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
-    fun findNextMoveAlternative(): Move {
+    fun findNextMoveSimplified(): Move {
         val defaultMove = Move(false, -1, -1, -1)
         val node = Node(rs, null, defaultMove, aiIndex)
 
