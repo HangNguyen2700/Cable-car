@@ -29,7 +29,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         if (isPositionLegal(posX, posY, rootService.currentGame!!.currentTurn) ) {
             if (fromHand) {
 
-                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)) {
+                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn) || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
@@ -69,7 +69,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
             } else {
                 // tile from tileStack
-                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)) {
+                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)  || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)) {
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
@@ -228,6 +228,22 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     companion object {
+        /**
+         * @author Ikhlawi
+         * check if no place more for Tiles in the hand & stack to set it
+         * in the last 4 until 8 places on the edge
+         */
+        private fun noPlaceMore(posX: Int, posY: Int, turn: Turn):Boolean
+        {
+            val size = turn.gameField.tileStack.tiles.size
+            if ( ( (posX in 1..8 && posY == 1)|| (posY in 1..8 && posX == 1)||(posX in 1..8 && posY == 8)||(posY in 1..8 && posX == 8) ) &&
+                    size<3 && !handTileLegal(posX,posY,turn) && !stackTileLegal(posX,posY,turn)
+            )
+            {
+                return true
+            }
+            return false
+        }
         /**
          * @author Ikhlawi
          * Check if the position at (posX, posY) is legal to place a tile from the hand on.
