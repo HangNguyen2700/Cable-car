@@ -40,7 +40,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     var playerList = listOf<Player>()
     private var isInputPlayer = mutableListOf(false,false,false,false,false,false)
 
-    private var networkPlayerName :String? = null
+    var networkPlayerName :String? = null
     private val tileBackImage = ImageVisual("tile_back.png")
 
     private var currentTile: Tile? = null
@@ -298,9 +298,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         initGameBoard()
         initStationPosition()
 
-        if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
+        /*if (playerList[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null)
             rootService.playerActionService.playAiTurn()
-
+*/
         turn()
     }
 
@@ -377,7 +377,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTurn = rootService.currentGame!!.currentTurn
 
         showPlayers(); refreshGameBoard(); playersHandCard()
-
+        println("tileStack :" + currentTurn!!.gameField.tileStack.tiles.count())
         if (currentTile != null) currentTile!!.rotationDegree = 0
         if (currentTileCardView != null) currentTileCardView!!.rotation = 0.0
         playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
@@ -387,10 +387,13 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         if (isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]) {
             playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
 
-            if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty())
+            if(currentTurn!!.gameField.tileStack.tiles.isNotEmpty()){
                 drawnTilesCardView.frontVisual = setTileFront(currentTurn!!.gameField.tileStack.tiles.first())
-            handTileCardView.frontVisual = setTileFront(currentTurn!!.
-            players[ (currentTurn!!.currentPlayerIndex) % currentTurn!!.players.size ].handTile!!)
+            }
+            if(currentTurn!!.players[(currentTurn!!.currentPlayerIndex)%currentTurn!!.players.size].handTile!=null){
+                handTileCardView.frontVisual = setTileFront(currentTurn!!.players[ (currentTurn!!.currentPlayerIndex)
+                        % currentTurn!!.players.size ].handTile!!)}
+
             //increment order workaround
 
             handTileCardView.showFront()

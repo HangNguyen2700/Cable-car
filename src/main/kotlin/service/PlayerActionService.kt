@@ -25,77 +25,89 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         var tile: Tile?
 
         // add tile to gameField and send TurnMessage
-        if (isPositionLegal(posX, posY)) {
+        if (isPositionLegal(posX, posY) ) {
             if (fromHand) {
-                // tile from hand
-                tile = rootService.currentGame!!.currentTurn.
-                    players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
-                // rotate tile if needed
-                if (rotationDegree != 0) {
-                    val tempId = tile!!.id
-                    val tempOriginalPorts = tile.originalPorts
 
-                    while (rotationDegree > tile!!.rotationDegree) {
-                        val rotDeg = tile.rotationDegree
-                        tile = rotate(tile)
-                        tile.rotationDegree = (rotDeg + 1) % 4
+
+                    tile =
+                        rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+
+
+                    // rotate tile if needed
+                    if (rotationDegree != 0) {
+                        val tempId = tile!!.id
+                        val tempOriginalPorts = tile.originalPorts
+
+                        while (rotationDegree > tile!!.rotationDegree) {
+                            val rotDeg = tile.rotationDegree
+                            tile = rotate(tile)
+                            tile.rotationDegree = (rotDeg + 1) % 4
+                        }
+
+                        tile.id = tempId
+                        tile.originalPorts = tempOriginalPorts
+                    }
+                if (handTileLegal(posX,posY)){
+                    tile!!.posX = posX
+                    tile.posY = posY
+                    // put tile onto Field
+                    rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile}
+                else
+                    throw IllegalStateException("no card must be placed here !")
+                    // give player new tile from tileStack
+                    if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isNotEmpty()) {
+                        rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                            rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                        if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
+                            onAllRefreshables { refreshAfterDrawStackEmpty() }
                     }
 
-                    tile.id = tempId
-                    tile.originalPorts = tempOriginalPorts
-                }
-                tile!!.posX = posX
-                tile.posY = posY
-                // put tile onto Field
-                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
-                // give player new tile from tileStack
-                if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isNotEmpty()){
-                    rootService.currentGame!!.currentTurn.
-                        players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
-                            rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
-                    if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
-                        onAllRefreshables { refreshAfterDrawStackEmpty() }
-                }
-                else rootService.currentGame!!.currentTurn.
-                players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile = null
 
             } else {
                 // tile from tileStack
-                tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
-                if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
-                    onAllRefreshables { refreshAfterDrawStackEmpty() }
-                // rotate tile if needed
-                if (rotationDegree != 0) {
-                    val tempId = tile.id
-                    val tempOriginalPorts = tile.originalPorts
 
-                    while (rotationDegree > tile!!.rotationDegree) {
-                        val rotDeg = tile.rotationDegree
-                        tile = rotate(tile)
-                        tile.rotationDegree = (rotDeg + 1) % 4
+                    tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
+                    if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
+                        onAllRefreshables { refreshAfterDrawStackEmpty() }
+
+                    // rotate tile if needed
+                    if (rotationDegree != 0) {
+                        val tempId = tile.id
+                        val tempOriginalPorts = tile.originalPorts
+
+                        while (rotationDegree > tile!!.rotationDegree) {
+                            val rotDeg = tile.rotationDegree
+                            tile = rotate(tile)
+                            tile.rotationDegree = (rotDeg + 1) % 4
+                        }
+
+                        tile.id = tempId
+                        tile.originalPorts = tempOriginalPorts
+
                     }
+                if (stackTileLegal(posX,posY)) {
+                    tile.posX = posX
+                    tile.posY = posY
+                    // remove tile from tileStack and put it onto the field
+                    rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
 
-                    tile.id = tempId
-                    tile.originalPorts = tempOriginalPorts
+                    rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.forEach { println(it.id) }
+                    println("laying tile with pairs " + tile.ports + " with id " + tile.id)
+                    if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
 
+                        rootService.networkService.sendTurnMessage(
+                            TurnMessage(
+                                posX, posY,
+                                !fromHand,
+                                tile.rotationDegree * 90,
+                                GameStateVerificationInfo(listOf(), listOf(), listOf())
+                            )
+                        )
+                    }
                 }
-                tile.posX = posX
-                tile.posY = posY
-                // remove tile from tileStack and put it onto the field
-                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] = tile
-            }
-            //rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.forEach { println(it.id) }
-            println("laying tile with pairs " + tile.ports + " with id " + tile.id)
-            if (!rootService.gameService.isLocalOnlyGame && !fromTurnMsg) {
+                else
+                    throw IllegalStateException("no card must be placed here !")
 
-                rootService.networkService.sendTurnMessage(
-                    TurnMessage(
-                        posX, posY,
-                        !fromHand,
-                        tile.rotationDegree*90,
-                        GameStateVerificationInfo(listOf(), listOf(), listOf())
-                    )
-                )
             }
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }
@@ -139,24 +151,119 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         if (isFree) {
             println("tile is free")
+
             if (tileEdge) {
                 println("tile does not stand alone")
-                /*if (player != null) {
-                    for (path in player.paths) {
-
-                        rootService.gameService.nextPlayer()
-                        if ((path.tiles.size > 1 && path.complete) ||
-                            rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile == null
-                        ) {
-
-                            return true
-                        }
-                    }
-                }*/
                 return true
             }
         }
+
         return false
+    }
+/**
+ * @author Ikhlawi
+ * Check if the position at (posX, posY) is legal to place a tile from the hand on.
+ *
+ * */
+    private fun handTileLegal(posX: Int,posY: Int):Boolean
+    {
+        val handTile  = rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile!!
+        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size
+        for (port in handTile.ports)
+        {
+
+            if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
+            {
+                return false
+            }
+            else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
+            {
+                return false
+            }
+            else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
+            {
+                return false
+            }
+            else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
+            {
+                return false
+            }
+            else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+            {
+                return false
+            }
+            else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+            {
+                return false
+            }
+            else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+            {
+                return false
+            }
+            else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+            {
+                return false
+            }
+            else if (lastTile == 0)
+            {
+                return true
+            }
+
+        }
+        return true
+
+    }
+    /**
+    * @author Ikhlawi
+    * Check if the position at (posX, posY) is legal to place a tile from the stack on.
+    *
+    * */
+    private fun stackTileLegal(posX: Int,posY: Int): Boolean
+    {
+        val stackTile  = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles[0].ports
+        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles[1]
+        for (port in stackTile)
+        {
+
+            if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
+            {
+                return false
+            }
+            else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
+            {
+                return false
+            }
+            else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
+            {
+                return false
+            }
+            else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
+            {
+                return false
+            }
+            else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+            {
+                return false
+            }
+            else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+            {
+                return false
+            }
+            else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+            {
+                return false
+            }
+            else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+            {
+                return false
+            }
+            else if(lastTile == null)
+            {
+                return true
+            }
+
+        }
+        return true
     }
 
     /**
