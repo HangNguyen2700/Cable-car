@@ -30,11 +30,11 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
         var shouldStop = false
         while (true) {
-            println("Still Thinking")
+            //println("Still Thinking")
             val node = selectRandomNode(root)
             if (PlayerActionService.isGameOver(node.state) || shouldStop) {
                 backpropagation(node, true)
-                println("Decision Made")
+                println("Bad Decision Made")
                 return node.move
             }
             shouldStop = expandNode(node, aiIndex)
@@ -45,17 +45,6 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     }
 
     private fun selectPromisingNode(node: Node): Node {
-        var current = node
-        while (current.children.isNotEmpty()) {
-            current = current.children.maxByOrNull {
-                if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount
-                else it.score
-            }!!
-        }
-        return current
-    }
-    //stupid Ai random move
-    private fun selectRandomNode(node: Node): Node {
         var current = node
         while (current.children.isNotEmpty()) {
             current = current.children.maxByOrNull {
@@ -92,6 +81,17 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         }
 
         return tempNode.state.players[aiIndex].score >= tempNode.state.players.maxOf { it.score }
+    }
+    //stupid Ai random move
+    private fun selectRandomNode(node: Node): Node {
+        var current =node
+        while (current.children.isNotEmpty()) {
+            current = current.children.maxByOrNull {
+                if (it.visitCount != 0.0) it.score + it.winCount / it.visitCount
+                else it.score
+            }!!
+        }
+        return current
     }
 
     private fun backpropagation(last: Node, aiWon: Boolean) {
