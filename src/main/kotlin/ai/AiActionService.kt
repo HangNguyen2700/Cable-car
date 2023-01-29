@@ -7,29 +7,6 @@ import java.lang.IllegalStateException
 class AiActionService {
     companion object {
         /**
-         * Checks if the game is over in the current turn.
-         */
-        fun isGameOver(turn: Turn) : Boolean {
-            var isFieldFull = true
-            for (row in turn.gameField.field) {
-                for (cell in row) {
-                    if (cell == null) {
-                        isFieldFull = false
-                        break
-                    }
-                }
-            }
-            var noCardsLeft = true
-            for (player in turn.players) {
-                if (player.handTile != null) {
-                    noCardsLeft = false
-                    break
-                }
-            }
-            return isFieldFull || noCardsLeft
-        }
-
-        /**
          * Checks if position the AI chose for tile placement is legal.
          */
         fun isPositionLegal(turn: Turn, posX: Int, posY: Int): Boolean {

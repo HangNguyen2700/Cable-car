@@ -104,20 +104,22 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
     /**
      * iterates currentPlayerIndex over players.size in a loop
      */
-    fun nextPlayer() {
-        if (rootService.currentGame!!.currentTurn.currentPlayerIndex == rootService.currentGame!!.currentTurn.players.size - 1) {
-            rootService.currentGame!!.currentTurn.currentPlayerIndex = 0
-            println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
-        } else {
-            rootService.currentGame!!.currentTurn.currentPlayerIndex++
-            println("now it is index turn " + rootService.currentGame!!.currentTurn.currentPlayerIndex)
+    fun nextPlayer(): Boolean {
+        val turn = rootService.currentGame!!.currentTurn
+
+        if (PlayerActionService.isGameOver(turn)) {
+            rootService.gameService.endGame()
+            return false
         }
-        val isSmartAi =
-            rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi
+        turn.currentPlayerIndex = (turn.currentPlayerIndex + 1) % turn.players.size
+        println("It's player's " + turn.currentPlayerIndex + " turn.")
+
+        val isSmartAi = turn.players[turn.currentPlayerIndex].isSmartAi
         if (isSmartAi != null) {
             if (isSmartAi) rootService.playerActionService.playAiTurn()
             else rootService.playerActionService.playRandomTurn()
         }
+        return true
     }
 
     /**

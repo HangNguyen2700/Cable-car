@@ -1,5 +1,7 @@
 package ai
 
+import service.PlayerActionService
+
 class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
 
     fun findNextMove() : Move {
@@ -9,7 +11,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         while (true) {
             println("Still Thinking")
             val node = selectPromisingNode(root)
-            if (AiActionService.isGameOver(node.state)) {
+            if (PlayerActionService.isGameOver(node.state)) {
                 backpropagation(node, true)
                 println("Decision Made")
                 return node.move
@@ -28,7 +30,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         while (true) {
             println("Still Thinking")
             val node = selectRandomNode(root)
-            if (AiActionService.isGameOver(node.state)) {
+            if (PlayerActionService.isGameOver(node.state)) {
                 backpropagation(node, true)
                 println("Decision Made")
                 return node.move
@@ -77,7 +79,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
         var tempNode = node.copy()
         var playerIndex = aiIndex
 
-        while (!AiActionService.isGameOver(tempNode.state)) {
+        while (!PlayerActionService.isGameOver(tempNode.state)) {
             for (player in tempNode.state.players) {
                 println(player.toString() + ": " + tempNode.state.players[playerIndex].handTile.toString())
             }

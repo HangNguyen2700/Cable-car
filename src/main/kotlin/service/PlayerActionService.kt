@@ -14,28 +14,6 @@ import entity.Turn
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    private fun isGameOver() : Boolean {
-        val turn = rootService.currentGame!!.currentTurn
-
-        var isFieldFull = true
-        for (row in turn.gameField.field) {
-            for (cell in row) {
-                if (cell == null) {
-                    isFieldFull = false
-                    break
-                }
-            }
-        }
-        var noCardsLeft = true
-        for (player in turn.players) {
-            if (player.handTile != null) {
-                noCardsLeft = false
-                break
-            }
-        }
-        return isFieldFull || noCardsLeft
-    }
-
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
         // add new Turn
         val newTurn = rootService.currentGame!!.currentTurn.copy()
@@ -122,10 +100,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             buildPathsAnastasiia(rootService.currentGame!!.currentTurn)
         }
 
-        rootService.gameService.nextPlayer()
-        onAllRefreshables { this.refreshAfterTurn() }
-
-        if(isGameOver()) rootService.gameService.endGame()
+        if (rootService.gameService.nextPlayer())
+            onAllRefreshables { this.refreshAfterTurn() }
     }
 
     /**
@@ -271,6 +247,26 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     companion object {
+        fun isGameOver(turn: Turn) : Boolean {
+            var isFieldFull = true
+            for (row in turn.gameField.field) {
+                for (cell in row) {
+                    if (cell == null) {
+                        isFieldFull = false
+                        break
+                    }
+                }
+            }
+            var noCardsLeft = true
+            for (player in turn.players) {
+                if (player.handTile != null) {
+                    noCardsLeft = false
+                    break
+                }
+            }
+            return isFieldFull || noCardsLeft
+        }
+
         fun buildPathsAnastasiia(turn: Turn) {
             for (player in turn.players) {
                 for (path in player.paths) {
