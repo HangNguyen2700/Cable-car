@@ -25,10 +25,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         var tile: Tile?
 
         // add tile to gameField and send TurnMessage
-        if (isPositionLegal(posX, posY) ) {
+        if (isPositionLegal(posX, posY, rootService.currentGame!!.currentTurn) ) {
             if (fromHand) {
 
-                if (handTileLegal(posX,posY)) {
+                if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)) {
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
 
@@ -68,7 +68,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
             } else {
                 // tile from tileStack
-                if (stackTileLegal(posX,posY)) {
+                if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)) {
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                         onAllRefreshables { refreshAfterDrawStackEmpty() }
@@ -108,9 +108,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                         )
                     }
                 }
-                else
-
-                {
+                else {
                     onAllRefreshables { refreshAfterTryingPlaceTile() }
                     return
                 }
@@ -142,149 +140,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         val move = MCTS(rootService, aiIndex).findRandomMove()
         placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
     }
-
-    /**
-     * @author Ikhlawi
-     * Check if the position at (posX, posY) is legal to place a tile on.
-     *
-     * @param posX The x-coordinate of the position to check.
-     * @param posY The y-coordinate of the position to check.
-     * @return True if the position is legal to place a tile on, false otherwise.
-     */
-     fun isPositionLegal(posX: Int, posY: Int): Boolean {
-
-        val isFree = isSpotFree(posX, posY)
-        val tileEdge = isConnectedToTile(rootService.currentGame!!.currentTurn.gameField.field, posX, posY)
-
-        if (isFree) {
-            println("tile is free")
-
-            if (tileEdge) {
-                println("tile does not stand alone")
-                return true
-            }
-        }
-
-        return false
-    }
-/**
- * @author Ikhlawi
- * Check if the position at (posX, posY) is legal to place a tile from the hand on.
- *
- * */
-    private fun handTileLegal(posX: Int,posY: Int):Boolean
-    {
-        val handTile  = rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile!!
-        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size
-        for (port in handTile.ports)
-        {
-
-            if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
-            {
-                return false
-            }
-            else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
-            {
-                return false
-            }
-            else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
-            {
-                return false
-            }
-            else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
-            {
-                return false
-            }
-            else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
-            {
-                return false
-            }
-            else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
-            {
-                return false
-            }
-            else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
-            {
-                return false
-            }
-            else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
-            {
-                return false
-            }
-            else if (lastTile == 0)
-            {
-                return true
-            }
-
-        }
-        return true
-
-    }
-    /**
-    * @author Ikhlawi
-    * Check if the position at (posX, posY) is legal to place a tile from the stack on.
-    *
-    * */
-    private fun stackTileLegal(posX: Int,posY: Int): Boolean
-    {
-        val stackTile  = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles[0].ports
-        val lastTile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size
-        for (port in stackTile)
-        {
-
-            if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
-            {
-                return false
-            }
-            else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
-            {
-                return false
-            }
-            else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
-            {
-                return false
-            }
-            else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
-            {
-                return false
-            }
-            else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
-            {
-                return false
-            }
-            else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
-            {
-                return false
-            }
-            else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
-            {
-                return false
-            }
-            else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
-            {
-                return false
-            }
-            else if(lastTile == 0)
-            {
-                return true
-            }
-
-        }
-        return true
-    }
-
-    /**
-     * @author Ikhlawi
-     * Check if the spot at (posX, posY) is free.
-     *
-     * @param posX The x-coordinate of the spot to check.
-     * @param posY The y-coordinate of the spot to check.
-     * @return True if the spot is free, false if illegal or already occupied.
-     */
-    private fun isSpotFree(posX: Int, posY: Int) =
-        !((posX in 0..9 && (posY == 0 || posY == 10)) || (posY in 0..9 && (posX == 0 || posX == 10)) ||
-            (posX in 4..5 && posY in 4..5) ||
-                rootService.currentGame!!.currentTurn.gameField.field[posX][posY] != null)
 
     /**
      * @author Jonah
@@ -361,6 +216,150 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     companion object {
+        /**
+         * @author Ikhlawi
+         * Check if the position at (posX, posY) is legal to place a tile from the hand on.
+         *
+         * */
+        fun handTileLegal(posX: Int,posY: Int, turn: Turn):Boolean
+        {
+            val handTile  = turn.players[turn.currentPlayerIndex].handTile!!
+            val lastTile = turn.gameField.tileStack.tiles.size
+            for (port in handTile.ports)
+            {
+
+                if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
+                {
+                    return false
+                }
+                else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
+                {
+                    return false
+                }
+                else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
+                {
+                    return false
+                }
+                else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
+                {
+                    return false
+                }
+                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+                {
+                    return false
+                }
+                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+                {
+                    return false
+                }
+                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+                {
+                    return false
+                }
+                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+                {
+                    return false
+                }
+                else if (lastTile == 0)
+                {
+                    return true
+                }
+
+            }
+            return true
+
+        }
+        /**
+         * @author Ikhlawi
+         * Check if the position at (posX, posY) is legal to place a tile from the stack on.
+         *
+         * */
+        fun stackTileLegal(posX: Int, posY: Int, turn: Turn): Boolean
+        {
+            val stackTile  = turn.gameField.tileStack.tiles[0].ports
+            val lastTile = turn.gameField.tileStack.tiles.size
+            for (port in stackTile)
+            {
+
+                if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
+                {
+                    return false
+                }
+                else if ( (port.first == 6 && port.second == 7) && (posY in 1..8 && posX == 1)  )
+                {
+                    return false
+                }
+                else if ( (port.first == 4 && port.second == 5) && (posX in 1..8 && posY == 8)  )
+                {
+                    return false
+                }
+                else if ( (port.first == 2 && port.second == 3) && (posY in 1..8 && posX == 8) )
+                {
+                    return false
+                }
+                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+                {
+                    return false
+                }
+                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+                {
+                    return false
+                }
+                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+                {
+                    return false
+                }
+                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+                {
+                    return false
+                }
+                else if(lastTile == 0)
+                {
+                    return true
+                }
+
+            }
+            return true
+        }
+
+        /**
+         * @author Ikhlawi
+         * Check if the spot at (posX, posY) is free.
+         *
+         * @param posX The x-coordinate of the spot to check.
+         * @param posY The y-coordinate of the spot to check.
+         * @return True if the spot is free, false if illegal or already occupied.
+         */
+        private fun isSpotFree(posX: Int, posY: Int, turn: Turn) =
+            !((posX in 0..9 && (posY == 0 || posY == 10)) || (posY in 0..9 && (posX == 0 || posX == 10)) ||
+                    (posX in 4..5 && posY in 4..5) ||
+                    turn.gameField.field[posX][posY] != null)
+
+        /**
+         * @author Ikhlawi
+         * Check if the position at (posX, posY) is legal to place a tile on.
+         *
+         * @param posX The x-coordinate of the position to check.
+         * @param posY The y-coordinate of the position to check.
+         * @return True if the position is legal to place a tile on, false otherwise.
+         */
+        fun isPositionLegal(posX: Int, posY: Int, turn: Turn): Boolean {
+
+            val isFree = isSpotFree(posX, posY, turn)
+            val tileEdge = isConnectedToTile(turn.gameField.field, posX, posY)
+
+            if (isFree) {
+                println("tile is free")
+
+                if (tileEdge) {
+                    println("tile does not stand alone")
+                    return true
+                }
+            }
+
+            return false
+        }
+
         fun isGameOver(turn: Turn) : Boolean {
             var isFieldFull = true
             for (row in turn.gameField.field) {

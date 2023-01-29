@@ -18,9 +18,11 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
 
         for (x in 1 until state.gameField.field.size - 1) {
             for (y in 1 until state.gameField.field[x].size - 1) {
-                if (!AiActionService.isPositionLegal(state, x, y)) continue
+                if (!PlayerActionService.isPositionLegal(x, y, state)) continue
                 for (i in 0..3) {
-                    moves.add(Move(false, i, x, y))
+                    if (PlayerActionService.handTileLegal(x, y, state))
+                        moves.add(Move(false, i, x, y))
+                    if (PlayerActionService.stackTileLegal(x, y, state))
                     moves.add(Move(true, i, x, y))
                 }
             }
