@@ -21,7 +21,11 @@ data class Turn(var gameField: GameField, var players: MutableList<Player>) {
      * copies the object
      */
     fun copy(): Turn {
-        val nTurn = Turn(gameField.copy(), players.toMutableList())
+        val nPlayers = mutableListOf<Player>()
+        for (player in players) {
+            nPlayers.add(player.copy())
+        }
+        val nTurn = Turn(gameField.copy(), nPlayers)
         nTurn.currentPlayerIndex = currentPlayerIndex
         return nTurn
     }
