@@ -1,5 +1,7 @@
 package view
 
+import com.soywiz.korio.dynamic.KDynamic.Companion.int
+import com.soywiz.korio.dynamic.KDynamic.Companion.intArray
 import entity.Player
 import entity.Tile
 import entity.Turn
@@ -416,7 +418,9 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         if (currentTileCardView != null) currentTileCardView!!.rotation = 0.0
         playerInputs.forEach { it.opacity = 0.0; it.isDisabled = true }
 
-        println(rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
+        println("currentPlayer Index:"+rootService.currentGame?.currentTurn?.currentPlayerIndex!!)
+        println("handCards1:"+ rootService.currentGame!!.currentTurn.players[0].handTile)
+        println("handCards2:"+ rootService.currentGame!!.currentTurn.players[1].handTile)
 
         if (isInputPlayer[rootService.currentGame?.currentTurn?.currentPlayerIndex!!]) {
             playerInputs.forEach { it.opacity = 1.0; it.isDisabled = false }
