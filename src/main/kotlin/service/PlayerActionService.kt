@@ -151,7 +151,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         runBlocking {
             val move = try {
-                withTimeout(9000L) {
+                withTimeout(8000L) {
                     MCTS(rootService, aiIndex).findNextMove(allowRotation)
                 }
             } catch (err: OutOfMemoryError) {

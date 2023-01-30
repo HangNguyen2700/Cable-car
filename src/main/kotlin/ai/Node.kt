@@ -70,26 +70,26 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move) 
 
         // -5 if another path was completed
         for (path in state.players[playerIndex].paths) {
-            if (path.complete) actComparator += 5
+            if (path.complete && path.tiles.size < 5) actComparator += 5
         }
         for (path in prev.players[playerIndex].paths) {
-            if (path.complete) prevComparator += 5
+            if (path.complete && path.tiles.size < 5) prevComparator += 5
         }
         if (actComparator > prevComparator) score -= (actComparator - prevComparator)
         actComparator = 0
         prevComparator = 0
 
-        // +5 if another rival's path was completed
+        // +3 if another rival's path was completed
         for (i in 0 until state.players.size) {
             if (i == playerIndex) continue
             for (path in state.players[i].paths) {
-                if (path.complete) actComparator += 5
+                if (path.complete && path.tiles.size < 5) actComparator += 3
             }
         }
         for (i in 0 until prev.players.size) {
             if (i == playerIndex) continue
             for (path in prev.players[i].paths) {
-                if (path.complete) prevComparator += 5
+                if (path.complete && path.tiles.size < 5) prevComparator += 3
             }
         }
         if (actComparator > prevComparator) score += (actComparator - prevComparator)
@@ -122,16 +122,19 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move) 
         actComparator = 0
         prevComparator = 0
 
-        // -1 if a rival's path extended
+        // -3 if a rival's path extended
         for (i in 0 until state.players.size) {
             if (i == playerIndex) continue
             for (path in state.players[i].paths) {
-                actComparator += path.tiles.size
+                actComparator += 3 * path.tiles.size
             }
             for (path in prev.players[i].paths) {
-                prevComparator += path.tiles.size
+                prevComparator += 3 * path.tiles.size
             }
         }
         if (actComparator > prevComparator) score -= (actComparator - prevComparator)
+
+        if (playerIndex != rs.currentGame!!.currentTurn.currentPlayerIndex)
+            score = -score
     }
 }
