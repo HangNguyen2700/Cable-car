@@ -235,7 +235,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     private var musicChannel: SoundChannel? = null
     private var soundChannel: SoundChannel? = null
 
-    private var musicEnabled = false         //TODO: set to true for final build
+    private var musicEnabled = true
     private var soundEnabled = true
 
     private val musicButtons = listOf(
@@ -472,6 +472,23 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     /**
+     * playback of music in game scene via KorAU audio library
+     */
+
+    private fun playGameSceneMusic() {
+        if (musicChannel != null) {
+            musicChannel!!.stop()
+        }
+        if (musicEnabled) {
+            GlobalScope.async {
+                val music = resourcesVfs["game_scene_music.wav"].readMusic()
+                musicChannel = music.play(infinitePlaybackTimes)
+                musicChannel!!.await()
+            }
+        }
+    }
+
+    /**
      * playback of sound via KorAU audio library
      */
 
@@ -518,6 +535,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
      */
 
     private fun explicitlyShowGameScene() {
+        playGameSceneMusic()
         showGameScene(gameScene)
     }
 
