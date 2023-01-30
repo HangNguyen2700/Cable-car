@@ -121,8 +121,6 @@ class MainMenuScene : MenuScene(1920,1080) {
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton, fullscreenToggleButton,
-            debugGameSceneButton,       //TODO: remove debug buttons
-            debugGameEndSceneButton,
             nameErrorLabel, closeNameErrorButton,
         )
         background = ColorVisual(0,0,0)
