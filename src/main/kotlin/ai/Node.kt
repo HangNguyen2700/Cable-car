@@ -1,6 +1,7 @@
 package ai
 import entity.Turn
 import service.PlayerActionService
+
 /**
  * Node class that represents a state in the game .
  * @property rs RootService object that holds the game state
@@ -50,6 +51,8 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
                 }
             }
         }
+        println()
+
         return moves
     }
     /**

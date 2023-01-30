@@ -30,8 +30,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         // add tile to gameField and send TurnMessage
         if (isPositionLegal(posX, posY, rootService.currentGame!!.currentTurn) ) {
-            if (fromHand) {
 
+            if (fromHand) {
                 if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
                     /*|| rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null*/) {
@@ -151,7 +151,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         runBlocking {
             val move = try {
-                withTimeout(9500L) {
+                withTimeout(9000L) {
                     MCTS(rootService, aiIndex).findNextMove(allowRotation)
                 }
             } catch (err: OutOfMemoryError) {
@@ -159,6 +159,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             } catch (exc: TimeoutCancellationException) {
                 MCTS(rootService, aiIndex).findNextMoveSimplified(allowRotation)
             }
+
+            println(move.toString() + " " + rootService.currentGame!!.currentTurn.players[aiIndex].handTile)
 
             placeTile(!move.shouldDrawFromStack, move.posX, move.posY, move.rotationsNo)
         }
@@ -311,10 +313,12 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }
                 else if(lastTile == 0)
                 {
+                    println("Position " + posX + ", " + posY + ": " + handTile.toString() + " is legal.")
                     return true
                 }
 
             }
+            println("Position " + posX + ", " + posY + ": " + handTile.toString() + " is legal.")
             return true
 
         }
