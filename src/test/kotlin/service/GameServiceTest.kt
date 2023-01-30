@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package service
 
 import com.soywiz.korio.dynamic.KDynamic.Companion.int
@@ -5,7 +7,6 @@ import entity.Color
 import entity.Path
 import entity.Player
 import entity.Tile
-import service.PlayerActionService.Companion
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -17,7 +18,7 @@ import org.junit.jupiter.api.Assertions.*
 internal class GameServiceTest {
     private lateinit var gameService : GameService
 
-    lateinit var rootService : RootService
+    private lateinit var rootService : RootService
     private lateinit var playerService: PlayerActionService
 
     @BeforeEach
@@ -30,11 +31,6 @@ internal class GameServiceTest {
 
     }
 
-    @Test
-    fun startNewGame() {
-        val playerNames = mutableListOf("sam", "john", "frank", "oli")
-
-    }
     @Test
             /**
              * @author Ikhlawi
@@ -59,16 +55,53 @@ internal class GameServiceTest {
 
 
     }
+    /**
+     * @author Ikhlawi
+     * checking if undo fun return the right value for
+     * the player index and tiles
+     */
     @Test
     fun undo()
     {
         val players = listOf(Player("sam",false), Player("Jen", false) )
-        gameService.startNewGame(players)
-        gameService.undo()
-        gameService.undo()
-        gameService.undo()
+        gameService.startNewGame(players, isLocalOnlyGame = false, isHostedGame = true, rotationAllowed = true)
+        while (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size==5){
 
-        assertFalse( rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size == 0)
+            gameService.undo()
+
+            assertFalse( rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size == 6)
+            assertNotEquals(players[0].handTile, players[1].handTile )
+
+            gameService.redo()
+            assertTrue(players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile==rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.last())
+        }
+
+    }
+    @Test
+            /**
+             * @author Ikhlawi
+             * checking if redo fun return the right value for
+             * the player index and tiles
+             */
+    fun redo()
+    {
+        val players = listOf(Player("sam",false), Player("Jen", false) )
+        gameService.startNewGame(players, isLocalOnlyGame = false, isHostedGame = true, rotationAllowed = true)
+             while (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size>5)
+                 {
+
+
+                     gameService.nextPlayer()
+                     assertTrue(rootService.currentGame!!.currentTurn.currentPlayerIndex == 0)
+                     gameService.undo()
+                     assertFalse(rootService.currentGame!!.currentTurn.currentPlayerIndex ==1)
+                     gameService.redo()
+                     assertTrue(rootService.currentGame!!.currentTurn.currentPlayerIndex == 0)
+                     gameService.redo()
+                     assertNotEquals(players[0].paths,players[1].paths)
+
+    }
+
     }
 
     @Test
