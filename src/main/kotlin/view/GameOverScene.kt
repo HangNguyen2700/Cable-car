@@ -46,22 +46,22 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
 
     //aligns player names
     private var p1Name = Label(width = 400, height = 50, posX = 825, posY = 810,
-        font = Font(60, Color.YELLOW, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color.YELLOW, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "TIME TO SCREAM!")
     private var p2Name = Label(width = 400, height = 50, posX = 1075, posY = 760,
-        font = Font(60, Color.BLUE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color.BLUE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "aaaaaaaaaaaaaaaa")
     private var p3Name = Label(width = 400, height = 50, posX = 600, posY = 760,
-        font = Font(60, Color.ORANGE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color.ORANGE, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "aaaaaaaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p4Name = Label(width = 400, height = 50, posX = 65, posY = 760,
-        font = Font(60, Color.GREEN, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color.GREEN, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "aaaaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p5Name = Label(width = 400, height = 50, posX = 315, posY = 810,
-        font = Font(60, Color(183,0,255), family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color(183,0,255), family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "aaaaaaaaaaaaaaaaaa").apply { isVisible=false }
     private var p6Name = Label(width = 400, height = 50, posX = 1350, posY = 810,
-        font = Font(60, Color.BLACK, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
+        font = Font(40, Color.BLACK, family = "Calibri", fontStyle = Font.FontStyle.OBLIQUE),
         text = "aaaaaaaaaaaaaaaaaaa").apply { isVisible=false }
 
     //aligns player image

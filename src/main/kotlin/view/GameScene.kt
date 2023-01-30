@@ -47,6 +47,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private var currentTile: Tile? = null
     private var currentTileCardView: CardView? = null
     private var isDrawStackTileChosen : Boolean? = null
+    private var failSafeExitCount = 0
 
     private val labelFont = Font(50, Color.BLACK, family = "Calibri")
     private val playerScoreFont = Font(40, Color.BLACK, family = "Calibri")
@@ -108,6 +109,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         flip()
         onMouseClicked = {
             if (isDrawStackTileChosen == null) {
+                hintLabel.opacity = 0.0
                 currentTileCardView = this
                 currentTile = currentTurn?.players?.get(currentTurn!!.currentPlayerIndex)?.handTile
                 isDrawStackTileChosen = false
@@ -124,6 +126,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         isDisabled = true; opacity = 0.0
         onMouseClicked = {
             if (isDrawStackTileChosen == null || isDrawStackTileChosen == false) {
+                hintLabel.opacity = 0.0
                 flip()
                 handTileCardView.flip()
                 currentTileCardView = this
@@ -218,13 +221,21 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             text = "please wait..."))
     ).apply { isDisabled = true; opacity = 0.0 }
 
+    val failSafeExitButton = Button(width = 10, height = 10, posX = 1910, posY = 0, visual = ColorVisual(0,0,0,0)
+    ).apply { onMouseClicked = {
+        failSafeExitCount++
+        if (failSafeExitCount == 5) {
+            rootService.gameService.endGame()
+        }
+    } }
+
     init {
         playersGrid.setColumnWidths(400)
 
         background = ImageVisual("game_scene.png")
         addComponents(playerScoreBGLabel, playersGrid, topStationGrid, leftStationGrid, rightStationGrid,
             bottomStationGrid, mainBoardGrid, quickMenuButton, startGameButton,
-            playerInputBGLabel, handTileLabel, handTileCardView,
+            playerInputBGLabel, handTileLabel, handTileCardView, failSafeExitButton,
             player1HandCardBG,player2HandCardBG,player3HandCardBG,player4HandCardBG,player5HandCardBG,player6HandCardBG,
             player1HandCard,player2HandCard,player3HandCard,player4HandCard,player5HandCard,player6HandCard,
             drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, hintLabel, pleaseWaitLabel)
@@ -527,6 +538,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         currentTile = null
         currentTileCardView = null
         isDrawStackTileChosen = null
+        failSafeExitCount = 0
     }
 
     /**
