@@ -32,8 +32,17 @@ class CreditsScene : BoardGameScene(1920,1080) {
     )
 
     private val memberQuotes = listOf(
-        "\"\"","\"\"","\"Alles hat ein Ende.\nNur die Wurst hat 2.\"","\"Now that my Code runs,\nI don't need Therapy anymore.\"","\"\"","\"Microsoft ist nicht schlecht,\nsie machen nur ein beschissenes OS.\"","\"Nur noch ein Tag,\ndann ist morgen.\"","\"\"","\"Das Sopra ist voll cool\""
+        "\"Karriereziel: mind. die Hälfte\ndavon verdienen,was Netflix\ndieser Flugbegleiterin zahlt\"","",
+        "\"Alles hat ein Ende.\nNur die Wurst hat 2.\"","\"Now that my Code runs,\nI don't need Therapy anymore.\"","",
+        "\"Microsoft ist nicht schlecht,\nsie machen nur ein beschissenes OS.\"",
+        "\"Nur noch ein Tag,\ndann ist morgen.\"","","\"Das Sopra ist voll cool\""
     )
+
+    private val anastasiiaImage = TokenView(width = 300, height = 330.5 , posX = 1500, posY = 1600,
+        visual = ImageVisual("anastasiia_credits.jpeg"))
+
+    private val ikhlawiImage = TokenView(width = 300, height = 246, posX = 400, posY = 7000,
+        visual = ImageVisual("ikhlawi_credits.jpg"))
 
     private val memberImages = listOf(
         ImageVisual("_DSC0521_.jpg"), ImageVisual("_DSC0624_.jpg"), ImageVisual("_DSC0587_.jpg"),
@@ -303,7 +312,6 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
     init {
 
-        movePane.add(creditsLabel)
 
         for(i in 0..8) {
             if (i%2 == 0) {
@@ -335,9 +343,12 @@ class CreditsScene : BoardGameScene(1920,1080) {
 
 
 
-        movePane.add(Label(text = "Music by Kevin MacLeod, bensound",
+        movePane.add(Label(text = "Music by Kevin MacLeod, bensound, Hans Zimmer, NetworkMusicEnsemble",
             font = Font(size = 50, color = Color.WHITE, family = "Calibri"), width = 1920, height = 200, posY = 8600))
         movePane.add(copyrightLabel)
+
+
+        movePane.addAll(creditsLabel,anastasiiaImage,ikhlawiImage)
 
         addComponents(tk)
 

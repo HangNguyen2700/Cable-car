@@ -286,7 +286,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
      * only called in join mode
      */
 
-    fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) { //TODO: isJoinAi
+    fun joinGameWaitForPlayers(joinName :String, isJoinAi : Boolean) {
         this.networkPlayerName = joinName
         isJoinAiGameScene = isJoinAi
         pleaseWaitLabel.opacity = 1.0; pleaseWaitLabel.isDisabled = false
@@ -318,7 +318,6 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             }
 
             undoButton.isVisible = false; redoButton.isVisible = false
-            //network mode TODO: set networkPlayerName to null on GameScene exit
         }
 
         println(isInputPlayer)
