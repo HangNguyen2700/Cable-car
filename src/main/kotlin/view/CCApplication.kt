@@ -83,6 +83,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         mainMenuButton.onMouseClicked = {
             explicitlyShowTitleScene()
             gameScene.resetScene()
+            resetConfig()
         }
         quitButton.onMouseClicked = {
             hideMenuScene(3000)

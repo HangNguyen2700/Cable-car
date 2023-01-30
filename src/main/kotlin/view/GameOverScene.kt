@@ -123,11 +123,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
                 font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Main Menu"
             )
         )
-    ).apply {
-        onMouseClicked = {
-            resetConfig()
-        }
-    }
+    )
 
     val quitButton = Button(
         width = 140, height = 140, posX = 1700, posY = 40, visual = ImageVisual("quit_button.png")    )
@@ -188,12 +184,19 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
      * reset the player name and score of the current game
      */
 
-    private fun resetConfig() {
-        val playerList = rootService.currentGame!!.currentTurn.players
-        for (player in playerList) {
-            player.name = ""
-            player.score = 0
-        }
+     fun resetConfig() {
+        var playerList = rootService.currentGame!!.currentTurn.players
+        var winnerList=rootService.gameService.findWinner()
+       /** for (winner in winnerList) {
+            winner.name = ""
+            winner.score = 0
+        }*/
+        playerList= emptyList<Player>().toMutableList()
+        winnerList=emptyList<Player>().toMutableList()
+
+        arrayOf(p1Name,p2Name,p3Name, p4Name, p5Name, p6Name,
+        ).forEach { it.text=""; it.name="";it.isVisible=false; it.opacity=0.0}
+
         arrayOf(p3Name, p4Name, p5Name, p6Name, third, fourth, fifth, sixth,
             playerImg3, playerImg4, playerImg5, playerImg6
         ).forEach { it.opacity = 0.0 }
