@@ -325,10 +325,11 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
          * */
         fun stackTileLegal(posX: Int, posY: Int, turn: Turn): Boolean
         {
+            if (turn.gameField.tileStack.tiles.isEmpty()) return false
             val stackTile  = turn.gameField.tileStack.tiles[0].ports
-            val lastTile = turn.gameField.tileStack.tiles.size
             for (port in stackTile)
             {
+
 
                 if ( (port.first == 0 && port.second == 1) && (posX in 1..8 && posY == 1) )
                 {
@@ -362,11 +363,6 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 {
                     return false
                 }
-                else if(lastTile == 0)
-                {
-                    return true
-                }
-
             }
             return true
         }
