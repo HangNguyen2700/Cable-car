@@ -11,7 +11,6 @@ import entity.Turn
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * class to handle player ingame actions
@@ -35,7 +34,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                 if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+                    /*|| rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null*/) {
 
                     tile =
                         rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
@@ -78,7 +77,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // tile from tileStack
                 if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
+                    /*|| rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null*/) {
 
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
@@ -152,7 +151,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         runBlocking {
             val move = try {
-                withTimeout(9000L) {
+                withTimeout(9500L) {
                     MCTS(rootService, aiIndex).findNextMove(allowRotation)
                 }
             } catch (err: OutOfMemoryError) {
