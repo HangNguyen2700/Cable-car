@@ -38,6 +38,7 @@ class CreditsScene : BoardGameScene(1920,1080) {
         "\"Nur noch ein Tag,\ndann ist morgen.\"","","\"Das Sopra ist voll cool\""
     )
 
+
     private val anastasiiaImage = TokenView(width = 300, height = 330.5 , posX = 1500, posY = 1600,
         visual = ImageVisual("anastasiia_credits.jpeg"))
 
