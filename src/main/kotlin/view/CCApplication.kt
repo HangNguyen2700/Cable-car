@@ -400,7 +400,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
                 if (musicChannel != null) musicChannel!!.volume = 0.0
             } else {
                 button.visual = musicButtonEnableImage
-                if (musicChannel != null) musicChannel!!.volume = 1.0
+                if (musicChannel != null) musicChannel!!.volume = 0.7
             }
         }
     }
