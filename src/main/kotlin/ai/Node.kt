@@ -62,13 +62,15 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move) 
      */
     fun setScore () {
         score = 0.0
-        val playerIndex = state.currentPlayerIndex
+        val playerIndex =
+            if(state.currentPlayerIndex - 1 >= 0) state.currentPlayerIndex - 1
+            else state.players.size - 1
         val prev = parent!!.state
 
         var actComparator = 0
         var prevComparator = 0
 
-        // -5 if another path was completed
+        // -5 if another path was completed too early
         for (path in state.players[playerIndex].paths) {
             if (path.complete && path.tiles.size < 5) actComparator += 5
         }
