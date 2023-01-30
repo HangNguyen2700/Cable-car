@@ -3,9 +3,17 @@ import entity.Path
 import entity.Tile
 import entity.Turn
 import service.PlayerActionService
-
+/**
+ * This class implements AI logic for game moves simulation.
+ * It is used to analyze potential game moves and to determine the best move based on the analysis.
+ */
 class AiActionService {
     companion object {
+        /**
+         * Creates a copy of the current turn object.
+         * @param turn - the current turn object.
+         * @return a new turn object, which is a copy of the current one.
+         */
         private fun createNextTurn(turn: Turn): Turn {
             val newTurn = turn.copy()
 
@@ -28,6 +36,10 @@ class AiActionService {
 
         /**
          * Simulates a game move from for a given player in the AI analysis.
+         * @param turn - the current turn object.
+         * @param move - the move object, representing the game move.
+         * @param playerIndex - the index of the player who is making the move.
+         * @return a new turn object, representing the game state after the move.
          */
         fun doMove(turn: Turn, move: Move, playerIndex: Int) : Turn {
             // add new Turn

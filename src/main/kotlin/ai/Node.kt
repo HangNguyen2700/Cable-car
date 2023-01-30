@@ -1,7 +1,18 @@
 package ai
 import entity.Turn
 import service.PlayerActionService
-
+/**
+ * Node class that represents a state in the game .
+ * @property rs RootService object that holds the game state
+ * @property parent Parent node in the game tree
+ * @property move Move made to reach this node's state
+ * @property playerIndex Index of the player whose turn it is in this node's state
+ * @property children List of child nodes in the game tree
+ * @property state Turn object representing this node's state
+ * @property score Score assigned to this node
+ * @property winCount Number of times this node led to a win for the player
+ * @property visitCount Number of times this node has been visited in tree search
+ */
 data class Node(val rs: service.RootService, val parent: Node?, val move: Move, val playerIndex: Int) {
     val children: MutableList<Node> = mutableListOf()
     val state: Turn =
@@ -13,6 +24,13 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
     var winCount = 0.0
     var visitCount = 0.0
 
+    /**
+     * Returns a list of possible moves in this node's state.
+     *
+     * @param allowRotation Whether to allow rotation of tiles in the moves
+     *
+     * @return List of Move objects representing the possible moves in this node's state
+     */
     fun getPossibleMoves(allowRotation: Boolean): MutableList<Move> {
         val moves: MutableList<Move> = mutableListOf()
         if (state.players[playerIndex].handTile == null) return moves
@@ -34,7 +52,9 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
         }
         return moves
     }
-
+    /**
+     * Sets the score for this node based on its state.
+     */
     fun setScore () {
         score = 0.0
         val prev = parent!!.state
