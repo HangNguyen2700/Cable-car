@@ -7,23 +7,26 @@ import service.PlayerActionService
  * @property rs RootService object that holds the game state
  * @property parent Parent node in the game tree
  * @property move Move made to reach this node's state
- * @property playerIndex Index of the player whose turn it is in this node's state
  * @property children List of child nodes in the game tree
  * @property state Turn object representing this node's state
  * @property score Score assigned to this node
  * @property winCount Number of times this node led to a win for the player
  * @property visitCount Number of times this node has been visited in tree search
  */
-data class Node(val rs: service.RootService, val parent: Node?, val move: Move, val playerIndex: Int) {
+data class Node(val rs: service.RootService, val parent: Node?, val move: Move) {
     val children: MutableList<Node> = mutableListOf()
     val state: Turn =
-        if (parent != null) AiActionService.doMove(parent.state, move, playerIndex)
+        if (parent != null) AiActionService.doMove(parent.state, move)
         else Turn (rs.currentGame!!.currentTurn.gameField.copy(),
             rs.currentGame!!.currentTurn.players.toMutableList())
 
     var score = 0.0
     var winCount = 0.0
     var visitCount = 0.0
+
+    init {
+        if (parent == null) state.currentPlayerIndex = rs.currentGame!!.currentTurn.currentPlayerIndex
+    }
 
     /**
      * Returns a list of possible moves in this node's state.
@@ -34,7 +37,7 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
      */
     fun getPossibleMoves(allowRotation: Boolean): MutableList<Move> {
         val moves: MutableList<Move> = mutableListOf()
-        if (state.players[playerIndex].handTile == null) return moves
+        if (state.players[state.currentPlayerIndex].handTile == null) return moves
 
         val rotations = if (allowRotation) 3 else 0
 
@@ -51,7 +54,6 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
                 }
             }
         }
-        println()
 
         return moves
     }
@@ -60,7 +62,9 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
      */
     fun setScore () {
         score = 0.0
+        val playerIndex = state.currentPlayerIndex
         val prev = parent!!.state
+
         var actComparator = 0
         var prevComparator = 0
 
@@ -129,7 +133,5 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move, 
             }
         }
         if (actComparator > prevComparator) score -= (actComparator - prevComparator)
-        actComparator = 0
-        prevComparator = 0
     }
 }

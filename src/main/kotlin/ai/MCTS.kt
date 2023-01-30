@@ -17,10 +17,10 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
      */
     fun findNextMoveSimplified(allowRotation: Boolean): Move {
         val defaultMove = Move(false, -1, -1, -1)
-        val node = Node(rs, null, defaultMove, aiIndex)
+        val node = Node(rs, null, defaultMove)
 
         node.getPossibleMoves(allowRotation).forEach {
-            val child = Node(rs, node, it, aiIndex)
+            val child = Node(rs, node, it)
             child.setScore()
             node.children.add(child)
         }
@@ -37,7 +37,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
      */
     fun findNextMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
-        val root = Node(rs, null, defaultMove, aiIndex)
+        val root = Node(rs, null, defaultMove)
 
         var shouldStop = false
         while (true) {
@@ -48,7 +48,7 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
                 println("Decision Made")
                 return node.move
             }
-            shouldStop = expandNode(node, aiIndex, allowRotation)
+            shouldStop = expandNode(node, allowRotation)
             val nodeToExplore = selectPromisingNode(node)
             val aiWon = simulateRandomPlayout(nodeToExplore, allowRotation)
             backpropagation(nodeToExplore, aiWon)
@@ -62,10 +62,10 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     */
     fun findRandomMove(allowRotation: Boolean) : Move {
         val defaultMove = Move(false, -1, -1, -1)
-        val node = Node(rs, null, defaultMove, aiIndex)
+        val node = Node(rs, null, defaultMove)
 
         node.getPossibleMoves(allowRotation).forEach {
-            val child = Node(rs, node, it, aiIndex)
+            val child = Node(rs, node, it)
             child.setScore()
             node.children.add(child)
         }
@@ -90,14 +90,13 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
     /**
      * expandNode - a function that expands the given node by adding its possible moves as children
      * @param node: the node to be expanded
-     * @param playerIndex: the index of the player for whom the moves are being added
      * @param allowRotation: a boolean indicating if rotation of the pieces is allowed or not
      * @return Boolean: returns true if there are no possible moves, false otherwise
      */
 
-    private fun expandNode(node: Node, playerIndex: Int, allowRotation: Boolean): Boolean {
+    private fun expandNode(node: Node, allowRotation: Boolean): Boolean {
         node.getPossibleMoves(allowRotation).forEach {
-            val child = Node(rs, node, it, playerIndex)
+            val child = Node(rs, node, it)
             child.setScore()
             node.children.add(child)
         }
@@ -112,12 +111,11 @@ class MCTS (private val rs: service.RootService, private val aiIndex: Int) {
      */
     private fun simulateRandomPlayout(node: Node, allowRotation: Boolean): Boolean {
         var tempNode = node.copy()
-        var playerIndex = aiIndex
 
         var shouldStop = false
         while (!PlayerActionService.isGameOver(tempNode.state) && !shouldStop) {
-            playerIndex = (playerIndex + 1) % node.state.players.size
-            shouldStop = expandNode(tempNode, playerIndex, allowRotation)
+            //playerIndex = (playerIndex + 1) % node.state.players.size
+            shouldStop = expandNode(tempNode, allowRotation)
             tempNode = selectPromisingNode(tempNode)
         }
 

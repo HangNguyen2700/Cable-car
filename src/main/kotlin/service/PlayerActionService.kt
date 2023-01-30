@@ -313,12 +313,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }
                 else if(lastTile == 0)
                 {
-                    println("Position " + posX + ", " + posY + ": " + handTile.toString() + " is legal.")
                     return true
                 }
 
             }
-            println("Position " + posX + ", " + posY + ": " + handTile.toString() + " is legal.")
             return true
 
         }

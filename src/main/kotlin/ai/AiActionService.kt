@@ -31,6 +31,7 @@ class AiActionService {
                     newTurn.players[i].paths.add(newPath)
                 }
             }
+            newTurn.currentPlayerIndex = (newTurn.currentPlayerIndex + 1) % newTurn.players.size
             return newTurn
         }
 
@@ -38,17 +39,16 @@ class AiActionService {
          * Simulates a game move from for a given player in the AI analysis.
          * @param turn - the current turn object.
          * @param move - the move object, representing the game move.
-         * @param playerIndex - the index of the player who is making the move.
          * @return a new turn object, representing the game state after the move.
          */
-        fun doMove(turn: Turn, move: Move, playerIndex: Int) : Turn {
+        fun doMove(turn: Turn, move: Move) : Turn {
             // add new Turn
             val newTurn = createNextTurn(turn)
             var tile: Tile?
 
             if (!move.shouldDrawFromStack) {
                 // tile from hand
-                tile = newTurn.players[playerIndex].handTile
+                tile = newTurn.players[newTurn.currentPlayerIndex].handTile
                 if (tile != null) {
                     // rotate tile if needed
                     if (move.rotationsNo != 0) {
@@ -71,9 +71,9 @@ class AiActionService {
 
                     // give player new tile from tileStack
                     if (newTurn.gameField.tileStack.tiles.isNotEmpty()){
-                        newTurn.players[playerIndex].handTile = newTurn.gameField.tileStack.tiles.removeFirst()
+                        newTurn.players[newTurn.currentPlayerIndex].handTile = newTurn.gameField.tileStack.tiles.removeFirst()
                     }
-                    else newTurn.players[playerIndex].handTile = null
+                    else newTurn.players[newTurn.currentPlayerIndex].handTile = null
                 }
                 else throw Exception("Hand tile is null!")
             }
@@ -103,7 +103,7 @@ class AiActionService {
                 }
                 else {
                     val newMove = Move(false, move.rotationsNo, move.posX, move.posY)
-                    return doMove(newTurn, newMove, playerIndex)
+                    return doMove(newTurn, newMove)
                 }
             }
             PlayerActionService.buildPathsAnastasiia(newTurn)
