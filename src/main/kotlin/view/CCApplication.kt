@@ -489,6 +489,23 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
     }
 
     /**
+     * playback of music in game scene via KorAU audio library
+     */
+
+    private fun playGameOverSceneMusic() {
+        if (musicChannel != null) {
+            musicChannel!!.stop()
+        }
+        if (musicEnabled) {
+            GlobalScope.async {
+                val music = resourcesVfs["game_over_scene.wav"].readMusic()
+                musicChannel = music.play(infinitePlaybackTimes)
+                musicChannel!!.await()
+            }
+        }
+    }
+
+    /**
      * playback of sound via KorAU audio library
      */
 
@@ -545,6 +562,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
 
     private fun explicitlyShowGameOverScene() {
         hideMenuScene(3000); showGameScene(gameOverScene)
+        playGameOverSceneMusic()
     }
 
     /**
