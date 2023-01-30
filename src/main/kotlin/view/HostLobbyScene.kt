@@ -38,13 +38,13 @@ class HostLobbyScene: MenuScene(1920, 1080) {
         visual = ImageVisual("fullscreen.png"))
 
    //KI Turnier
-    private val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 300,
+    private val allowKITurnier = Button(width = 600, height = 100, posX = 100, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
     ).apply { onMouseClicked = { allowKITurnierCheckbox.isChecked = !allowKITurnierCheckbox.isChecked } }
 
-    val allowKITurnierCheckbox = CheckBox(posX = 730, posY = 333)
+    val allowKITurnierCheckbox = CheckBox(posX = 730, posY = 433)
 
     //Shuffle Player
     /*private val allowShufflePlayerOrderButton = Button(width = 600, height = 100, posX = 100, posY = 450,
@@ -57,21 +57,21 @@ class HostLobbyScene: MenuScene(1920, 1080) {
 
     //Tile Rotation
 
-    private val allowTileRotationButton = Button(width = 600, height = 100, posX = 100, posY = 600,
+    private val allowTileRotationButton = Button(width = 600, height = 100, posX = 100, posY = 550,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Tile Rotation"))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
-    val allowTileRotationCheckbox = CheckBox(posX = 730, posY = 633)
+    val allowTileRotationCheckbox = CheckBox(posX = 730, posY = 583).apply { isChecked = true }
 
     //Session ID
-    private val sessionIdLabel = Label(width = 300, height = 100, posX = 1130, posY = 400,
+    private val sessionIdLabel = Label(width = 300, height = 100, posX = 1180, posY = 450,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"), text = "SessionID")))
 
-    val sessionIdTextField = TextField(width = 300, height = 80, posX = 1130, posY = 550,
+    val sessionIdTextField = TextField(width = 300, height = 80, posX = 1180, posY = 600,
         prompt = "Choose SessionID", font = Font(size = 36, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() } }
 

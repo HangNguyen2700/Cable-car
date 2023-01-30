@@ -27,11 +27,11 @@ class NetworkJoinScene : MenuScene(1920, 1080){
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Back to Main Menu")))
 
-    private val sessionIDLabel = Label(width = 600, height = 100, posX = 180, posY = 350,
+    private val sessionIDLabel = Label(width = 600, height = 100, posX = 1080, posY = 400,
         visual = TextVisual(font = Font(size = 100, color = Color.WHITE, family = "Calibri"),
             text = "SessionID"))
 
-    val sessionIDTextField = TextField(width = 300, height = 80, posX = 330, posY = 500, prompt = "Enter SessionID",
+    val sessionIDTextField = TextField(width = 300, height = 80, posX = 1230, posY = 550, prompt = "Enter SessionID",
         font = Font(size = 40, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() } }
 
@@ -43,13 +43,13 @@ class NetworkJoinScene : MenuScene(1920, 1080){
         font = Font(size = 40, family = "Calibri")
     ).apply { onKeyTyped = { parametersInput() }   }*/
 
-    private val aiGameButton = Button(width = 370, height = 100, posX = 775, posY = 500,
+    private val aiGameButton = Button(width = 370, height = 100, posX = 250, posY = 500,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 40, color = Color.RED, family = "Calibri"), text = "AI Tournament Mode"))
     ).apply { onMouseClicked = { aiGameCheckBox.isChecked = !aiGameCheckBox.isChecked } }
 
-    val aiGameCheckBox = CheckBox(1175, 533)
+    val aiGameCheckBox = CheckBox(650, 533)
 
     val joinGameButton = Button(width = 400, height = 100, posX = 760, posY = 850,
         visual = CompoundVisual(

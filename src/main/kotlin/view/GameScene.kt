@@ -98,10 +98,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     private val playerHandCardBGList = mutableListOf(player1HandCardBG,player2HandCardBG,player3HandCardBG,
         player4HandCardBG,player5HandCardBG,player6HandCardBG)
 
-    private val handTileLabel = Label(width = 300, height = 100, posX = 1570, posY = 100,
+    private val handTileLabel = Label(width = 300, height = 100, posX = 1564, posY = 50,
         font = labelFont, text = "Hand Tile").apply { isDisabled = true; opacity = 0.0 }
 
-    private val handTileCardView = CardView(width = 200, height = 200, posX = 1620, posY = 230,
+    private val handTileCardView = CardView(width = 200, height = 200, posX = 1614, posY = 140,
         front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         isDisabled = true; opacity = 0.0
@@ -115,10 +115,10 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    private val drawnTilesLabel = Label(height = 100, width = 300, posX = 1570, posY = 450,
+    private val drawnTilesLabel = Label(height = 100, width = 300, posX = 1564, posY = 360,
         font = labelFont, text = "Draw Stack").apply { isDisabled = true; opacity = 0.0 }
 
-    private val drawnTilesCardView = CardView(height = 200, width = 200, posX = 1620, posY = 580,
+    private val drawnTilesCardView = CardView(height = 200, width = 200, posX = 1614, posY = 450,
         front = ColorVisual.WHITE, back = tileBackImage
     ).apply {
         isDisabled = true; opacity = 0.0
@@ -134,15 +134,15 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
         }
     }
 
-    private val undoButton = Button(width = 150, height = 50, posX = 1540, posY = 800,
+    private val undoButton = Button(width = 150, height = 50, posX = 1539, posY = 770,
         font = buttonTextFont, text = "Undo", visual = ColorVisual(186, 136, 133)
     ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { gameService.undo() } }
 
-    private val redoButton = Button(width = 150, height = 50, posX = 1750, posY = 800,
+    private val redoButton = Button(width = 150, height = 50, posX = 1739, posY = 770,
         font = buttonTextFont, text = "Redo", visual = ColorVisual(186, 136, 133)
     ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { gameService.redo() } }
 
-    private val rotateButton = Button(width = 150, height = 50, posX = 1645, posY = 900,
+    private val rotateButton = Button(width = 150, height = 50, posX = 1639, posY = 690,
         font = buttonTextFont, text = "Rotate", visual = ColorVisual(186, 136, 133, 255)
     ).apply {
         isDisabled = true; opacity = 0.0
@@ -152,8 +152,19 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 currentTile!!.rotationDegree = (currentTile!!.rotationDegree + 90) % 360
                 currentTileCardView!!.frontVisual = setTileFront(currentTile) } } }
 
+    private val hintLabel = Label(width = 380, height = 180, posX = 1524, posY = 850, visual = CompoundVisual(
+        ColorVisual.WHITE.apply { transparency = 0.5 },
+        TextVisual(font = Font(size = 44, color = Color.RED, family = "Calibri", fontStyle = Font.FontStyle.ITALIC),
+            text = "Choose tile either\nfrom hand or stack!"))
+    ).apply { isDisabled = true; opacity = 0.0 }
+
+    private val playerInputBGLabel = Label(width = 420, height = 1020, posX = 1505, posY = 40,
+        visual = ColorVisual.WHITE.apply { transparency = 0.35 }
+    )
+
+
     private val playerInputs = listOf(handTileLabel, handTileCardView, drawnTilesLabel, drawnTilesCardView, undoButton,
-        redoButton, rotateButton)
+        redoButton, rotateButton, hintLabel, playerInputBGLabel)
 
     val quickMenuButton = Button(width = 140, height = 140, posX = 40, posY = 40,
         visual = ImageVisual("quick_menu_button.png"))
@@ -212,10 +223,11 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
         background = ImageVisual("game_scene.png")
         addComponents(playerScoreBGLabel, playersGrid, topStationGrid, leftStationGrid, rightStationGrid,
-            bottomStationGrid, mainBoardGrid, quickMenuButton, startGameButton, handTileLabel, handTileCardView,
+            bottomStationGrid, mainBoardGrid, quickMenuButton, startGameButton,
+            playerInputBGLabel, handTileLabel, handTileCardView,
             player1HandCardBG,player2HandCardBG,player3HandCardBG,player4HandCardBG,player5HandCardBG,player6HandCardBG,
             player1HandCard,player2HandCard,player3HandCard,player4HandCard,player5HandCard,player6HandCard,
-            drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, pleaseWaitLabel)
+            drawnTilesLabel, drawnTilesCardView, undoButton, redoButton, rotateButton, hintLabel, pleaseWaitLabel)
     }
 
     /**

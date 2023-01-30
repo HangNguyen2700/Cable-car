@@ -62,7 +62,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Allow Tile Rotation"))
     ).apply { onMouseClicked = { allowTileRotationCheckbox.isChecked = !allowTileRotationCheckbox.isChecked } }
 
-    val allowTileRotationCheckbox = CheckBox(1750, 413)
+    val allowTileRotationCheckbox = CheckBox(1750, 413).apply { isChecked = true }
 
     private val playerLabel = Label(width = 300, height = 100, posX = 100, posY = 100,
         visual = CompoundVisual(

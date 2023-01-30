@@ -49,13 +49,13 @@ class MainMenuScene : MenuScene(1920,1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Back to Title")))
 
-    private val nameFieldLabel = Label(width = 600, height = 100, posX = 100, posY = 250,
+    private val nameFieldLabel = Label(width = 600, height = 100, posX = 200, posY = 250,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
                 text = "Player Name")))
 
-    val nameField = TextField(width = 400, height = 80, posX = 200, posY = 400,
+    val nameField = TextField(width = 400, height = 80, posX = 300, posY = 400,
         prompt = "Enter your Name",
         font = Font(size = 40, family = "Calibri"))
 
@@ -72,25 +72,25 @@ class MainMenuScene : MenuScene(1920,1080) {
         text = "close",
     ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { nameErrorClose() } }
 
-    private val newGameLabel = Label(width = 600, height = 100, posX = 1200, posY = 250,
+    private val newGameLabel = Label(width = 600, height = 100, posX = 1100, posY = 250,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.1 },
             TextVisual(font = Font(size = 60, color = Color.BLUE, family = "Calibri"),
                 text = "Start New Game")))
 
-    val joinButton = Button(width = 400, height = 100, posX = 1300, posY = 400,
+    val joinButton = Button(width = 400, height = 100, posX = 1200, posY = 400,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Join Game")))
 
-    val hostButton = Button(width = 400, height = 100, posX = 1300, posY = 550,
+    val hostButton = Button(width = 400, height = 100, posX = 1200, posY = 550,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
                 text = "Host Game")))
 
-    val hotseatButton = Button(width = 400, height = 100, posX = 1300, posY = 700,
+    val hotseatButton = Button(width = 400, height = 100, posX = 1200, posY = 700,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"),
@@ -121,7 +121,7 @@ class MainMenuScene : MenuScene(1920,1080) {
             newGameLabel, joinButton, hostButton, hotseatButton,
             creditsButton, backToTitleSceneButton,
             quitButton, soundToggleButton, musicToggleButton, fullscreenToggleButton,
-            debugGameSceneButton,
+            debugGameSceneButton,       //TODO: remove debug buttons
             debugGameEndSceneButton,
             nameErrorLabel, closeNameErrorButton,
         )
