@@ -1,7 +1,5 @@
 package view
 
-import com.soywiz.korio.dynamic.KDynamic.Companion.int
-import com.soywiz.korio.dynamic.KDynamic.Companion.intArray
 import entity.Player
 import entity.Tile
 import entity.Turn
@@ -42,8 +40,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     var playerList = listOf<Player>()
     private var isInputPlayer = mutableListOf(false,false,false,false,false,false)
 
-    var networkPlayerName :String? = null
-    var isJoinAiGameScene : Boolean? = null
+    private var networkPlayerName :String? = null
+    private var isJoinAiGameScene : Boolean? = null
     private val tileBackImage = ImageVisual("tile_back.png")
 
     private var currentTile: Tile? = null
@@ -223,7 +221,7 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
             text = "please wait..."))
     ).apply { isDisabled = true; opacity = 0.0 }
 
-    val failSafeExitButton = Button(width = 10, height = 10, posX = 1910, posY = 0, visual = ColorVisual(0,0,0,0)
+    private val failSafeExitButton = Button(width = 10, height = 10, posX = 1910, posY = 0, visual = ColorVisual(0,0,0,0)
     ).apply { onMouseClicked = {
         failSafeExitCount++
         if (failSafeExitCount == 5) {
@@ -356,7 +354,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                     visual = ColorVisual(0, 0, 0, 0)
                 ).apply {
                     onMouseClicked = {
-                        if (PlayerActionService.isPositionLegal(i+1, j+1, rootService.currentGame!!.currentTurn) && isDrawStackTileChosen != null) {
+                        if (PlayerActionService.isPositionLegal(i+1, j+1, rootService.currentGame!!.currentTurn)
+                            && isDrawStackTileChosen != null) {
                             playerActionService.placeTile(!isDrawStackTileChosen!!, i+1, j+1,
                                 currentTile!!.rotationDegree/90)
                         } else {
@@ -467,14 +466,16 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
                 // highlight current player
                 val playerNameLabel = Label(width = 270, height = 50, font = playerScoreFont, text = playerList[i].name,
                     alignment = Alignment.CENTER_LEFT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex)
+                    font = playerScoreHighlightedFont }
 
                 playerGrid[2, 0] = playerNameLabel
 
                 // highlight current player
                 val playerScoreLabel = Label(width = 70, height = 50, font = playerScoreFont,
                     text = playerList[i].score.toString(), alignment = Alignment.CENTER_RIGHT
-                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex) font = playerScoreHighlightedFont }
+                ).apply { if (currentTurn != null && i == currentTurn!!.currentPlayerIndex)
+                    font = playerScoreHighlightedFont }
 
                 playerGrid[3,0] = playerScoreLabel
 
@@ -528,10 +529,8 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
     override fun refreshAfterDrawStackEmpty() { drawnTilesCardView.isVisible = false; drawnTilesLabel.isVisible = false }
 
     /**
-     * triggered by service when game over
+     * resets gamescene internal attributes not accessed by service
      */
-
-    override fun refreshAfterGameFinished() {  }
 
     fun resetScene(){
         networkPlayerName = null
@@ -684,31 +683,55 @@ class GameScene(private val rootService: RootService) : BoardGameScene(1920, 108
 
     private fun setTileFront(tile: Tile?): ImageVisual {
         when (tile) {
-            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,0))
-            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(1,0))
-            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(2,0))
-            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(3,0))
-            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))) -> return ImageVisual(cardImageLoader.frontImage(0,1))
-            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(1,1))
-            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))) -> return ImageVisual(cardImageLoader.frontImage(2,1))
-            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(3,1))
-            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(0,2))
-            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(1,2))
-            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(2,2))
-            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(3,2))
-            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(0,3))
-            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(1,3))
-            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(2,3))
-            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(3,3))
-            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,4))
-            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))) -> return ImageVisual(cardImageLoader.frontImage(1,4))
-            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(2,4))
-            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))) -> return ImageVisual(cardImageLoader.frontImage(3,4))
-            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))) -> return ImageVisual(cardImageLoader.frontImage(0,5))
-            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))) -> return ImageVisual(cardImageLoader.frontImage(1,5))
-            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))) -> return ImageVisual(cardImageLoader.frontImage(2,5))
-            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))) -> return ImageVisual(cardImageLoader.frontImage(3,5))
-            else -> throw Exception("TIME TO SCREAM!!")
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,0))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,0))
+            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,0))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,0))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,1))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,1))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,1))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,1))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,2))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,2))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,2))
+            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,2))
+            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,3))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,3))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,3))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,3))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,4))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,4))
+            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,4))
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,4))
+            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(0,5))
+            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))) ->
+                return ImageVisual(cardImageLoader.frontImage(1,5))
+            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(2,5))
+            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))) ->
+                return ImageVisual(cardImageLoader.frontImage(3,5))
+            else -> return tileBackImage
         }
     }
 

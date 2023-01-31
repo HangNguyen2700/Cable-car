@@ -1,6 +1,5 @@
 package view
 
-import entity.Player
 import service.AbstractRefreshingService
 
 /**
@@ -58,11 +57,11 @@ interface Refreshable {
 
     fun refreshAfterGameFinished(){}
 
-    /**
+    /*/**
      * Refresh game config except player name and numbers
      */
 
-    fun refreshAfterRestartGame(playerNames: MutableList<Player>){}
+    fun refreshAfterRestartGame(playerNames: MutableList<Player>){}*/
 
     /**
      * refreshes after trying to place a tile, if is not accept

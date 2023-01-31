@@ -2,7 +2,6 @@ package view
 
 import entity.Player
 import service.RootService
-import tools.aqua.bgw.components.ComponentView
 import tools.aqua.bgw.components.gamecomponentviews.TokenView
 import tools.aqua.bgw.components.uicomponents.Button
 import tools.aqua.bgw.components.uicomponents.Label
@@ -23,7 +22,6 @@ import java.awt.Color
  * [playerImg1],[playerImg2],[playerImg3],[playerImg4],[playerImg5],[playerImg6]:contains the image for players
  * [first],[second],[third],[fourth],[fifth],[sixth] aligns Players Rank
  * [crown] crown and crown position
- * [restartButton] restarts the current game
  * [mainMenuButton] return to Main Menu
  * [quitButton] exit the game
  *
@@ -103,7 +101,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
     private val crown = TokenView(
         width = 120, height = 117.6, posX = 990, posY = 220, visual = ImageVisual("Crown.png")    )
 
-    private val restartButton = Button(
+    /*private val restartButton = Button(
         width = 400, height = 100, posX = 181, posY = 880, visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 }, TextVisual(
                 font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Restart Game"
@@ -114,7 +112,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
             resetConfig()
             recreateGame()
         }
-    }
+    }*/
 
     // Back to main Menu button
     val mainMenuButton = Button(
@@ -185,14 +183,14 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
      */
 
      fun resetConfig() {
-        var playerList = rootService.currentGame!!.currentTurn.players
+        /*var playerList = rootService.currentGame!!.currentTurn.players
         var winnerList=rootService.gameService.findWinner()
-       /** for (winner in winnerList) {
+        for (winner in winnerList) {
             winner.name = ""
             winner.score = 0
-        }*/
+        }
         playerList= emptyList<Player>().toMutableList()
-        winnerList=emptyList<Player>().toMutableList()
+        winnerList=emptyList<Player>().toMutableList()*/
 
         arrayOf(p1Name,p2Name,p3Name, p4Name, p5Name, p6Name,
         ).forEach { it.text=""; it.name="";it.isVisible=false; it.opacity=0.0}
@@ -202,7 +200,7 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
         ).forEach { it.opacity = 0.0 }
     }
 
-    /**
+    /*/**
      * saves the current playerList if the user restarts the game
      */
     private fun recreateGame() {
@@ -211,6 +209,6 @@ class GameOverScene(private val rootService: RootService) : BoardGameScene(1920,
             player.name.also { playerName[i] }
         }
         refreshAfterRestartGame(playerName)
-    }
+    }*/
 
 }

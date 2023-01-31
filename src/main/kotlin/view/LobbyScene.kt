@@ -41,7 +41,7 @@ class LobbyScene : MenuScene(1920, 1080) {
 
     private var realAISelection: Int? = null
 
-    var playerType = mutableListOf<Int>(0,0,0,0,0,0)
+    var playerType = mutableListOf(0,0,0,0,0,0)
 
     val backToMainMenuSceneButton = Button(width = 600, height = 100, posX = 100, posY = 900,
         visual = CompoundVisual(
@@ -175,7 +175,7 @@ class LobbyScene : MenuScene(1920, 1080) {
         isDisabled = true; opacity = 0.0
         onMouseClicked = { smartAICheckbox.isChecked = !smartAICheckbox.isChecked }}
 
-    val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
+    private val smartAICheckbox = CheckBox(1420, 713).apply { isDisabled = true; opacity = 0.0 }
 
     private val confirmButton = Button(width = 400, height = 100, posX = 1120, posY = 850,
         visual = CompoundVisual(
@@ -183,7 +183,7 @@ class LobbyScene : MenuScene(1920, 1080) {
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Confirm"))
     ).apply { isDisabled = true; opacity = 0.0; onMouseClicked = { playerAddFinished() } }
 
-    val startGameButton = Button(width = 300, height = 100, posX = 800 , posY = 900,
+    private val startGameButton = Button(width = 300, height = 100, posX = 800 , posY = 900,
         visual = CompoundVisual(
             ColorVisual.WHITE.apply { transparency = 0.3 },
             TextVisual(font = Font(size = 60, color = Color.RED, family = "Calibri"), text = "Start Game"))

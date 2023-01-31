@@ -315,6 +315,10 @@ class GameService(private val rootService: RootService) : AbstractRefreshingServ
         this.tileLookUp = tileList
     }
 
+    /**
+     * triggers nope sound in ccapp
+     */
+
     fun playNopeSound() {
         onAllRefreshables { playNopeSoundInCCApp() }
     }

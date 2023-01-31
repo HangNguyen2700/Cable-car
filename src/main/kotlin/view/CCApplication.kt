@@ -18,7 +18,6 @@ import tools.aqua.bgw.visual.CompoundVisual
 import tools.aqua.bgw.visual.ImageVisual
 import tools.aqua.bgw.visual.TextVisual
 import java.awt.Color
-import java.awt.Image
 
 /**
  * Main BoardGameApplication. contains all scenes and manages scene traversing and audio playback & toggle
@@ -62,11 +61,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
                 6 -> {
                     backToTitleSceneButton.apply { posX = 100.0; posY = 930.0 }
                     timesClicked = 0
-                    playTitleMusic()
-                    showGameScene(titleScene)
-                    titleScene.gameLabel.opacity = 1.0
-                    titleScene.trigger.opacity = 0.0
-                    repaint()
+                    explicitlyShowTitleScene()
                 }
             }
         }
@@ -366,7 +361,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
         }
 
         hideMenuScene(3000)
-        showGameScene(gameScene)
+        explicitlyShowGameScene()
     }
 
     /**
@@ -378,7 +373,7 @@ class CCApplication : BoardGameApplication("Carbel Car Game"), Refreshable {
             "cable22", mainMenuScene.nameField.text, hostLobbyScene.sessionIdTextField.text)
         gameScene.hostGameWaitForPlayers(mainMenuScene.nameField.text,hostLobbyScene.allowKITurnierCheckbox.isChecked)
 
-        hideMenuScene(3000); showGameScene(gameScene)
+        hideMenuScene(3000); explicitlyShowGameScene()
     }
 
     /**

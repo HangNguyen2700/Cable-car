@@ -232,21 +232,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
             return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
 
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+        else
             return tile
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
-            return tile
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
-            return tile
-
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
-            return tile
-
-        else {
-            throw Exception("ROTATE FUNKTIONIERT NICHT :(((((")
-        }
 
     }
 
@@ -839,23 +826,8 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
                 return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
 
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,4),Pair(5,6))))
+            else
                 return tile
-
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,7),Pair(3,6))))
-                return tile
-
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,5),Pair(4,7))))
-                return tile
-
-            else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,5),Pair(6,7))))
-                return tile
-
-            else {
-                throw Exception("ROTATE FUNKTIONIERT NICHT :(((((")
-            }
-
-
         }
 
     }
