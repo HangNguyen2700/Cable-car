@@ -44,6 +44,7 @@ class AiActionService {
         fun doMove(turn: Turn, move: Move) : Turn {
             // add new Turn
             val newTurn = createNextTurn(turn)
+            val currentPlayer=newTurn.players[newTurn.currentPlayerIndex]
             var tile: Tile?
 
             if (!move.shouldDrawFromStack) {
@@ -71,7 +72,7 @@ class AiActionService {
 
                     // give player new tile from tileStack
                     if (newTurn.gameField.tileStack.tiles.isNotEmpty()){
-                        newTurn.players[newTurn.currentPlayerIndex].handTile = newTurn.gameField.tileStack.tiles.removeFirst()
+                        currentPlayer.handTile = newTurn.gameField.tileStack.tiles.removeFirst()
                     }
                     else newTurn.players[newTurn.currentPlayerIndex].handTile = null
                 }

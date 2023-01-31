@@ -41,7 +41,8 @@ internal class GameServiceTest {
     fun nextPlayer()
     {
 
-        val players = listOf(Player("sam",false), Player("Jen", false), Player("Jen", false) , Player("Jen", false) )
+        val players = listOf(Player("sam",false), Player("Jen", false),
+            Player("Jen", false) , Player("Jen", false) )
         gameService.startNewGame(players)
         rootService.currentGame!!.currentTurn.currentPlayerIndex = 1
 
@@ -64,6 +65,9 @@ internal class GameServiceTest {
     fun undo()
     {
         val players = listOf(Player("sam",false), Player("Jen", false) )
+        val currentPLayerIndex=rootService.currentGame!!.currentTurn.currentPlayerIndex
+        val tile=rootService.currentGame!!.currentTurn.gameField.tileStack.tiles
+
         gameService.startNewGame(players, isLocalOnlyGame = false, isHostedGame = true, rotationAllowed = true)
         while (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.size==5){
 
@@ -73,7 +77,7 @@ internal class GameServiceTest {
             assertNotEquals(players[0].handTile, players[1].handTile )
 
             gameService.redo()
-            assertTrue(players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile==rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.last())
+            assertTrue(players[currentPLayerIndex].handTile==tile.last())
         }
 
     }

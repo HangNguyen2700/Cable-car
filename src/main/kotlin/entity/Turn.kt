@@ -1,5 +1,4 @@
 package entity
-import ai.*
 
 /**
  * The Turn class represents a turn in the game, including information about the game field, players,

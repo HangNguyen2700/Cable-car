@@ -56,9 +56,9 @@ class CardImageLoader {
      */
 
     private fun getImageByCoordinates (image: BufferedImage, x: Int, y: Int) : BufferedImage {
-        if (image == tilesImage) return image.getSubimage(
+        return if (image == tilesImage) image.getSubimage(
             x * TILES_FILE_IMG_WIDTH,y * TILES_FILE_IMG_HEIGHT, TILES_FILE_IMG_WIDTH, TILES_FILE_IMG_HEIGHT)
-        else return image.getSubimage(
+        else image.getSubimage(
             x * STATION_CARDS_FILE_IMG_WIDTH,y * STATION_CARDS_FILE_IMG_HEIGHT,
             STATION_CARDS_FILE_IMG_WIDTH, STATION_CARDS_FILE_IMG_HEIGHT)
     }

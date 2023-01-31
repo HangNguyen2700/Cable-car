@@ -35,6 +35,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         val newTurn = rootService.currentGame!!.currentTurn.copy()
         rootService.currentGame!!.currentTurn.nextTurn = newTurn
         newTurn.previousTurn = rootService.currentGame!!.currentTurn
+        val currentPlayer= rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex]
 
         rootService.currentGame!!.currentTurn = newTurn
 
@@ -46,10 +47,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             if (fromHand) {
                 if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                    /*|| rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null*/) {
+                    ) {
 
-                    tile =
-                        rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile
+                    tile = currentPlayer .handTile
 
                     // rotate tile if needed
                     if (rotationDegree != 0) {
@@ -74,7 +74,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                     // give player new tile from tileStack
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isNotEmpty()) {
-                        rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].handTile =
+                        currentPlayer.handTile =
                             rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                         if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
                             onAllRefreshables { refreshAfterDrawStackEmpty() }
@@ -89,7 +89,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // tile from tileStack
                 if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                    /*|| rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null*/) {
+                  ) {
 
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())
@@ -155,7 +155,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     * Play ai turn
+     * Play AI turn
      *
      * @param allowRotation
      */
@@ -200,54 +200,49 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
         tile.rotationDegree = (tile.rotationDegree + 1) % 4
 
-        if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
-            return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
-            return Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
-            return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
-            return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
-            return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
-            return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
-            return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
-            return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
-
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
-            return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
-            return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
-            return Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
-            return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
-            return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
-            return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
-            return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
-            return Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
-
-        else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
-            return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
-        else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
-            return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
-
-        else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
-            return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
-        else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
-            return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
-
-        else
-            return tile
+        when (tile) {
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
+            -> return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
+            -> return Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
+            Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
+            -> return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
+            -> return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
+            -> return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
+            -> return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
+            Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
+            -> return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
+            Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
+            -> return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
+            -> return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
+            -> return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
+            -> return Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
+            Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
+            -> return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
+            Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
+            -> return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
+            Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
+            -> return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
+            Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
+            -> return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
+            Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
+            -> return Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
+            Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
+            -> return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
+            Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
+            -> return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
+            Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
+            -> return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
+            Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
+            -> return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
+            else -> return tile
+        }
 
     }
 
@@ -260,7 +255,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         fun noPlaceMore(posX: Int, posY: Int, turn: Turn):Boolean
         {
             val size = turn.gameField.tileStack.tiles.size
-            if ( ( (posX in 1..8 && posY == 1)|| (posY in 1..8 && posX == 1)||(posX in 1..8 && posY == 8)||(posY in 1..8 && posX == 8) ) &&
+            if ( ( (posX in 1..8 && posY == 1)||
+                        (posY in 1..8 && posX == 1)||
+                        (posX in 1..8 && posY == 8)||
+                        (posY in 1..8 && posX == 8) ) &&
                     size<3 && !handTileLegal(posX,posY,turn) && !stackTileLegal(posX,posY,turn)
             )
             {
@@ -296,19 +294,23 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 {
                     return false
                 }
-                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6))
+                    && (posY == 1 && posX == 1)  )
                 {
                     return false
                 }
-                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7))
+                    && (posY == 8 && posX == 1) )
                 {
                     return false
                 }
-                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5))
+                    && (posY == 8 && posX == 8)  )
                 {
                     return false
                 }
-                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2))
+                    && (posY == 1 && posX == 8)  )
                 {
                     return false
                 }
@@ -350,19 +352,23 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 {
                     return false
                 }
-                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6)) && (posY == 1 && posX == 1)  )
+                else if ( ((port.first == 0 && port.second == 7)||(port.first == 1 && port.second == 6))
+                    && (posY == 1 && posX == 1)  )
                 {
                     return false
                 }
-                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7)) && (posY == 8 && posX == 1) )
+                else if ( ((port.first == 5 && port.second == 6)||(port.first == 4 && port.second == 7))
+                    && (posY == 8 && posX == 1) )
                 {
                     return false
                 }
-                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5)) && (posY == 8 && posX == 8)  )
+                else if ( ((port.first == 3 && port.second == 4)||(port.first == 2 && port.second == 5))
+                    && (posY == 8 && posX == 8)  )
                 {
                     return false
                 }
-                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2)) && (posY == 1 && posX == 8)  )
+                else if (( (port.first == 0 && port.second == 3)||(port.first == 1 && port.second == 2))
+                    && (posY == 1 && posX == 8)  )
                 {
                     return false
                 }
@@ -408,6 +414,12 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             return false
         }
 
+        /**
+         * calls isGameOver() when
+         * the field is filled with 60 tiles
+         * there are no cards left
+         */
+
         fun isGameOver(turn: Turn) : Boolean {
             var isFieldFull = true
             var vbreak = false
@@ -444,6 +456,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
              */
             return isFieldFull || noCardsLeft
         }
+
+        /**
+         * buildPathsAnastasiia() calculates the legal Position for the current turn
+         */
 
         fun buildPathsAnastasiia(turn: Turn) {
             for (player in turn.players) {
@@ -519,14 +535,12 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                             var placedTile: Tile?
                             val coordinate = stationNoToCoordinate(path.startPos)
                             // Check if a new tile was placed at the station
-                            if (path.startPos in 1..8)
-                                placedTile = tileAtTheBottom(coordinate.first, coordinate.second, turn.gameField)
-                            else if (path.startPos in 9..16)
-                                placedTile = tileToTheLeft(coordinate.first, coordinate.second, turn.gameField)
-                            else if (path.startPos in 17..24)
-                                placedTile = tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
-                            else
-                                placedTile = tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
+                            placedTile = when (path.startPos) {
+                                in 1..8 -> tileAtTheBottom(coordinate.first, coordinate.second, turn.gameField)
+                                in 9..16 -> tileToTheLeft(coordinate.first, coordinate.second, turn.gameField)
+                                in 17..24 -> tileAtTheTop(coordinate.first, coordinate.second, turn.gameField)
+                                else -> tileToTheRight(coordinate.first, coordinate.second, turn.gameField)
+                            }
 
                             // If not, then not.
                             if (placedTile == null) break
@@ -550,16 +564,16 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
         }
         private fun stationNoToCoordinate(stationNo: Int): Pair<Int, Int> {
             if (stationNo < 1 || stationNo > 32)
-                throw IllegalStateException("Tf you doin?")
+                throw IllegalStateException("Tf you doing?")
 
             if (stationNo <= 8)
                 return Pair(stationNo, 0)
             if (stationNo <= 16)
                 return Pair(9, stationNo - 8)
-            if (stationNo <= 24)
-                return Pair(25 - stationNo, 9)
+            return if (stationNo <= 24)
+                Pair(25 - stationNo, 9)
             else
-                return Pair(0, 33 - stationNo)
+                Pair(0, 33 - stationNo)
         }
         private fun tileToTheRight(x: Int, y: Int, field: GameField): Tile? {
             if (x + 1 > 8)
@@ -588,6 +602,11 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             if (x == 8 && outPort == 3) return true
             return false
         }
+
+        /**
+         * isConnectedToPower() returns true when
+         * the tile port is connected to the Power station
+         */
         fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
             if (y == 6 && x == 4 or 5 && outPort == 0 or 1) return true
             if (y == 3 && x == 4 or 5 && outPort == 4 or 5) return true
@@ -610,7 +629,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
          * @param posY The y-coordinate of the spot to check.
          * @return True if there is an adjacent tile at the spot, false otherwise.
          */
-        fun isConnectedToTile(currentField: Array<Array<Tile?>>, posX: Int, posY: Int): Boolean {
+        private fun isConnectedToTile(currentField: Array<Array<Tile?>>, posX: Int, posY: Int): Boolean {
 
             if (posX < 1 || posX > 8 || posY < 1 || posY > 8)
                 throw Exception("Tile coordinates must lie between 1 and 8.")
@@ -665,7 +684,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
          * Within the loop, the function checks various conditions to determine if the placed tile can be added to the path by
          * comparing the ports of the last tile in the path to the ports of the placed tile. If the tile can be added, it is
          * added and the "lastPort" variable is updated. If the path is completed, either by the last tile matching
-         * the start tile or by the last tile being in a specific position --powerstation--
+         * the start tile or by the last tile being in a specific position --power station--
          * (x=4, y=4 or x=4, y=5 or x=5, y=4 or x=5, y=5)
          * the player's score is incremented by the number of
          * tiles in the path, and the "complete" variable of the path is set to true.
@@ -769,6 +788,12 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 }*/
             }
         }
+
+        /**
+         * calculates the score when
+         * tile successfully connects and builds path
+         */
+
         fun buildPathWithPowerStation(player: Player, placedTile: Tile)
         {
             //val currentGame = rootService.currentGame
@@ -794,54 +819,49 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
             tile.rotationDegree = (tile.rotationDegree + 1) % 4
 
-            if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6))))
-                return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6))))
-                return Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5))))
-                return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7))))
-                return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
-
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4))))
-                return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6))))
-                return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6))))
-                return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7))))
-                return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
-
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5))))
-                return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7))))
-                return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7))))
-                return Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
-            else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6))))
-                return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
-
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5))))
-                return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7))))
-                return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7))))
-                return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7))))
-                return Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
-
-            else if (tile == Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6))))
-                return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
-            else if (tile == Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4))))
-                return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
-
-            else if (tile == Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7))))
-                return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
-            else if (tile == Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5))))
-                return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
-
-            else
-                return tile
+            when (tile) {
+                Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
+                -> return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
+                Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,3),Pair(5,6)))
+                -> return Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
+                Tile(mutableListOf(Pair(0,7),Pair(1,2),Pair(3,6),Pair(4,5)))
+                -> return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
+                Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,4),Pair(6,7)))
+                -> return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,4),Pair(5,6)))
+                Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
+                -> return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
+                Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,7),Pair(5,6)))
+                -> return Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
+                Tile(mutableListOf(Pair(0,7),Pair(1,4),Pair(2,5),Pair(3,6)))
+                -> return Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
+                Tile(mutableListOf(Pair(0,5),Pair(1,2),Pair(3,6),Pair(4,7)))
+                -> return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,7),Pair(3,4)))
+                Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
+                -> return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
+                Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,5),Pair(6,7)))
+                -> return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
+                Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,4),Pair(6,7)))
+                -> return Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
+                Tile(mutableListOf(Pair(0,1),Pair(2,3),Pair(4,7),Pair(5,6)))
+                -> return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,3),Pair(4,5)))
+                Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
+                -> return Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
+                Tile(mutableListOf(Pair(0,3),Pair(1,4),Pair(2,5),Pair(6,7)))
+                -> return Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
+                Tile(mutableListOf(Pair(0,1),Pair(2,5),Pair(3,6),Pair(4,7)))
+                -> return Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
+                Tile(mutableListOf(Pair(0,5),Pair(1,6),Pair(2,3),Pair(4,7)))
+                -> return Tile(mutableListOf(Pair(0,3),Pair(1,6),Pair(2,7),Pair(4,5)))
+                Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
+                -> return Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
+                Tile(mutableListOf(Pair(0,7),Pair(1,6),Pair(2,5),Pair(3,4)))
+                -> return Tile(mutableListOf(Pair(0,3),Pair(1,2),Pair(4,7),Pair(5,6)))
+                Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
+                -> return Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
+                Tile(mutableListOf(Pair(0,1),Pair(2,7),Pair(3,6),Pair(4,5)))
+                -> return Tile(mutableListOf(Pair(0,5),Pair(1,4),Pair(2,3),Pair(6,7)))
+                else -> return tile
+            }
         }
 
     }
