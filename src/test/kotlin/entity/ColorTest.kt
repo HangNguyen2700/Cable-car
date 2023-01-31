@@ -4,7 +4,16 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import tools.aqua.bgw.visual.ColorVisual
 
+/**
+ * Color test
+ *
+ * @constructor Create Color test
+ */
 class ColorTest {
+    /**
+     * Test to string
+     *
+     */
     @Test
     fun testToString() {
         assertEquals("Yellow", Color.YELLOW.toString())
@@ -15,6 +24,10 @@ class ColorTest {
         assertEquals("Black", Color.BLACK.toString())
     }
 
+    /**
+     * Test to rgb
+     *
+     */
     @Test
     fun testToRGB() {
         assertEquals(Color.YELLOW.toRGB(), ColorVisual.YELLOW)

@@ -4,8 +4,17 @@ import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
+/**
+ * Game field test
+ *
+ * @constructor Create empty Game field test
+ */
 class GameFieldTest {
 
+    /**
+     * Test copy
+     *
+     */
     @Test
     fun testCopy() {
         val stations = mutableListOf<Station>()

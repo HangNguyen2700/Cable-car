@@ -4,7 +4,16 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 
+/**
+ * Game test
+ *
+ * @constructor Create empty Game test
+ */
 class GameTest {
+    /**
+     * Test current turn
+     *
+     */
     @Test
     fun testCurrentTurn() {
         val stations = mutableListOf<Station>()
