@@ -70,7 +70,7 @@ tasks.jacocoTestReport {
 
     classDirectories.setFrom(files(classDirectories.files.map {
         fileTree(it) {
-            exclude(listOf("view/**", "entity/serializer.", "Main*.*"))
+            exclude(listOf("view/**", "entity/serializer.", "Main*.*", "ai/**"))
         }
     }))
 }
