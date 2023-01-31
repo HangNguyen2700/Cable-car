@@ -5,7 +5,10 @@ import entity.*
 import entity.Tile
 
 /**
- * class to handle network connections for online play
+ * Network service: class to handle network connections for online play
+ *
+ * @property rootService
+ * @constructor Create empty Network service
  */
 
 class NetworkService(var rootService: RootService): AbstractRefreshingService() {
@@ -19,6 +22,13 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
     var joinedPlayers = mutableListOf<String>()
 
 
+    /**
+     * Host game
+     *
+     * @param secret
+     * @param playerName
+     * @param sessionID
+     */
     fun hostGame(secret: String, playerName: String, sessionID: String) {
         if(connect(secret, playerName)) {
             client?.createGame(GAME_ID, sessionID, "Hallo von Gruppe 10")
@@ -28,6 +38,13 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         }
     }
 
+    /**
+     * Join game
+     *
+     * @param secret
+     * @param playerName
+     * @param sessionID
+     */
     fun joinGame(secret: String, playerName: String, sessionID: String) {
         if(connect(secret, playerName)) {
             client?.joinGame(sessionID, "Hallo von Gruppe 10.")
@@ -63,6 +80,13 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         return false
     }
 
+    /**
+     * Start new hosted game
+     *
+     * @param hostPlayerName
+     * @param rotationAllowed
+     * @param drawStack
+     */
     fun startNewHostedGame(hostPlayerName: String, rotationAllowed: Boolean, drawStack: List<Tile>) {
         val playerInfoList = mutableListOf<PlayerInfo>()
         playerInfoList.add(PlayerInfo(hostPlayerName))
@@ -98,6 +122,11 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
 
     }
 
+    /**
+     * Start new joined game
+     *
+     * @param message
+     */
     fun startNewJoinedGame(message: GameInitMessage) {
 
 
@@ -138,6 +167,11 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         onAllRefreshables { refreshAfterStartGame() }
     }
 
+    /**
+     * Send game init message
+     *
+     * @param message
+     */
     fun sendGameInitMessage(message: GameInitMessage) {
         // send GameInitMessage
 
@@ -151,14 +185,28 @@ class NetworkService(var rootService: RootService): AbstractRefreshingService() 
         updateConnectionState(ConnectionState.GAME_INITIALIZED)
     }
 
+    /**
+     * Send turn message
+     *
+     * @param message
+     */
     fun sendTurnMessage(message: TurnMessage) {
         client?.sendGameActionMessage(message)
     }
 
+    /**
+     * Update connection state
+     *
+     * @param newState
+     */
     fun updateConnectionState(newState: ConnectionState) {
         connectionState = newState
     }
 
+    /**
+     * Disconnect
+     *
+     */
     fun disconnect() {
         client?.disconnect()
         println("disconnecting.")

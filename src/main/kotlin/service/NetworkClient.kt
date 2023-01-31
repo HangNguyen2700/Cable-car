@@ -1,6 +1,6 @@
 package service
 
-import com.soywiz.korio.file.std.rootLocalVfs
+
 import edu.udo.cs.sopra.ntf.GameInitMessage
 import edu.udo.cs.sopra.ntf.TurnMessage
 import tools.aqua.bgw.core.BoardGameApplication
@@ -15,7 +15,14 @@ import tools.aqua.bgw.net.common.response.JoinGameResponse
 import tools.aqua.bgw.net.common.response.JoinGameResponseStatus
 
 /**
- * class to handle player actions in network game
+ * Network client: to handle player actions in network game
+ *
+ * @property networkService
+ * @constructor
+ *
+ * @param playerName
+ * @param host
+ * @param secret
  */
 
 class NetworkClient(playerName: String,
@@ -134,6 +141,12 @@ class NetworkClient(playerName: String,
         }
     }
 
+    /**
+     * On init received
+     *
+     * @param message
+     * @param sender
+     */
     @GameActionReceiver
     fun onInitReceived(message: GameInitMessage, sender: String) {
         if (networkService.connectionState == ConnectionState.WAITING_FOR_INIT) {
@@ -143,6 +156,12 @@ class NetworkClient(playerName: String,
         }
     }
 
+    /**
+     * On turn message received
+     *
+     * @param message
+     * @param sender
+     */
     @GameActionReceiver
     fun onTurnMessageReceived(message: TurnMessage, sender: String) {
         BoardGameApplication.runOnGUIThread {

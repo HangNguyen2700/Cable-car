@@ -13,11 +13,23 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 
 /**
- * class to handle player ingame actions
+ * Player action service: class to handle player ingame actions
+ *
+ * @property rootService
+ * @constructor Create empty Player action service
  */
 
 class PlayerActionService(private val rootService: RootService) : AbstractRefreshingService() {
 
+    /**
+     * Place tile
+     *
+     * @param fromHand
+     * @param posX
+     * @param posY
+     * @param rotationDegree
+     * @param fromTurnMsg
+     */
     fun placeTile(fromHand: Boolean, posX: Int, posY: Int, rotationDegree: Int = 0, fromTurnMsg: Boolean = false) {
         // add new Turn
         val newTurn = rootService.currentGame!!.currentTurn.copy()
@@ -143,8 +155,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     *  @author Anastasiia
-     * playAiTurn: a function to play the turn of the 'smart AI' player.
+     * Play ai turn
+     *
+     * @param allowRotation
      */
     fun playAiTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
@@ -167,8 +180,9 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     *  @author Aziz
-     * playRandomTurn: a function to play the turn of the 'dumb/random AI' player.
+     * Play random turn
+     *
+     * @param allowRotation
      */
     fun playRandomTurn(allowRotation: Boolean) {
         val aiIndex = rootService.currentGame!!.currentTurn.currentPlayerIndex
@@ -177,10 +191,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
     }
 
     /**
-     * @author Jonah
-     * Rotate a tile 90 degrees clockwise Sense
+     * Rotate
      *
-     * @param tile The tile which should rotate
+     * @param tile
+     * @return
      */
     fun rotate(tile: Tile) : Tile{
 

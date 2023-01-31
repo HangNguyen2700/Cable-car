@@ -4,6 +4,4 @@ package entity
  *
  * @property currentTurn the current turn object, containing information about the player, their actions and score
  */
-data class Game(var currentTurn: Turn) {
-
-}
+data class Game(var currentTurn: Turn)
