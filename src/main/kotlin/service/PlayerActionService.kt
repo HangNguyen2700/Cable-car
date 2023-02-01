@@ -489,7 +489,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
 
                             var placedTile: Tile?
                             // Check on the right if lastPort goes to the right
-                            if (path.lastPort == 2 or 3) {
+                            if (path.lastPort == 2 || path.lastPort == 3) {
                                 placedTile = tileToTheRight(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -499,7 +499,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check at the top if lastPort goes to the top
-                            else if (path.lastPort == 0 or 1) {
+                            else if (path.lastPort == 0 || path.lastPort == 1) {
                                 placedTile = tileAtTheTop(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -509,7 +509,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check on the left if lastPort goes to the left
-                            else if (path.lastPort == 6 or 7) {
+                            else if (path.lastPort == 6 || path.lastPort == 7) {
                                 placedTile = tileToTheLeft(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -519,7 +519,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                                 }
                             }
                             // Check at the bottom if lastPort goes to the bottom
-                            else if (path.lastPort == 4 or 5) {
+                            else if (path.lastPort == 4 || path.lastPort == 5) {
                                 placedTile = tileAtTheBottom(path.tiles.last().posX, path.tiles.last().posY, turn.gameField)
                                 if (placedTile != null) {
                                     path.tiles.add(placedTile)
@@ -608,10 +608,10 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
          * the tile port is connected to the Power station
          */
         fun isConnectedToPower(x: Int, y: Int, outPort: Int): Boolean {
-            if (y == 6 && x == 4 or 5 && outPort == 0 or 1) return true
-            if (y == 3 && x == 4 or 5 && outPort == 4 or 5) return true
-            if (x == 3 && y == 4 or 5 && outPort == 2 or 3) return true
-            if (x == 6 && y == 4 or 5 && outPort == 6 or 7) return true
+            if (y == 6 && (x == 4 || x == 5) && (outPort == 0 || outPort == 1)) return true
+            if (y == 3 && (x == 4 || x == 5) && (outPort == 4 || outPort == 5)) return true
+            if (x == 3 && (y == 4 || y == 5) && (outPort == 2 || outPort == 3)) return true
+            if (x == 6 && (y == 4 || y == 5) && (outPort == 6 || outPort == 7)) return true
             return false
         }
         private fun inPortFromStartPos(startPos: Int): Int {
