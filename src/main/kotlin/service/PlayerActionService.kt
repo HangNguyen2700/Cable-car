@@ -47,7 +47,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
             if (fromHand) {
                 if (handTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                    ) {
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
 
                     tile = currentPlayer .handTile
 
@@ -89,7 +89,7 @@ class PlayerActionService(private val rootService: RootService) : AbstractRefres
                 // tile from tileStack
                 if (stackTileLegal(posX, posY, rootService.currentGame!!.currentTurn)
                     || noPlaceMore(posX,posY,rootService.currentGame!!.currentTurn)
-                  ) {
+                    || rootService.currentGame!!.currentTurn.players[rootService.currentGame!!.currentTurn.currentPlayerIndex].isSmartAi != null) {
 
                     tile = rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.removeFirst()
                     if (rootService.currentGame!!.currentTurn.gameField.tileStack.tiles.isEmpty())

@@ -98,16 +98,16 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move) 
         actComparator = 0
         prevComparator = 0
 
-        // +1 if another train connected to power station
+        // +4 if another train connected to power station
         for (path in state.players[playerIndex].paths) {
             if (path.tiles.isNotEmpty() &&
                 PlayerActionService.isConnectedToPower(path.tiles.last().posX, path.tiles.last().posY, path.lastPort))
-                actComparator++
+                actComparator += 4
         }
         for (path in prev.players[playerIndex].paths) {
             if (path.tiles.isNotEmpty() &&
                 PlayerActionService.isConnectedToPower(path.tiles.last().posX, path.tiles.last().posY, path.lastPort))
-                prevComparator++
+                prevComparator += 4
         }
         if (actComparator > prevComparator) score += (actComparator - prevComparator)
         actComparator = 0
@@ -135,8 +135,5 @@ data class Node(val rs: service.RootService, val parent: Node?, val move: Move) 
             }
         }
         if (actComparator > prevComparator) score -= (actComparator - prevComparator)
-
-        if (playerIndex != rs.currentGame!!.currentTurn.currentPlayerIndex)
-            score = -score
     }
 }
